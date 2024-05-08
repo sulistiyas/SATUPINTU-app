@@ -54,12 +54,20 @@
                                     <td>{{ $item->npwp }}</td>
                                     <td>{{ $item->almt_npwp }}</td>
                                     <td>
-                                        <form onsubmit="return confirm('Apakah Anda Yakin ingin Menghapus data ?');" action="{{ route('destroy_client_admin',[$item->id_client]) }}" method="POST">
-                                            @csrf
-                                            @method('DELETE')
-                                            <a href="javascript:void(0)" id="show-data" data-url="{{ route('edit_client_admin',$item->id_client) }}" class="btn btn-warning"><i class="fas fa-pencil-alt"></i></a> |
-                                            <button type="submit" class="btn btn-danger"><i class="fas fa-trash-alt	"></i></button>
-                                        </form>
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-default btn-flat" data-toggle="dropdown" aria-expanded="false">
+                                                <i class="fas fa-align-justify"></i>
+                                            </button>
+                                            <div class="dropdown-menu" role="menu" style="">
+                                                <form onsubmit="return confirm('Apakah Anda Yakin ingin Menghapus data ?');" action="{{ route('destroy_client_admin',[$item->id_client]) }}" method="POST">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <a href="javascript:void(0)" id="show-data" data-url="{{ route('edit_client_admin',$item->id_client) }}" class="dropdown-item"><i class="fas fa-pencil-alt"> Update</i></a>
+                                                    <button type="submit" class="dropdown-item"><i class="fas fa-trash-alt"> Delete </i></button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                        
                                     </td>
                                 </tr>
                             @endforeach
@@ -292,6 +300,6 @@
           })
       });
 
-  });
+    });
 </script>
 
