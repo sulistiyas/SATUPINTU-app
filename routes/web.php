@@ -35,7 +35,8 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
         // Purchase Request
         Route::get('/Admin/EPurchase/PR/List', [EPurchaseController::class, 'index_pr'])->name('index_pr_admin');
         Route::get('/Admin/EPurchase/PR/Create', [EPurchaseController::class, 'create_pr'])->name('create_pr_admin');
-        Route::post('/Admin/EPurchase/PR/Store', [EPurchaseController::class, 'store_pr'])->name('store_pr_admin');
+        Route::POST('/Admin/EPurchase/PR/Store', [EPurchaseController::class, 'store_pr'])->name('store_pr_admin');
+        Route::get('/Admin/EPurchase/PR/Show/{id}', [EPurchaseController::class, 'show_pr'])->name('show_pr_admin');
         Route::get('/Admin/EPurchase/PR/Edit/{id}', [EPurchaseController::class, 'edit_pr'])->name('edit_pr_admin');
         Route::POST('/Admin/EPurchase/PR/Update/{id}', [EPurchaseController::class, 'update_pr'])->name('update_pr_admin');
         Route::delete('/Admin/EPurchase/PR/Destroy/{id}', [EPurchaseController::class, 'destroy_pr'])->name('destroy_pr_admin');

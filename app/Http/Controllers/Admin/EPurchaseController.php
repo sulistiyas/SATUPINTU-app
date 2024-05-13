@@ -2,30 +2,109 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Error;
 use App\Models\Vendor;
 use Illuminate\Http\Request;
+use App\Models\PurchaseRequest;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\Validator;
+use Haruncpi\LaravelIdGenerator\IdGenerator;
+
+
 
 class EPurchaseController extends Controller
 {
     // Purchase Request Section Start
     public function index_pr()
     {
-        return view('admin.ePurchase.purchase_request.index');
+        $id_emp = Auth::user()->id;
+        $get_data = DB::table('pr')
+            ->where('id_employee', '=', $id_emp)
+            ->where('deleted_at', '=', NULL)
+            ->groupBy('pr_no')
+            ->get();
+        return view('admin.ePurchase.purchase_request.index', ['data' => $get_data]);
     }
 
     public function create_pr()
     {
-        //
+        $id = IdGenerator::generate(['table' => 'pr', 'field' => 'pr_no', 'length' => 13, 'prefix' => 'PR' . +date('Ymd')]);
+        $data = DB::table('jobnumber')->where('deleted_at', '=', NULL)->orderBy('id_jn', 'DESC')->get();
+        return view('admin.ePurchase.purchase_request.create', compact('id', 'data'));
     }
 
     public function store_pr(Request $request)
     {
-        //
+        // $idusers = Auth::user()->id;
+        // $division = DB::table('employee')->where('id_users', '=', $idusers)->get();
+        // foreach ($division as $item_div) {
+        //     $emp_div = $item_div->emp_division;
+        // }
+
+        // $id_manager = DB::table('employee')
+        //     ->join('users', 'users.id', '=', 'employee.id_users')
+        //     ->where('emp_division', '=', $emp_div)
+        //     ->where('emp_position', '=', "Manager")->get();
+        // foreach ($id_manager as $manager) {
+        //     $manager_id = $manager->name;
+        // }
+
+        // return view('emails.pr_send', [
+        //     'fullname'                          => Auth::user()->id,
+        //     'manager'                           => $manager_id,
+        // ]);
+        // return $this->SendMailPR($manager_id);
+        try {
+            $rows   = $request->rows;
+            $desc   = $request->description;
+            $qty    = $request->quantity;
+            $unit    = $request->unit;
+            $idusers = Auth::user()->id;
+            $division = DB::table('employee')->where('id_users', '=', $idusers)->get();
+            foreach ($division as $item_div) {
+                $emp_div = $item_div->emp_division;
+            }
+
+            $id_manager = DB::table('employee')
+                ->join('users', 'users.id', '=', 'employee.id_users')
+                ->where('emp_division', '=', $emp_div)
+                ->where('emp_position', '=', "Manager")->get();
+            foreach ($id_manager as $manager) {
+                $manager_id = $manager->id;
+                $manager_name = $manager->name;
+            }
+            foreach ($rows as $key => $value) {
+                $array_data[] = array(
+                    'pr_no'                 => $request->txt_pr_number,
+                    'job_number'                 => $request->txt_jn,
+                    'id_employee'           => $idusers,
+                    'pr_desc'               => $desc[$key],
+                    'pr_qty'                => $qty[$key],
+                    'pr_unit'               => $unit[$key],
+                    'pr_status'             => 3,
+                    'pr_date'               => date('Y-m-d'),
+                    'id_manager'            => $manager_id,
+                    'created_at'            => date('Y-m-d h:i:s'),
+                );
+            }
+            PurchaseRequest::insert($array_data);
+            // dd($array_data);
+            Alert::success('Success', 'Data Created Successfully');
+            return redirect()->route('index_pr_admin');
+            // return $this->SendMailPR($manager_id);
+        } catch (\Exception $th) {
+            return response()->json([
+                'status'    => false,
+                'message'   => 'Error Send mail : ',
+                'errors'    => $th
+            ], 401);
+            Alert::error('error', 'Failed to Create Data!!');
+            return redirect()->route('create_pr_admin');
+        }
     }
 
     public function show_pr(string $id)
@@ -203,4 +282,27 @@ class EPurchaseController extends Controller
         }
     }
     // Vendor Section End
+
+    public function SendMailPR($manager_id)
+    {
+        // dd($manager_id);
+        try {
+            Mail::send('emails.pr_send', [
+                'fullname'                          => Auth::user()->id,
+                'manager'                           => $manager_id,
+            ], function ($mail) {
+
+                // $mail->to($manager_email);
+                $mail->to('sulis.nugroho@inlingua.co.id');
+                $mail->from(config('mail.from.name'));
+                $mail->subject('SATUPINTU - APP | Purchase Request Order');
+            });
+        } catch (\Exception $th) {
+            return response()->json([
+                'status'    => false,
+                'message'   => 'Error Send mail : ',
+                'errors'    => $th
+            ], 401);
+        }
+    }
 }

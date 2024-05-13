@@ -14,7 +14,7 @@ class PurchaseRequest extends Model
     protected $primaryKey = 'id_pr';
     protected $fillable = [
         'pr_no',
-        'id_jn',
+        'job_number',
         'id_employee',
         'pr_desc',
         'pr_qty',

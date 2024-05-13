@@ -14,15 +14,16 @@ class PurchaseOrder extends Model
     protected $primaryKey = 'id_po';
     protected $fillable = [
         'po_no',
-        'id_jn',
-        'id_employee',
-        'po_desc',
-        'po_qty',
-        'po_unit',
-        'po_status',
+        'id_pr',
+        'id_vendor',
+        'price',
+        'total_price',
         'po_date',
-        'id_manager',
-        'po_reason',
+        'po_status',
+        'po_approve',
+        'po_disc',
+        'po_tax',
+
     ];
     protected $dates = [
         'updated_at',

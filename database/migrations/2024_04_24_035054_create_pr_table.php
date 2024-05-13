@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('pr', function (Blueprint $table) {
             $table->id('id_pr');
-            $table->string('pr_no');
-            $table->foreignId('id_jn')->references('id_jn')->on('jobnumber')->onUpdate('cascade')->onDelete('cascade');
+            $table->string('pr_no')->nullable();
+            $table->string('job_number');
             $table->foreignId('id_employee')->references('id_employee')->on('employee')->onUpdate('cascade')->onDelete('cascade');
             $table->string('pr_desc');
             $table->string('pr_qty');
