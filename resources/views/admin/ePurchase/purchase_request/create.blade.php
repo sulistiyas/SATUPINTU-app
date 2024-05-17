@@ -29,9 +29,7 @@
                         <div class="card">
                             <div class="card-header">
                                 <h3 class="card-title">Purchase Request Form</h3>
-                                <button type="button" class="float-sm-right btn btn-primary" id="add_btn" name="add_btn">
-                                    <i class="fas fa-plus">&nbsp;Add New Row</i>
-                                </button>
+                                
                             </div>
                             <div class="card-body">
                                 <div class="row">
@@ -48,6 +46,13 @@
                                                 @endforeach
                                             </select>
                                         </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <button type="button" class="float-sm-left btn btn-primary" id="add_btn" name="add_btn">
+                                            <i class="fas fa-plus">&nbsp;Add New Row</i>
+                                        </button>
                                     </div>
                                 </div>
                                 <div class="row">

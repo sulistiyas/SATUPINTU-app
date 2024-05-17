@@ -34,36 +34,39 @@
                             <p>You get a message from {{ $fullname }}, waiting for PR ( Purchase Request ) approval.</p>
                             
                             <ul>
-                                <li><b>Job Number :</b> </li>
-                                <li><b>PR Number : </b> </li>
+                                <li><b>Job Number : {{ $job_number }}</b> </li>
+                                <li><b>PR Number : {{ $pr_no }}</b> </li>
+                                <li><b>Items :</b> </li>
                             </ul>
                             <table class="table" border="1" cellpadding="0" cellspacing="0" style="width: 100%;">
                                 <thead>
-                                    <tr>
-                                        <th>No.</th>
-                                        <th>Desc</th>
-                                        <th>Qty</th>
-                                        <th>Unit</th>
+                                    <tr align="center">
+                                        <th style="font-weight: 900;">No.</th>
+                                        <th style="font-weight: 900;">Desc</th>
+                                        <th style="font-weight: 900;">Qty</th>
+                                        <th style="font-weight: 900;">Unit</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
+                                    @foreach ($data as $item_pr)
+                                        <tr align="center">
+                                            <td>{{ $loop->iteration }}.</td>
+                                            <td>{{ $item_pr['pr_desc'] }}</td>
+                                            <td>{{ $item_pr['pr_qty'] }}</td>
+                                            <td>{{ $item_pr['pr_unit'] }}</td>
+                                        </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
-                            <p>Please proceed to <a href="#"><b>EMS - APP</b>.</a></p>
+                            <p>Please proceed to <a href="#"><b>SATUPINTU - APP</b>.</a></p>
                             <p>Kind regards,</p>
-                            <p>EMS - APP</p>
+                            <p>SATUPINTU - APP</p>
                             <br>
                             <p>inlingua International Indonesia</p>
                             <p >Jl. Puri Indah Raya Kav A3 No. 2, Kembangan, Jakarta Barat 11610</p>
                             <p >T +62 21 583 55 088 </p>
                             <p><a href="https://inlingua.co.id/">www.inlingua.co.id</a></p>
-                            <img src="{{ asset('asset/img/inl_wscc.png') }}" width="300" alt="inl wscc" style="border:none">
+                            <img src="{{ asset('assets/dist/img/inl_wscc.png') }}" width="300" alt="inl wscc" style="border:none">
                             <p style="color: #3366ff; font-weight: 600"><i>“We keep growing and never stop learning”</i></p>
                         </td>
                     </tr>

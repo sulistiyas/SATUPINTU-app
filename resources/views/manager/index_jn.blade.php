@@ -1,5 +1,5 @@
-@include('admin.includes.header')
-@include('admin.includes.sidebar')
+@include('manager.includes.header')
+@include('manager.includes.sidebar')
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -11,7 +11,7 @@
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
+              <li class="breadcrumb-item"><a href="{{ route('dashboard_manager') }}">Home</a></li>
               <li class="breadcrumb-item active">Job Number Table</li>
             </ol>
           </div><!-- /.col -->
@@ -97,7 +97,7 @@
     <!-- /.content -->
     {{-- End Content --}}
     {{-- Create Modal --}}
-    <form action="{{ route('store_jn_admin') }}" method="POST" enctype="multipart/form-data" id="jobnumber" name="jobnumber">
+    <form action="{{ route('store_jn_manager') }}" method="POST" enctype="multipart/form-data" id="jobnumber" name="jobnumber">
         @csrf
         <div class="modal fade" id="modal_jn">
             <div class="modal-dialog modal-xl">
@@ -114,13 +114,13 @@
                     <div class="col-5">
                       <div class="form-group">
                         <label for="txt_old_jn">Last Job Number</label>
-                        <input type="text" class="form-control" name="txt_old_jn" id="txt_old_jn"  readonly>
+                        <input type="text" class="form-control" name="txt_old_jn" id="txt_old_jn" value="{{ $late_jn->job_number }}"  readonly>
                       </div>
                     </div>
                     <div class="col-1">
                       <div class="form-group">
                         <label for="btn_refresh_jn" style="color: white">Refresh</label>
-                        <a href="javascript:void(0)" id="btn_refresh_jn" name="btn_refresh_jn" class="btn btn-warning form-control" data-url="{{ route('refresh_jn_admin') }}">
+                        <a href="javascript:void(0)" id="btn_refresh_jn" name="btn_refresh_jn" class="btn btn-warning form-control" data-url="{{ route('refresh_jn_manager') }}">
                           <i class="fas fa-sync-alt"></i>
                         </a>
                       </div>
@@ -288,7 +288,7 @@
     {{-- End Update --}}
   </div>
   
-@include('admin.includes.footer')
+@include('manager.includes.footer')
 <script>
     // Datatables
     $(function () {

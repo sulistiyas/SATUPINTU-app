@@ -21,12 +21,13 @@ class EPurchaseController extends Controller
     // Purchase Request Section Start
     public function index_pr()
     {
-        $id_emp = Auth::user()->id;
+        $id_usr = Auth::user()->id;
         $get_data = DB::table('pr')
-            ->where('id_employee', '=', $id_emp)
-            ->where('deleted_at', '=', NULL)
-            ->groupBy('pr_no')
-            ->get();
+            ->join('employee', 'employee.id_employee', '=', 'pr.id_employee')
+            ->join('users', 'users.id', '=', 'employee.id_users')
+            ->where('users.id', '=', $id_usr)
+            ->where('pr.deleted_at', '=', NULL)
+            ->groupBy('pr.pr_no')->get();
         return view('admin.ePurchase.purchase_request.index', ['data' => $get_data]);
     }
 
@@ -53,20 +54,21 @@ class EPurchaseController extends Controller
         //     $manager_id = $manager->name;
         // }
 
-        // return view('emails.pr_send', [
-        //     'fullname'                          => Auth::user()->id,
-        //     'manager'                           => $manager_id,
-        // ]);
-        // return $this->SendMailPR($manager_id);
+
         try {
-            $rows   = $request->rows;
-            $desc   = $request->description;
-            $qty    = $request->quantity;
-            $unit    = $request->unit;
-            $idusers = Auth::user()->id;
-            $division = DB::table('employee')->where('id_users', '=', $idusers)->get();
+            $rows       = $request->rows;
+            $desc       = $request->description;
+            $qty        = $request->quantity;
+            $unit       = $request->unit;
+            $pr_no      = $request->txt_pr_number;
+            $jn         = $request->txt_jn;
+            $idusers    = Auth::user()->id;
+            $division   = DB::table('employee')
+                ->join('users', 'users.id', '=', 'employee.id_users')
+                ->where('id_users', '=', $idusers)->get();
             foreach ($division as $item_div) {
                 $emp_div = $item_div->emp_division;
+                $emp_name = $item_div->name;
             }
 
             $id_manager = DB::table('employee')
@@ -79,8 +81,8 @@ class EPurchaseController extends Controller
             }
             foreach ($rows as $key => $value) {
                 $array_data[] = array(
-                    'pr_no'                 => $request->txt_pr_number,
-                    'job_number'                 => $request->txt_jn,
+                    'pr_no'                 => $pr_no,
+                    'job_number'            => $jn,
                     'id_employee'           => $idusers,
                     'pr_desc'               => $desc[$key],
                     'pr_qty'                => $qty[$key],
@@ -91,11 +93,18 @@ class EPurchaseController extends Controller
                     'created_at'            => date('Y-m-d h:i:s'),
                 );
             }
+            // return view('emails.pr_send', [
+            //     'fullname'      => $emp_name,
+            //     'manager'       => $manager_name,
+            //     'data'          => $array_data,
+            //     'pr_no'         => $request->txt_pr_number,
+            //     'job_number'    => $request->txt_jn,
+            // ]);
+
             PurchaseRequest::insert($array_data);
-            // dd($array_data);
-            Alert::success('Success', 'Data Created Successfully');
+            return $this->SendMailPR($idusers, $manager_id, $array_data, $pr_no, $jn);
+            Alert::success('Success', 'PR Submitted Successfully');
             return redirect()->route('index_pr_admin');
-            // return $this->SendMailPR($manager_id);
         } catch (\Exception $th) {
             return response()->json([
                 'status'    => false,
@@ -107,9 +116,16 @@ class EPurchaseController extends Controller
         }
     }
 
-    public function show_pr(string $id)
+
+    public function show_modal_pr_admin($id)
     {
-        //
+        // 
+        $pr_data = DB::table('pr')
+            ->join('employee', 'employee.id_employee', '=', 'pr.id_employee')
+            ->join('users', 'users.id', '=', 'employee.id_users')
+            ->where('pr.pr_no', '=', $id)->get();
+        // $pr_data = DB::table('pr')->where('pr_no', '=', $id)->get();
+        return view('components.modals.pr_admin_show', ['data_pr' => $pr_data]);
     }
 
     public function edit_pr(string $id)
@@ -283,26 +299,61 @@ class EPurchaseController extends Controller
     }
     // Vendor Section End
 
-    public function SendMailPR($manager_id)
+    public function SendMailPR($idusers, $manager_id, $array_data, $pr_no, $jn)
     {
-        // dd($manager_id);
         try {
-            Mail::send('emails.pr_send', [
-                'fullname'                          => Auth::user()->id,
-                'manager'                           => $manager_id,
-            ], function ($mail) {
+            $emp_data   = DB::table('employee')
+                ->join('users', 'users.id', '=', 'employee.id_users')
+                ->where('id_users', '=', $idusers)->get();
+            foreach ($emp_data as $item_emp) {
+                $emp_div = $item_emp->emp_division;
+                $emp_name = $item_emp->name;
+            }
 
+            $manager_data = DB::table('employee')
+                ->join('users', 'users.id', '=', 'employee.id_users')
+                ->where('emp_division', '=', $emp_div)
+                ->where('emp_position', '=', "Manager")->get();
+            foreach ($manager_data as $manager) {
+                $manager_name = $manager->name;
+            }
+            Mail::send('emails.pr_send', [
+                'fullname'      => $emp_name,
+                'manager'       => $manager_name,
+                'data'          => $array_data,
+                'pr_no'         => $pr_no,
+                'job_number'    => $jn,
+            ], function ($mail) {
+                $id_users = Auth::user()->id;
+                $emp_data   = DB::table('employee')
+                    ->join('users', 'users.id', '=', 'employee.id_users')
+                    ->where('id_users', '=', $id_users)->get();
+                foreach ($emp_data as $item_emp) {
+                    $emp_div = $item_emp->emp_division;
+                }
+
+                $manager_data = DB::table('employee')
+                    ->join('users', 'users.id', '=', 'employee.id_users')
+                    ->where('emp_division', '=', $emp_div)
+                    ->where('emp_position', '=', "Manager")->get();
+                foreach ($manager_data as $manager) {
+                    $manager_email = $manager->email;
+                }
                 // $mail->to($manager_email);
                 $mail->to('sulis.nugroho@inlingua.co.id');
                 $mail->from(config('mail.from.name'));
                 $mail->subject('SATUPINTU - APP | Purchase Request Order');
             });
+            Alert::success('Success', 'PR Submitted Successfully');
+            return redirect()->route('index_pr_admin');
         } catch (\Exception $th) {
             return response()->json([
                 'status'    => false,
                 'message'   => 'Error Send mail : ',
                 'errors'    => $th
             ], 401);
+            Alert::error('error', 'Failed to Create Data!!');
+            return redirect()->route('create_pr_admin');
         }
     }
 }

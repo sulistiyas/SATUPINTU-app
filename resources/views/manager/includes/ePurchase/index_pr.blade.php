@@ -1,5 +1,5 @@
-@include('admin.includes.header')
-@include('admin.includes.sidebar')
+@include('manager.includes.header')
+@include('manager.includes.sidebar')
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <div class="content-header">
@@ -10,7 +10,7 @@
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
+              <li class="breadcrumb-item"><a href="{{ route('dashboard_manager') }}">Home</a></li>
               <li class="breadcrumb-item active">PR Table</li>
             </ol>
           </div><!-- /.col -->
@@ -26,7 +26,6 @@
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">Purchase Request Data</h3>
-                            <a href="{{ route('create_pr_admin') }}" class="float-sm-right btn btn-primary"><i class="fas fa-plus">&nbsp;Add New Request</i></a>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
@@ -60,7 +59,7 @@
                                                 <button type="button" class="btn btn-default btn-flat" data-toggle="dropdown" aria-expanded="false">
                                                     <i class="fas fa-align-justify"></i>
                                                 </button>
-                                                <div class="dropdown-menu" role="menu" style="">
+                                                {{-- <div class="dropdown-menu" role="menu" style="">
                                                     <form onsubmit="return confirm('Apakah Anda Yakin ingin Menghapus data ?');" action="{{ route('destroy_pr_admin',[$item_pr->pr_no]) }}" method="POST">
                                                         @csrf
                                                         @method('DELETE')
@@ -71,7 +70,7 @@
                                                     <button data-toggle="modal" data-target="#modal_pr_show" id="getPR"  type="button" class="dropdown-item" data-url="{{ route('show_modal_pr_admin',['id'=>$item_pr->pr_no])}}">
                                                       <i class="far fa-eye">&nbsp;View</i>
                                                     </button>
-                                                </div>
+                                                </div> --}}
                                             </div>
                                           </td>
                                         </tr>
@@ -135,7 +134,7 @@
     </div>
     {{-- End View --}}
 </div>
-@include('admin.includes.footer')
+@include('manager.includes.footer')
 <script>
     // Datatables
     $(function () {

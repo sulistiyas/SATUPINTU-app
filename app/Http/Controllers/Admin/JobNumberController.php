@@ -8,6 +8,7 @@ use App\Models\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\OldJobnumber;
 use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\Validator;
@@ -29,6 +30,16 @@ class JobNumberController extends Controller
             ->where('jobnumber.deleted_at', '=', NULL)
             ->orderBy('jobnumber.id_jn', 'desc')->limit(1)->get();
         return view('admin.jobNumber.index', compact('jn_data', 'data_client', 'latest_jn'));
+    }
+
+    public function index_old()
+    {
+        $jn_data = DB::table('old_jobnumber')
+            ->join('client', 'old_jobnumber.id_client', '=', 'client.id_client')
+            ->where('old_jobnumber.deleted_at', '=', NULL)
+            ->orderBy('old_jobnumber.id_jn', 'desc')->get();
+        $data_client = DB::table('client')->where('client.deleted_at', '=', NULL)->orderBy('client.id_client', 'asc')->get();
+        return view('admin.jobNumber.index_old', ['jn_data' => $jn_data]);
     }
 
     /**
@@ -94,9 +105,14 @@ class JobNumberController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show_jn_old_admin(string $id)
     {
-        //
+        // $old_jn_data = OldJobnumber::find($id);
+        // return response()->json($old_jn_data);
+        $old_jn_data = DB::table('old_jobnumber')
+            ->join('client', 'client.id_client', '=', 'old_jobnumber.id_client')
+            ->where('old_jobnumber.id_jn', '=', $id)->get();
+        return $old_jn_data[0];
     }
 
     /**
