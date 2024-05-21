@@ -10,7 +10,7 @@
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="{{ route('dashboard_manager') }}">Home</a></li>
+              <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
               <li class="breadcrumb-item active">PR Table</li>
             </ol>
           </div><!-- /.col -->
@@ -44,33 +44,37 @@
                                           <td>{{ $loop->iteration }}</td>
                                           <td>{{ $item_pr->pr_no }}</td>
                                           <td>
-                                            @if ( $item_pr->pr_status  == 3)
+                                            @if ( $item_pr->pr_status  == 4)
                                               Waiting Manager Approval
+                                            @elseif ( $item_pr->pr_status == 3)
+                                              PR Approved
                                             @elseif ( $item_pr->pr_status == 2)
-                                              PR Approved - PO Submitting
+                                              PO Submitting
                                             @elseif ( $item_pr->pr_status == 1)
-                                              PR Completed
-                                            @elseif ( $item_pr->pr_status == 4)
-                                              PR Declined
+                                              PR PO Completed
+                                            @elseif ( $item_pr->pr_status == 5)
+                                              PR Rejected
+                                            @elseif ( $item_pr->pr_status == 6)
+                                              PO Rejected
                                             @endif
                                           </td>
                                           <td>
                                             <div class="btn-group">
-                                                <button type="button" class="btn btn-default btn-flat" data-toggle="dropdown" aria-expanded="false">
-                                                    <i class="fas fa-align-justify"></i>
-                                                </button>
-                                                {{-- <div class="dropdown-menu" role="menu" style="">
-                                                    <form onsubmit="return confirm('Apakah Anda Yakin ingin Menghapus data ?');" action="{{ route('destroy_pr_admin',[$item_pr->pr_no]) }}" method="POST">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        
-                                                        <a href="javascript:void(0)" id="show-data_update" data-url="{{ route('edit_pr_admin',$item_pr->pr_no) }}" class="dropdown-item"><i class="fas fa-pencil-alt"> Update</i></a>
-                                                        <button type="submit" class="dropdown-item"><i class="fas fa-trash-alt"> Delete </i></button>
-                                                    </form>
-                                                    <button data-toggle="modal" data-target="#modal_pr_show" id="getPR"  type="button" class="dropdown-item" data-url="{{ route('show_modal_pr_admin',['id'=>$item_pr->pr_no])}}">
-                                                      <i class="far fa-eye">&nbsp;View</i>
-                                                    </button>
-                                                </div> --}}
+                                              @if ( $item_pr->pr_status  == 4)
+                                                <button type="button" class="btn btn-app bg-primary" title="Show Data" data-toggle="modal" data-target="#modal_pr_show_manager" id="getPR" data-url="{{ route('show_modal_pr_manager',['id'=>$item_pr->pr_no])}}"><i class="fas fa-eye"></i></button>
+                                                <form onsubmit="return confirm('Are you sure you want to APPROVE this request ?');" action="{{ route('approve_pr_manager') }}" method="POST">
+                                                  @csrf
+                                                  <input type="hidden" name="txt_pr_no" id="txt_pr_no" value="{{ $item_pr->pr_no }}" readonly>
+                                                  <button type="submit" name="btn_approval" id="btn_approval" value="approve_pr" class="btn btn-app bg-success" title="Approve PR"><i class="fas fa-check"></i></i></button>
+                                                </form>
+                                                <form onsubmit="return confirm('Are you sure you want to REJECT this request ?');" action="{{ route('approve_pr_manager') }}" method="POST">
+                                                  @csrf
+                                                  <input type="hidden" name="txt_pr_no" id="txt_pr_no" value="{{ $item_pr->pr_no }}" readonly>
+                                                  <button type="submit" name="btn_approval" id="btn_approval" value="reject_pr" class="btn btn-app bg-danger" title="Reject PR"><i class="fas fa-times"></i></button>
+                                                </form>
+                                              @else
+                                                <button type="button" class="btn btn-app bg-primary" title="Show Data" data-toggle="modal" data-target="#modal_pr_show_manager" id="getPR" data-url="{{ route('show_modal_pr_manager',['id'=>$item_pr->pr_no])}}"><i class="fas fa-eye"></i></button>
+                                              @endif
                                             </div>
                                           </td>
                                         </tr>
@@ -111,7 +115,7 @@
     {{-- End Create --}}
     {{-- View Modal --}}
     {{-- @include('components.modals.pr_admin_show',['pr_data' => $item_pr->pr_no]) --}}
-    <div class="modal fade" id="modal_pr_show">
+    <div class="modal fade" id="modal_pr_show_manager">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="overlay" id="modal-loader">
@@ -123,11 +127,8 @@
                   <span aria-hidden="true">&times;</span>
               </button>
           </div>
-          <div class="modal-body">
-             <div id="dynamic-content"></div>
-          </div>
-          <div class="modal-footer justify-content-between">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <div id="dynamic-content">
+          
           </div>
         </div>
       </div>

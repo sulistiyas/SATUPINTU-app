@@ -87,7 +87,7 @@ class EPurchaseController extends Controller
                     'pr_desc'               => $desc[$key],
                     'pr_qty'                => $qty[$key],
                     'pr_unit'               => $unit[$key],
-                    'pr_status'             => 3,
+                    'pr_status'             => 4,
                     'pr_date'               => date('Y-m-d'),
                     'id_manager'            => $manager_id,
                     'created_at'            => date('Y-m-d h:i:s'),
@@ -128,6 +128,17 @@ class EPurchaseController extends Controller
         return view('components.modals.pr_admin_show', ['data_pr' => $pr_data]);
     }
 
+    public function show_modal_price_admin($id)
+    {
+        $po_no = IdGenerator::generate(['table' => 'po', 'field' => 'po_no', 'length' => 13, 'prefix' => 'PO' . +date('Ymd')]);
+        $data_pr = DB::table('pr')
+            ->join('employee', 'employee.id_employee', '=', 'pr.id_employee')
+            ->join('users', 'users.id', '=', 'employee.id_users')
+            ->where('pr.pr_no', '=', $id)->get();
+        // $pr_data = DB::table('pr')->where('pr_no', '=', $id)->get();
+        return view('components.modals.price_admin', compact('po_no', 'data_pr'));
+    }
+
     public function edit_pr(string $id)
     {
         //
@@ -146,7 +157,12 @@ class EPurchaseController extends Controller
     // Purchase Order Section Start
     public function index_po()
     {
-        //
+        $get_pr_data = DB::table('pr')
+            ->join('employee', 'employee.id_employee', '=', 'pr.id_employee')
+            ->join('users', 'users.id', '=', 'employee.id_users')
+            ->where('pr.deleted_at', '=', NULL)
+            ->groupBy('pr.pr_no')->get();
+        return view('admin.ePurchase.purchase_order.index', ['data' => $get_pr_data]);
     }
 
     public function create_po()
@@ -157,6 +173,31 @@ class EPurchaseController extends Controller
     public function store_po(Request $request)
     {
         //
+    }
+
+    public function store_price(Request $request)
+    {
+        $txt_po_no = $request->txt_po_no;
+        $txt_id_pr = $request->txt_id_pr;
+        $price = $request->txt_price;
+        $txt_qty = $request->txt_qty_pr;
+        $txt_count = $request->txt_count;
+
+        // dd($count);
+        foreach ($txt_count as $key => $value) {
+            $price_total_unit = $price[$key] * $txt_qty[$key];
+            $array_data[] = array(
+                'po_no'         => $txt_po_no[$key],
+                'id_pr'         => $txt_id_pr[$key],
+                'price'         => $price[$key],
+                'total_price'   => $price_total_unit,
+                'po_date'       => date('Y-m-d'),
+                'po_status'     => '2',
+                'created_at'    => date('Y-m-d h:i:s'),
+                'updated_at'    => date('Y-m-d h:i:s'),
+            );
+        }
+        dd($array_data);
     }
 
     public function show_po(string $id)

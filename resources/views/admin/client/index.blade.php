@@ -1,5 +1,5 @@
-@include('admin.includes.header')
-@include('admin.includes.sidebar')
+@include('components.includes.header')
+@include('components.includes.sidebar')
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -270,7 +270,7 @@
     {{-- End Update --}}
   </div>
   
-@include('admin.includes.footer')
+@include('components.includes.footer')
 <script>
     // Datatables
     $(function () {

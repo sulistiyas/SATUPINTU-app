@@ -11,7 +11,7 @@
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
-          <img src="{{ asset('assets/dist/img/avatar3.png') }}" class="img-circle elevation-2" alt="User Image">
+          <img src="{{ asset('assets/dist/img/avatar4.png') }}" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
           <a href="#" class="d-block">{{ Auth::user()->name }}</a>
@@ -41,8 +41,8 @@
               <p>Dashboard</p>
             </a>
           </li>
-          <li class="{{ Request::routeIs('index_jn_manager') || Request::routeIs('index_client_manager') || Request::routeIs('index_jn_old_manager') ? 'nav-item menu-open' : 'nav-item menu' }}">
-            <a href="#"  class="{{ Request::routeIs('index_jn_manager') || Request::routeIs('index_client_manager') || Request::routeIs('index_jn_old_manager') ? 'nav-link active' : 'nav-link' }}">
+          <li class="{{ Request::routeIs('index_jn_admin') || Request::routeIs('index_client_admin') || Request::routeIs('index_jn_old_admin') ? 'nav-item menu-open' : 'nav-item menu' }}">
+            <a href="#"  class="{{ Request::routeIs('index_jn_admin') || Request::routeIs('index_client_admin') || Request::routeIs('index_jn_old_admin') ? 'nav-link active' : 'nav-link' }}">
               <i class="nav-icon fas fa-briefcase"></i>
               <p>
                 Job Number
@@ -51,19 +51,19 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="{{ route('index_client_manager') }}" class="{{ Request::routeIs('index_client_manager') ? 'nav-link active' : 'nav-link' }}">
+                <a href="{{ route('index_client_admin') }}" class="{{ Request::routeIs('index_client_admin') ? 'nav-link active' : 'nav-link' }}">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Client</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{{ route('index_jn_manager') }}" class="{{ Request::routeIs('index_jn_manager') ? 'nav-link active' : 'nav-link' }}">
+                <a href="{{ route('index_jn_admin') }}" class="{{ Request::routeIs('index_jn_admin') ? 'nav-link active' : 'nav-link' }}">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Job Number List</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{{ route('index_jn_old_manager') }}" class="{{ Request::routeIs('index_jn_old_manager') ? 'nav-link active' : 'nav-link' }}">
+                <a href="{{ route('index_jn_old_admin') }}" class="{{ Request::routeIs('index_jn_old_admin') ? 'nav-link active' : 'nav-link' }}">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Old Job Number</p>
                 </a>
@@ -71,8 +71,8 @@
             </ul>
           </li>
 
-          <li class="{{ Request::routeIs('index_pr_manager') || Request::routeIs('index_po_manager') || Request::routeIs('index_vendor_manager') || Request::routeIs('create_pr_manager') ? 'nav-item menu-open' : 'nav-item menu' }}">
-            <a href="#"  class="{{ Request::routeIs('index_pr_manager') || Request::routeIs('index_po_manager') || Request::routeIs('index_vendor_manager') || Request::routeIs('create_pr_manager') ? 'nav-link active' : 'nav-link' }}">
+          <li class="{{ Request::routeIs('index_pr_admin') || Request::routeIs('index_po_admin') || Request::routeIs('index_vendor_admin') || Request::routeIs('create_pr_admin') ? 'nav-item menu-open' : 'nav-item menu' }}">
+            <a href="#"  class="{{ Request::routeIs('index_pr_admin') || Request::routeIs('index_po_admin') || Request::routeIs('index_vendor_admin') || Request::routeIs('create_pr_admin') ? 'nav-link active' : 'nav-link' }}">
               <i class="fas fa-shopping-cart"></i>
               <p>
                 e-Purchase
@@ -81,13 +81,13 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="{{ route('index_pr_manager') }}" class="{{ Request::routeIs('index_pr_manager') || Request::routeIs('create_pr_manager') ? 'nav-link active' : 'nav-link' }}">
+                <a href="{{ route('index_pr_admin') }}" class="{{ Request::routeIs('index_pr_admin') || Request::routeIs('create_pr_admin') ? 'nav-link active' : 'nav-link' }}">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Purchase Request</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{{ route('index_po_manager') }}" class="{{ Request::routeIs('index_po_manager') || Request::routeIs('create_po_manager') ? 'nav-link active' : 'nav-link' }}">
+                <a href="{{ route('index_po_admin') }}" class="{{ Request::routeIs('index_po_admin') || Request::routeIs('create_po_admin') ? 'nav-link active' : 'nav-link' }}">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Purchase Order</p>
                 </a>
@@ -98,12 +98,12 @@
                   <p>Report</p>
                 </a>
               </li>
-              {{-- <li class="nav-item">
-                <a href="{{ route('index_vendor_manager') }}" class="{{ Request::routeIs('index_vendor_manager') ? 'nav-link active' : 'nav-link' }}">
+              <li class="nav-item">
+                <a href="{{ route('index_vendor_admin') }}" class="{{ Request::routeIs('index_vendor_admin') ? 'nav-link active' : 'nav-link' }}">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Vendor</p>
                 </a>
-              </li> --}}
+              </li>
             </ul>
           </li>
           

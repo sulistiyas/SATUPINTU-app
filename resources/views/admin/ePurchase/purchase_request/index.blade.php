@@ -45,14 +45,18 @@
                                           <td>{{ $loop->iteration }}</td>
                                           <td>{{ $item_pr->pr_no }}</td>
                                           <td>
-                                            @if ( $item_pr->pr_status  == 3)
+                                            @if ( $item_pr->pr_status  == 4)
                                               Waiting Manager Approval
+                                            @elseif ( $item_pr->pr_status == 3)
+                                              PR Approved
                                             @elseif ( $item_pr->pr_status == 2)
-                                              PR Approved - PO Submitting
+                                              PO Submitting
                                             @elseif ( $item_pr->pr_status == 1)
-                                              PR Completed
-                                            @elseif ( $item_pr->pr_status == 4)
-                                              PR Declined
+                                              PR PO Completed
+                                            @elseif ( $item_pr->pr_status == 5)
+                                              PR Rejected
+                                            @elseif ( $item_pr->pr_status == 6)
+                                              PO Rejected
                                             @endif
                                           </td>
                                           <td>
