@@ -50,6 +50,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
             Route::get('/Admin/EPurchase/PO/List', [EPurchaseController::class, 'index_po'])->name('index_po_admin');
             Route::get('/Admin/EPurchase/PO/Create', [EPurchaseController::class, 'create_po'])->name('create_po_admin');
             Route::post('/Admin/EPurchase/PO/Store', [EPurchaseController::class, 'store_po'])->name('store_po_admin');
+            // Route::post('/Admin/EPurchase/PO/Store', [EPurchaseController::class, 'store_po_2'])->name('store_po_admin');
             Route::post('/Admin/EPurchase/PO/Price/Store', [EPurchaseController::class, 'store_price'])->name('store_price_admin');
             Route::get('/Admin/EPurchase/PO/Edit/{id}', [EPurchaseController::class, 'edit_po'])->name('edit_po_admin');
             Route::POST('/Admin/EPurchase/PO/Update/{id}', [EPurchaseController::class, 'update_po'])->name('update_po_admin');
@@ -66,6 +67,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
             // Show Modal Data
             Route::get('show_modal_pr_admin/{id}', [EPurchaseController::class, 'show_modal_pr_admin'])->name('show_modal_pr_admin');
             Route::get('show_modal_price_admin/{id}', [EPurchaseController::class, 'show_modal_price_admin'])->name('show_modal_price_admin');
+            Route::get('show_modal_po_admin/{id}', [EPurchaseController::class, 'show_modal_po_admin'])->name('show_modal_po_admin');
         });
         Route::middleware(['auth', 'userLevel:2'])->group(function () {
 

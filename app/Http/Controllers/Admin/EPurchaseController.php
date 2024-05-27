@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use App\Models\PurchaseRequest;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\PurchaseOrder;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -23,6 +25,7 @@ class EPurchaseController extends Controller
     {
         $id_usr = Auth::user()->id;
         $get_data = DB::table('pr')
+            ->join('po', 'po.id_pr', '=', 'pr.id_pr')
             ->join('employee', 'employee.id_employee', '=', 'pr.id_employee')
             ->join('users', 'users.id', '=', 'employee.id_users')
             ->where('users.id', '=', $id_usr)
@@ -139,6 +142,19 @@ class EPurchaseController extends Controller
         return view('components.modals.price_admin', compact('po_no', 'data_pr'));
     }
 
+    public function show_modal_po_admin($id)
+    {
+        $data_po = DB::table('po')
+            ->join('pr', 'pr.id_pr', '=', 'po.id_pr')
+            ->join('employee', 'employee.id_employee', '=', 'pr.id_employee')
+            ->join('users', 'users.id', '=', 'employee.id_users')
+            ->where('po.po_no', '=', $id)->get();
+        // $pr_data = DB::table('pr')->where('pr_no', '=', $id)->get();
+        $total_prices = DB::table('po')->selectRaw('SUM(total_price) as grand_total')->where('po_no', '=', $id)->get();
+        $vendor_data = DB::table('vendor')->where('deleted_at', '=', NULL)->orderBy('vendor', 'asc')->get();
+        return view('components.modals.po_admin', compact('data_po', 'total_prices', 'vendor_data'));
+    }
+
     public function edit_pr(string $id)
     {
         //
@@ -157,11 +173,13 @@ class EPurchaseController extends Controller
     // Purchase Order Section Start
     public function index_po()
     {
-        $get_pr_data = DB::table('pr')
+        $get_pr_data = DB::table('pr')->select('*', 'pr.pr_no as pr_no_1')
+            ->leftJoin('po', 'po.id_pr', '=', 'pr.id_pr')
             ->join('employee', 'employee.id_employee', '=', 'pr.id_employee')
             ->join('users', 'users.id', '=', 'employee.id_users')
             ->where('pr.deleted_at', '=', NULL)
             ->groupBy('pr.pr_no')->get();
+        // dd($get_pr_data);
         return view('admin.ePurchase.purchase_order.index', ['data' => $get_pr_data]);
     }
 
@@ -170,34 +188,119 @@ class EPurchaseController extends Controller
         //
     }
 
+    public function store_po_2(Request $request)
+    {
+        $po_no = $request->txt_po_no;
+        $po_data = PurchaseOrder::where('po_no', '=', $po_no)->first();
+        $po_data->update([
+            'updated_at'        => date('Y-m-d h:i:s')
+        ]);
+    }
     public function store_po(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'txt_tax' => 'required'
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'status'    => false,
+                'message'   => 'Validation Error',
+                'errors'    => $validator->errors()
+            ], 401);
+        } else {
+
+            try {
+                $id_po = $request->txt_id_po;
+                $po_no = $request->txt_po_no;
+                $total_price = $request->txt_total_price;
+                $disc = $request->txt_disc;
+                $tax = $request->txt_tax;
+                $vendor = $request->txt_id_vendor;
+                $count_data = $request->txt_count_data;
+
+
+                foreach ($count_data as $key => $value) {
+                    // $a_disc = ($disc / 100) * $total_price;
+                    // $a_tax = ($tax / 100) * $total_price;
+
+                    // $grand_total = $total_price - $a_disc - $a_tax;
+
+                    $po_array[] = array(
+                        ''
+                    );
+                }
+                $po_data = PurchaseOrder::where('po_no', '=', $po_no)->update([
+                    'id_vendor'     => $vendor,
+                    'po_disc'     => $disc,
+                    'po_tax'     => $tax,
+                    'updated_at'    => date('Y-m-d h:i:s')
+                ]);
+                Alert::success('Success', 'Successfully Insert PO');
+                return redirect()->route('index_po_admin');
+                // dd($po_no);
+            } catch (\Exception $ex) {
+                return response()->json([
+                    'status'    => false,
+                    'message'   => 'Error : ',
+                    'errors'    => $ex
+                ], 401);
+                Alert::error('Error', 'Error Insert PO');
+                return redirect()->route('index_po_admin');
+            }
+        }
     }
 
     public function store_price(Request $request)
     {
-        $txt_po_no = $request->txt_po_no;
-        $txt_id_pr = $request->txt_id_pr;
-        $price = $request->txt_price;
-        $txt_qty = $request->txt_qty_pr;
-        $txt_count = $request->txt_count;
+        $validator = Validator::make($request->all(), [
+            'txt_price' => 'required'
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'status'    => false,
+                'message'   => 'Validation Error',
+                'errors'    => $validator->errors()
+            ], 401);
+        } else {
+            try {
+                $txt_pr_no = $request->txt_pr_no;
+                $txt_po_no = $request->txt_po_no;
+                $txt_id_pr = $request->txt_id_pr;
+                $price = $request->txt_price;
+                $txt_qty = $request->txt_qty_pr;
+                $txt_count = $request->txt_count;
 
-        // dd($count);
-        foreach ($txt_count as $key => $value) {
-            $price_total_unit = $price[$key] * $txt_qty[$key];
-            $array_data[] = array(
-                'po_no'         => $txt_po_no[$key],
-                'id_pr'         => $txt_id_pr[$key],
-                'price'         => $price[$key],
-                'total_price'   => $price_total_unit,
-                'po_date'       => date('Y-m-d'),
-                'po_status'     => '2',
-                'created_at'    => date('Y-m-d h:i:s'),
-                'updated_at'    => date('Y-m-d h:i:s'),
-            );
+                // dd($count);
+                foreach ($txt_count as $key => $value) {
+                    $price_total_unit = $price[$key] * $txt_qty[$key];
+                    $array_data[] = array(
+                        'po_no'         => $txt_po_no[$key],
+                        'id_pr'         => $txt_id_pr[$key],
+                        'price'         => $price[$key],
+                        'total_price'   => $price_total_unit,
+                        'po_date'       => date('Y-m-d'),
+                        'po_status'     => '2',
+                        'created_at'    => date('Y-m-d h:i:s'),
+                        'updated_at'    => date('Y-m-d h:i:s'),
+                    );
+                }
+                PurchaseOrder::insert($array_data);
+                $pr_data = PurchaseRequest::where('pr_no', '=', $txt_pr_no)->update([
+                    'pr_status'     => '2',
+                    'updated_at'    => date('Y-m-d h:i:s')
+                ]);
+                Alert::success('Success', 'Successfully Insert Price');
+                return redirect()->route('index_po_admin');
+            } catch (\Exception $ex) {
+                return response()->json([
+                    'status'    => false,
+                    'message'   => 'Error : ',
+                    'errors'    => $ex
+                ], 401);
+                Alert::error('Error', 'Error Insert Price');
+                return redirect()->route('index_po_admin');
+            }
         }
-        dd($array_data);
     }
 
     public function show_po(string $id)

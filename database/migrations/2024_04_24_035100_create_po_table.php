@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('po', function (Blueprint $table) {
             $table->id('id_po');
             $table->string('po_no');
-            $table->foreignId('id_pr')->references('id_pr')->on('pr')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreignId('id_vendor')->references('id_vendor')->on('vendor')->onUpdate('cascade')->onDelete('cascade');
+            $table->string('pr_no');
+            $table->foreignId('id_vendor')->references('id_vendor')->on('vendor')->onUpdate('cascade')->onDelete('cascade')->nullable();
             $table->string('price');
             $table->string('total_price');
             $table->date('po_date');

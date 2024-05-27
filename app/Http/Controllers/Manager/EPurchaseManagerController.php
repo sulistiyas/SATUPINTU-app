@@ -177,8 +177,17 @@ class EPurchaseManagerController extends Controller
                 foreach ($manager_data as $manager) {
                     $manager_email = $manager->email;
                 }
+
+                $ga_data = DB::table('users')
+                    ->where('user_level', '=', '0')
+                    ->where('deleted_at', '=', NULL)->get();
+                foreach ($ga_data as $data_ga) {
+                    $GA_email = $data_ga->email;
+                }
                 // $mail->to($manager_email);
                 $mail->to('sulis.nugroho@inlingua.co.id');
+                // $mail->cc($GA_email);
+                $mail->cc('sulis.nugroho@inlingua.co.id');
                 $mail->from(config('mail.from.name'));
                 $mail->subject('SATUPINTU - APP | Purchase Request Order');
             });

@@ -7,7 +7,10 @@
         <tr>
           <th>PR Number </th>
           <td>:</td>
-          <th>{{ $item_single->pr_no }}</th>
+          <th>
+            {{ $item_single->pr_no }}
+            <input type="hidden" name="txt_pr_no" id="txt_pr_no" value="{{ $item_single->pr_no }}" readonly>
+          </th>
         </tr>
         <tr>
           <th>Job Number </th>
@@ -58,7 +61,7 @@
         </tbody>
       </table>
     </div>
-  </div>
+</div>
   <script>
     $(function () {
       $("#tbl_price").DataTable({
