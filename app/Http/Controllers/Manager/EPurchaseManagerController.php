@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\Controller;
+use App\Models\PurchaseOrder;
 use App\Models\PurchaseRequest;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -31,7 +32,6 @@ class EPurchaseManagerController extends Controller
             ->groupBy('pr.pr_no')->get();
         return view('manager.includes.ePurchase.index_pr', ['data' => $get_pr_data]);
     }
-
     public function approve_pr_manager(Request $request)
     {
         $pr_approval = $request->btn_approval;
@@ -54,8 +54,8 @@ class EPurchaseManagerController extends Controller
                     'message'   => 'Error : ',
                     'errors'    => $ex
                 ], 401);
-                // Alert::success('Danger', 'Failed Approve Request');
-                // return redirect()->route('index_pr_manager');
+                Alert::success('Danger', 'Failed Approve Request');
+                return redirect()->route('index_pr_manager');
             }
         } else if ($pr_approval == "reject_pr") {
             try {
@@ -75,6 +75,143 @@ class EPurchaseManagerController extends Controller
                 ], 401);
                 Alert::success('Danger', 'Failed Approve Request');
                 return redirect()->route('index_pr_manager');
+            }
+        }
+    }
+
+    public function index_po()
+    {
+
+        $get_po_data = DB::table('pr')->select('*', 'pr.pr_no as pr_no_1')
+            ->leftJoin('po', 'po.id_pr', '=', 'pr.id_pr')
+            ->join('employee', 'employee.id_employee', '=', 'pr.id_employee')
+            ->join('users', 'users.id', '=', 'employee.id_users')
+            ->where('pr.deleted_at', '=', NULL)
+            ->groupBy('pr.pr_no')->get();
+        return view('manager.includes.ePurchase.index_po', ['data' => $get_po_data]);
+    }
+
+    public function approve_po_manager(Request $request)
+    {
+        $po_approval = $request->btn_approval;
+        $po_no = $request->txt_po_no;
+        $pr_no = $request->txt_pr_no;
+        if ($po_approval == "approve_po") {
+
+            try {
+                $status = "Approved";
+                $po_data = PurchaseOrder::where('po_no', '=', $po_no)->update([
+                    'po_status'     => '0',
+                    'updated_at'    => date('Y-m-d h:i:s')
+                ]);
+
+                $pr_data = PurchaseRequest::where('pr_no', '=', $pr_no)->update([
+                    'pr_status'     => '0',
+                    'updated_at'    => date('Y-m-d h:i:s')
+                ]);
+                //  Mail Data
+                $emp_data = DB::table('po')
+                    ->join('pr', 'pr.id_pr', '=', 'po.id_pr')
+                    ->join('vendor', 'vendor.id_vendor', '=', 'po.id_vendor')
+                    ->join('users', 'users.id', '=', 'pr.id_employee')->get();
+                foreach ($emp_data as $emp) {
+                    $emp_name = $emp->name;
+                }
+                $mng_data = DB::table('po')
+                    ->join('pr', 'pr.id_pr', '=', 'po.id_pr')
+                    ->join('vendor', 'vendor.id_vendor', '=', 'po.id_vendor')
+                    ->join('users', 'users.id', '=', 'pr.id_manager')->get();
+                foreach ($mng_data as $mng) {
+                    $mng_name = $mng->name;
+                }
+                $po_data = DB::table('po')
+                    ->join('pr', 'pr.id_pr', '=', 'po.id_pr')
+                    ->join('employee', 'employee.id_employee', '=', 'pr.id_employee')
+                    ->join('users', 'users.id', '=', 'employee.id_users')
+                    ->where('po.po_no', '=', $po_no)->get();
+
+                foreach ($po_data as $data_po) {
+                    $disc = $data_po->po_disc;
+                    $tax = $data_po->po_tax;
+                }
+
+                $sub_total = DB::table('po')->selectRaw('SUM(total_price) as sub_total')->where('po_no', '=', $po_no)->get();
+                foreach ($sub_total as $subs) {
+                    $sub = $subs->sub_total;
+                }
+
+                $a_disc = ($disc / 100) * $sub;
+                $a_tax = ($tax / 100) * $sub;
+
+                $grand_total = $sub - $a_disc + $a_tax;
+
+                return $this->SendMailPOAction($emp_name, $mng_name, $po_data, $a_disc, $a_tax, $sub, $grand_total, $status);
+            } catch (\Exception $ex) {
+                return response()->json([
+                    'status'    => false,
+                    'message'   => 'Error : ',
+                    'errors'    => $ex
+                ], 401);
+                Alert::success('Danger', 'Failed Approve Request');
+                return redirect()->route('index_po_manager');
+            }
+        } else if ($po_approval == "reject_po") {
+            try {
+                $status = "Rejected";
+                $po_data = PurchaseOrder::where('po_no', '=', $po_no)->update([
+                    'po_status'     => '6',
+                    'updated_at'    => date('Y-m-d h:i:s')
+                ]);
+
+                $pr_data = PurchaseRequest::where('pr_no', '=', $pr_no)->update([
+                    'pr_status'     => '6',
+                    'updated_at'    => date('Y-m-d h:i:s')
+                ]);
+                //  Mail Data
+                $emp_data = DB::table('po')
+                    ->join('pr', 'pr.id_pr', '=', 'po.id_pr')
+                    ->join('vendor', 'vendor.id_vendor', '=', 'po.id_vendor')
+                    ->join('users', 'users.id', '=', 'pr.id_employee')->get();
+                foreach ($emp_data as $emp) {
+                    $emp_name = $emp->name;
+                }
+                $mng_data = DB::table('po')
+                    ->join('pr', 'pr.id_pr', '=', 'po.id_pr')
+                    ->join('vendor', 'vendor.id_vendor', '=', 'po.id_vendor')
+                    ->join('users', 'users.id', '=', 'pr.id_manager')->get();
+                foreach ($mng_data as $mng) {
+                    $mng_name = $mng->name;
+                }
+                $po_data = DB::table('po')
+                    ->join('pr', 'pr.id_pr', '=', 'po.id_pr')
+                    ->join('employee', 'employee.id_employee', '=', 'pr.id_employee')
+                    ->join('users', 'users.id', '=', 'employee.id_users')
+                    ->where('po.po_no', '=', $po_no)->get();
+
+                foreach ($po_data as $data_po) {
+                    $disc = $data_po->po_disc;
+                    $tax = $data_po->po_tax;
+                }
+
+                $sub_total = DB::table('po')->selectRaw('SUM(total_price) as sub_total')->where('po_no', '=', $po_no)->get();
+                foreach ($sub_total as $subs) {
+                    $sub = $subs->sub_total;
+                }
+
+                $a_disc = ($disc / 100) * $sub;
+                $a_tax = ($tax / 100) * $sub;
+
+                $grand_total = $sub - $a_disc + $a_tax;
+
+                return $this->SendMailPOAction($emp_name, $mng_name, $po_data, $a_disc, $a_tax, $sub, $grand_total, $status);
+            } catch (\Exception $ex) {
+                return response()->json([
+                    'status'    => false,
+                    'message'   => 'Error : ',
+                    'errors'    => $ex
+                ], 401);
+                Alert::success('Danger', 'Failed Approve Request');
+                return redirect()->route('index_po_manager');
             }
         }
     }
@@ -207,5 +344,63 @@ class EPurchaseManagerController extends Controller
             Alert::error('error', 'Failed to Create Data!!');
             return redirect()->route('index_pr_manager');
         }
+    }
+
+    public function SendMailPOAction($emp_name, $mng_name, $po_data, $a_disc, $a_tax, $sub, $grand_total, $status)
+    {
+
+        // return view('emails.po_send_manager', [
+        //     'fullname'      => $emp_name,
+        //     'manager'       => $mng_name,
+        //     'ga'            => $ga_name,
+        //     'po_data'       => $po_data,
+        //     'disc'          => $a_disc,
+        //     'tax'           => $a_tax,
+        //     'sub_total'     => $sub,
+        //     'grand_total'   => $grand_total,
+        //     'status'        => $status
+        // ]);
+        $get_ga = DB::table('users')->where('user_level', '=', '4')->get();
+        foreach ($get_ga as $ga_data) {
+            $ga_name = $ga_data->name;
+        }
+        Mail::send('emails.po_send_manager', [
+            'fullname'      => $emp_name,
+            'manager'       => $mng_name,
+            'ga'            => $ga_name,
+            'po_data'       => $po_data,
+            'disc'          => $a_disc,
+            'tax'           => $a_tax,
+            'sub_total'     => $sub,
+            'grand_total'   => $grand_total,
+            'status'        => $status
+        ], function ($mail) {
+            $get_ga = DB::table('users')->where('user_level', '=', '4')->get();
+            foreach ($get_ga as $ga_data) {
+                $ga_mail = $ga_data->email;
+            }
+
+            $id_users = Auth::user()->id;
+            $emp_data   = DB::table('employee')
+                ->join('users', 'users.id', '=', 'employee.id_users')
+                ->where('id_users', '=', $id_users)->get();
+            foreach ($emp_data as $item_emp) {
+                $emp_div = $item_emp->emp_division;
+            }
+
+            $manager_data = DB::table('employee')
+                ->join('users', 'users.id', '=', 'employee.id_users')
+                ->where('emp_division', '=', $emp_div)
+                ->where('emp_position', '=', "Manager")->get();
+            foreach ($manager_data as $manager) {
+                $manager_email = $manager->email;
+            }
+            // $mail->to($ga_mail);
+            $mail->to('sulis.nugroho@inlingua.co.id ');
+            $mail->from(config('mail.from.name'));
+            $mail->subject('SATUPINTU - APP | Purchase Order Approval');
+        });
+        Alert::success('Success', 'Successfully');
+        return redirect()->route('index_po_manager');
     }
 }

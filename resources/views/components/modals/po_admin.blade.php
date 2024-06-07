@@ -2,7 +2,7 @@
 <link rel="stylesheet" href="{{ asset('assets/plugins/select2/css/select2.min.css')}}">
 <link rel="stylesheet" href="{{ asset('assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
 <div class="row">
-    <div class="col-6">
+    <div class="col-10">
         <table class="table">
             @foreach ($data_po as $item_single)
 
@@ -80,7 +80,7 @@
                     </td>
                     <td>
                         @currency($item_list->total_price)
-                        <input type="hidden" name="txt_total_price[]" id="txt_total_price[]" value="{{ $loop->iteration }}">
+                        <input type="hidden" name="txt_total_price" id="txt_total_price" value="{{ $loop->iteration }}">
                     </td>
                 </tr>
                 @endforeach

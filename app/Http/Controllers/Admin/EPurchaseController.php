@@ -212,6 +212,7 @@ class EPurchaseController extends Controller
             try {
                 $id_po = $request->txt_id_po;
                 $po_no = $request->txt_po_no;
+                $pr_no = $request->txt_pr_no;
                 $total_price = $request->txt_total_price;
                 $disc = $request->txt_disc;
                 $tax = $request->txt_tax;
@@ -233,8 +234,45 @@ class EPurchaseController extends Controller
                     'id_vendor'     => $vendor,
                     'po_disc'     => $disc,
                     'po_tax'     => $tax,
+                    'po_status'     => '1',
                     'updated_at'    => date('Y-m-d h:i:s')
                 ]);
+                $pr_data = PurchaseRequest::where('pr_no', '=', $pr_no)->update([
+                    'pr_status'     => '1',
+                    'updated_at'    => date('Y-m-d h:i:s')
+                ]);
+                $emp_data = DB::table('po')
+                    ->join('pr', 'pr.id_pr', '=', 'po.id_pr')
+                    ->join('vendor', 'vendor.id_vendor', '=', 'po.id_vendor')
+                    ->join('users', 'users.id', '=', 'pr.id_employee')->get();
+                foreach ($emp_data as $emp) {
+                    $emp_name = $emp->name;
+                }
+                $mng_data = DB::table('po')
+                    ->join('pr', 'pr.id_pr', '=', 'po.id_pr')
+                    ->join('vendor', 'vendor.id_vendor', '=', 'po.id_vendor')
+                    ->join('users', 'users.id', '=', 'pr.id_manager')->get();
+                foreach ($mng_data as $mng) {
+                    $mng_name = $mng->name;
+                }
+                $po_data = DB::table('po')
+                    ->join('pr', 'pr.id_pr', '=', 'po.id_pr')
+                    ->join('employee', 'employee.id_employee', '=', 'pr.id_employee')
+                    ->join('users', 'users.id', '=', 'employee.id_users')
+                    ->where('po.po_no', '=', $po_no)
+                    ->where('po.po_status', '=', '1')->get();
+
+                $sub_total = DB::table('po')->selectRaw('SUM(total_price) as sub_total')->where('po_no', '=', $po_no)->get();
+                foreach ($sub_total as $subs) {
+                    $sub = $subs->sub_total;
+                }
+
+                $a_disc = ($disc / 100) * $sub;
+                $a_tax = ($tax / 100) * $sub;
+
+                $grand_total = $sub - $a_disc + $a_tax;
+
+                return $this->SendMailPO($emp_name, $mng_name, $po_data, $a_disc, $a_tax, $sub, $grand_total);
                 Alert::success('Success', 'Successfully Insert PO');
                 return redirect()->route('index_po_admin');
                 // dd($po_no);
@@ -490,6 +528,63 @@ class EPurchaseController extends Controller
             });
             Alert::success('Success', 'PR Submitted Successfully');
             return redirect()->route('index_pr_admin');
+        } catch (\Exception $th) {
+            return response()->json([
+                'status'    => false,
+                'message'   => 'Error Send mail : ',
+                'errors'    => $th
+            ], 401);
+            Alert::error('error', 'Failed to Create Data!!');
+            return redirect()->route('create_pr_admin');
+        }
+    }
+
+    public function SendMailPO($emp_name, $mng_name, $po_data, $a_disc, $a_tax, $sub, $grand_total)
+    {
+        try {
+            // return view('emails.po_send', [
+            //     'fullname'      => $emp_name,
+            //     'manager'       => $mng_name,
+            //     'ga'            => Auth::user()->name,
+            //     'po_data'       => $po_data,
+            //     'disc'          => $a_disc,
+            //     'tax'           => $a_tax,
+            //     'sub_total'     => $sub,
+            //     'grand_total'   => $grand_total
+            // ]);
+            Mail::send('emails.po_send', [
+                'fullname'      => $emp_name,
+                'manager'       => $mng_name,
+                'ga'            => Auth::user()->name,
+                'po_data'       => $po_data,
+                'disc'          => $a_disc,
+                'tax'           => $a_tax,
+                'sub_total'     => $sub,
+                'grand_total'   => $grand_total
+            ], function ($mail) {
+                $ga_mail = Auth::user()->email;
+                $id_users = Auth::user()->id;
+                $emp_data   = DB::table('employee')
+                    ->join('users', 'users.id', '=', 'employee.id_users')
+                    ->where('id_users', '=', $id_users)->get();
+                foreach ($emp_data as $item_emp) {
+                    $emp_div = $item_emp->emp_division;
+                }
+
+                $manager_data = DB::table('employee')
+                    ->join('users', 'users.id', '=', 'employee.id_users')
+                    ->where('emp_division', '=', $emp_div)
+                    ->where('emp_position', '=', "Manager")->get();
+                foreach ($manager_data as $manager) {
+                    $manager_email = $manager->email;
+                }
+                // $mail->to($manager_email);
+                $mail->to('sulis.nugroho@inlingua.co.id');
+                $mail->from(config('mail.from.name'));
+                $mail->subject('SATUPINTU - APP | Purchase Order Approval');
+            });
+            Alert::success('Success', 'PO Submitted Successfully');
+            return redirect()->route('index_po_admin');
         } catch (\Exception $th) {
             return response()->json([
                 'status'    => false,

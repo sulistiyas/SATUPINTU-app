@@ -1,5 +1,5 @@
-@include('admin.includes.header')
-@include('admin.includes.sidebar')
+@include('manager.includes.header')
+@include('manager.includes.sidebar')
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <div class="content-header">
@@ -68,10 +68,10 @@
                                               PO Rejected
                                             @endif
                                           </td>
-                                          <td>
+                                          <td align="center">
                                             <div class="btn-group">
-                                                <div class="col-md-8">
-                                                    <button type="button" class="btn btn-block btn-outline-primary" title="Show Data" data-toggle="modal" data-target="#modal_pr_show_manager" id="getPR" data-url="{{ route('show_modal_pr_admin',['id'=>$item_pr->pr_no_1])}}"><i class="fas fa-eye">&nbsp;View Data</i></button>
+                                                <div class="col-md-4">
+                                                    <button type="button" class="btn btn-block btn-outline-primary" title="Show Data" data-toggle="modal" data-target="#modal_pr_show_manager" id="getPR" data-url="{{ route('show_modal_pr_admin',['id'=>$item_pr->pr_no_1])}}"><i class="fas fa-eye">&nbsp;</i></button>
                                                 </div>
                                                 @if ( $item_pr->pr_status  == 3)
                                                   <div class="col-md-8">
@@ -82,6 +82,23 @@
                                                     <button type="button" class="btn btn-block btn-outline-success" title="Add PO" data-toggle="modal" data-target="#modal_po_add" id="getPO" data-url="{{ route('show_modal_po_admin',['id'=>$item_pr->po_no])}}"><i class="fas fa-plus">&nbsp;Submit PO</i></button>
                                                   </div>
                                                 @elseif ( $item_pr->pr_status == 1)
+                                                <form onsubmit="return confirm('Are you sure you want to APPROVE this request ?');" action="{{ route('approve_po_manager') }}" method="POST">
+                                                    @csrf
+                                                    <div class="col-md-4">
+                                                        <input type="hidden" name="txt_po_no" id="txt_po_no" value="{{ $item_pr->po_no }}" readonly>
+                                                        <input type="hidden" name="txt_pr_no" id="txt_pr_no" value="{{ $item_pr->pr_no }}" readonly>
+                                                        <button type="submit" name="btn_approval" id="btn_approval" value="approve_po" class="btn btn-outline-success" title="Approve PO"><i class="fas fa-check"></i></i></button>
+                                                    </div>
+                                                </form>
+                                                <form onsubmit="return confirm('Are you sure you want to REJECT this request ?');" action="{{ route('approve_po_manager') }}" method="POST">
+                                                    @csrf
+                                                    <div class="col-md-4">
+                                                        <input type="hidden" name="txt_po_no" id="txt_po_no" value="{{ $item_pr->po_no }}" readonly>
+                                                        <input type="hidden" name="txt_pr_no" id="txt_pr_no" value="{{ $item_pr->pr_no }}" readonly>
+                                                        <button type="submit" name="btn_approval" id="btn_approval" value="reject_po" class="btn btn-outline-danger" title="Reject PO"><i class="fas fa-times"></i></button>
+                                                    </div>
+                                                </form>
+                                                @elseif ( $item_pr->pr_status == 0)
                                                   <div class="col-md-8">
                                                     <button type="button" class="btn btn-block btn-outline-success" title="Print PO" data-toggle="modal" data-target="#modal_po_add" id="getPO" data-url="{{ route('show_modal_po_admin',['id'=>$item_pr->po_no])}}"><i class="fas fa-print">&nbsp;Print</i></button>
                                                   </div>
@@ -204,7 +221,7 @@
     </div>
     {{-- End View --}}
 </div>
-@include('admin.includes.footer')
+@include('manager.includes.footer')
 <script>
     // Datatables
     $(function () {

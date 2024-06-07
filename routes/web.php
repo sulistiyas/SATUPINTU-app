@@ -90,12 +90,8 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
             Route::POST('/Manager/EPurchase/PR/Approve', [EPurchaseManagerController::class, 'approve_pr_manager'])->name('approve_pr_manager');
             Route::POST('/Manager/EPurchase/PR/Reject', [EPurchaseManagerController::class, 'reject_pr_manager'])->name('reject_pr_manager');
             // Purchase Order
-            Route::get('/Manager/EPurchase/PO/List', [EPurchaseController::class, 'index_po'])->name('index_po_manager');
-            Route::get('/Manager/EPurchase/PO/Create', [EPurchaseController::class, 'create_po'])->name('create_po_manager');
-            Route::post('/Manager/EPurchase/PO/Store', [EPurchaseController::class, 'store_po'])->name('store_po_manager');
-            Route::get('/Manager/EPurchase/PO/Edit/{id}', [EPurchaseController::class, 'edit_po'])->name('edit_po_manager');
-            Route::POST('/Manager/EPurchase/PO/Update/{id}', [EPurchaseController::class, 'update_po'])->name('update_po_manager');
-            Route::delete('/Manager/EPurchase/PO/Destroy/{id}', [EPurchaseController::class, 'destroy_po'])->name('destroy_po_manager');
+            Route::get('/Manager/EPurchase/PO/List', [EPurchaseManagerController::class, 'index_po'])->name('index_po_manager');
+            Route::POST('/Manager/EPurchase/PO/Approve', [EPurchaseManagerController::class, 'approve_po_manager'])->name('approve_po_manager');
             // Vendor
             Route::get('/Admin/EPurchase/Vendor/List', [EPurchaseController::class, 'index_vendor'])->name('index_vendor_admin');
             Route::get('/Admin/EPurchase/Vendor/Create', [EPurchaseController::class, 'create_vendor'])->name('create_vendor_admin');
