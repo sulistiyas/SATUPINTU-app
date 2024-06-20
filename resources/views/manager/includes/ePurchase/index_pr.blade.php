@@ -34,6 +34,7 @@
                                     <tr>
                                         <th>#</th>
                                         <th>PR Number</th>
+                                        <th>Title</th>
                                         <th>Status</th>
                                         <th><i class="fas fa-cog"></i></th>
                                     </tr>
@@ -42,38 +43,67 @@
                                     @foreach ($data as $item_pr)
                                         <tr>
                                           <td>{{ $loop->iteration }}</td>
-                                          <td>{{ $item_pr->pr_no }}</td>
+                                          <td><b>{{ $item_pr->pr_no }}</b></td>
+                                          <td>{{ $item_pr->pr_title }}</td>
                                           <td>
-                                            @if ( $item_pr->pr_status  == 4)
+                                            @if ( $item_pr->pr_status  == 5)
                                               Waiting Manager Approval
-                                            @elseif ( $item_pr->pr_status == 3)
+                                            @elseif ( $item_pr->pr_status == 4)
                                               PR Approved
+                                            @elseif ( $item_pr->pr_status == 3)
+                                              PR Approved - PO Submitting
                                             @elseif ( $item_pr->pr_status == 2)
-                                              PO Submitting
+                                              PR Approved - PO Submitting
                                             @elseif ( $item_pr->pr_status == 1)
                                               PR PO Completed
-                                            @elseif ( $item_pr->pr_status == 5)
-                                              PR Rejected
                                             @elseif ( $item_pr->pr_status == 6)
+                                              PR Rejected
+                                            @elseif ( $item_pr->pr_status == 7)
                                               PO Rejected
                                             @endif
                                           </td>
                                           <td>
                                             <div class="btn-group">
-                                              @if ( $item_pr->pr_status  == 4)
-                                                <button type="button" class="btn btn-app bg-primary" title="Show Data" data-toggle="modal" data-target="#modal_pr_show_manager" id="getPR" data-url="{{ route('show_modal_pr_manager',['id'=>$item_pr->pr_no])}}"><i class="fas fa-eye"></i></button>
+                                              @if ( $item_pr->pr_status  == 5)
+                                              <div class="col-5">
+                                                <button type="button" class="btn btn-outline-primary" title="Show Data" data-toggle="modal" data-target="#modal_pr_show_manager" id="getPR" data-url="{{ route('show_modal_pr_manager',['id'=>$item_pr->pr_no])}}"><i class="fas fa-eye">&nbsp;View Data</i></button>
+                                              </div>
+                                              <div class="col-5">
                                                 <form onsubmit="return confirm('Are you sure you want to APPROVE this request ?');" action="{{ route('approve_pr_manager') }}" method="POST">
                                                   @csrf
                                                   <input type="hidden" name="txt_pr_no" id="txt_pr_no" value="{{ $item_pr->pr_no }}" readonly>
-                                                  <button type="submit" name="btn_approval" id="btn_approval" value="approve_pr" class="btn btn-app bg-success" title="Approve PR"><i class="fas fa-check"></i></i></button>
+                                                  <button type="submit" name="btn_approval" id="btn_approval" value="approve_pr" class="btn btn-outline-success" title="Approve PR"><i class="fas fa-check">&nbsp; Approve</i></button>
                                                 </form>
+                                              </div>
+                                              <div class="col-4">
                                                 <form onsubmit="return confirm('Are you sure you want to REJECT this request ?');" action="{{ route('approve_pr_manager') }}" method="POST">
                                                   @csrf
                                                   <input type="hidden" name="txt_pr_no" id="txt_pr_no" value="{{ $item_pr->pr_no }}" readonly>
-                                                  <button type="submit" name="btn_approval" id="btn_approval" value="reject_pr" class="btn btn-app bg-danger" title="Reject PR"><i class="fas fa-times"></i></button>
+                                                  <button type="submit" name="btn_approval" id="btn_approval" value="reject_pr" class="btn btn-outline-danger" title="Reject PR"><i class="fas fa-times">&nbsp; Reject</i></button>
                                                 </form>
-                                              @else
-                                                <button type="button" class="btn btn-app bg-primary" title="Show Data" data-toggle="modal" data-target="#modal_pr_show_manager" id="getPR" data-url="{{ route('show_modal_pr_manager',['id'=>$item_pr->pr_no])}}"><i class="fas fa-eye"></i></button>
+                                              </div>
+                                              @elseif ( $item_pr->pr_status  == 4 || $item_pr->pr_status  == 3 || $item_pr->pr_status  == 2 || $item_pr->pr_status  == 1)
+                                              <div class="col-7">
+                                                <button type="button" class="btn btn-outline-primary" title="Show Data" data-toggle="modal" data-target="#modal_pr_show_manager" id="getPR" data-url="{{ route('show_modal_pr_manager',['id'=>$item_pr->pr_no])}}"><i class="fas fa-eye">&nbsp;View Data</i></button>
+                                              </div>
+                                              <div class="col-6">
+                                                <form action="{{ route('print_pr_manager') }}" method="POST">
+                                                  @csrf
+                                                  <input type="hidden" name="txt_pr_no" id="txt_pr_no" value="{{ $item_pr->pr_no }}">
+                                                  <button type="submit" class="btn btn-outline-success" id="print_pr"><i class="fas fa-print">&nbsp;Print PR</i></button>
+                                                </form>
+                                              </div>
+                                              {{-- @elseif ($item_pr->pr_status  == 2)
+                                              <div class="col-7">
+                                                <button type="button" class="btn btn-outline-primary" title="Show Data" data-toggle="modal" data-target="#modal_pr_show_manager" id="getPR" data-url="{{ route('show_modal_pr_manager',['id'=>$item_pr->pr_no])}}"><i class="fas fa-eye">&nbsp;View Data</i></button>
+                                              </div>
+                                              <div class="col-6">
+                                                <form action="{{ route('print_pr_manager') }}" method="POST">
+                                                  @csrf
+                                                  <input type="hidden" name="txt_pr_no" id="txt_pr_no" value="{{ $item_pr->pr_no }}">
+                                                  <button type="submit" class="btn btn-outline-success" id="print_pr"><i class="fas fa-print">&nbsp;Print PR</i></button>
+                                                </form>
+                                              </div> --}}
                                               @endif
                                             </div>
                                           </td>

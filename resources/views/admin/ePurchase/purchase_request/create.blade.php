@@ -50,6 +50,14 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-6">
+                                        <div class="form-group">
+                                            <label for="txt_pr_title">PR Title</label>
+                                            <input type="text" name="txt_pr_title" id="txt_pr_title" class="form-control" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
                                         <button type="button" class="float-sm-left btn btn-primary" id="add_btn" name="add_btn">
                                             <i class="fas fa-plus">&nbsp;Add New Row</i>
                                         </button>

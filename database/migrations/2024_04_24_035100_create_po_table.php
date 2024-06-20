@@ -21,8 +21,8 @@ return new class extends Migration
             $table->date('po_date');
             $table->string('po_status');
             $table->string('po_approve');
-            $table->string('po_disc');
-            $table->string('po_tax');
+            $table->string('po_disc')->nullable();
+            $table->string('po_tax')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

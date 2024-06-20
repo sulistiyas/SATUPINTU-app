@@ -3,14 +3,15 @@
 namespace App\Http\Controllers\Manager;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
-use App\Http\Controllers\Controller;
 use App\Models\PurchaseOrder;
 use App\Models\PurchaseRequest;
-use Haruncpi\LaravelIdGenerator\IdGenerator;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use RealRashid\SweetAlert\Facades\Alert;
+use Haruncpi\LaravelIdGenerator\IdGenerator;
 
 class EPurchaseManagerController extends Controller
 {
@@ -41,7 +42,7 @@ class EPurchaseManagerController extends Controller
             try {
                 $status = "Approved";
                 $pr_data = PurchaseRequest::where('pr_no', '=', $pr_no)->update([
-                    'pr_status'     => '3',
+                    'pr_status'     => '4',
                     'updated_at'    => date('Y-m-d h:i:s')
                 ]);
                 return $this->SendMailPRAction($pr_no, $status);
@@ -61,7 +62,7 @@ class EPurchaseManagerController extends Controller
             try {
                 $status = "Rejected";
                 $pr_data = PurchaseRequest::where('pr_no', '=', $pr_no)->update([
-                    'pr_status'     => '5',
+                    'pr_status'     => '6',
                     'updated_at'    => date('Y-m-d h:i:s')
                 ]);
                 return $this->SendMailPRAction($pr_no, $status);
@@ -77,6 +78,24 @@ class EPurchaseManagerController extends Controller
                 return redirect()->route('index_pr_manager');
             }
         }
+    }
+
+    public function print_pr_manager(Request $request)
+    {
+        $pr_no = $request->txt_pr_no;
+        $data = ['pr_no' => $pr_no];
+        $pdf = Pdf::loadView('components.pdf.pr_print', $data);
+        // $pdf->loadHTML($pr_no);
+        return $pdf->stream("$pr_no.pdf");
+    }
+
+    public function print_po_manager(Request $request)
+    {
+        $po_no = $request->txt_po_no;
+        $data = ['po_no' => $po_no];
+        $pdf = Pdf::loadView('components.pdf.po_print', $data);
+        // $pdf->loadHTML($po_no);
+        return $pdf->stream("$po_no.pdf");
     }
 
     public function index_po()
@@ -101,12 +120,12 @@ class EPurchaseManagerController extends Controller
             try {
                 $status = "Approved";
                 $po_data = PurchaseOrder::where('po_no', '=', $po_no)->update([
-                    'po_status'     => '0',
+                    'po_status'     => '1',
                     'updated_at'    => date('Y-m-d h:i:s')
                 ]);
 
                 $pr_data = PurchaseRequest::where('pr_no', '=', $pr_no)->update([
-                    'pr_status'     => '0',
+                    'pr_status'     => '1',
                     'updated_at'    => date('Y-m-d h:i:s')
                 ]);
                 //  Mail Data
@@ -159,12 +178,12 @@ class EPurchaseManagerController extends Controller
             try {
                 $status = "Rejected";
                 $po_data = PurchaseOrder::where('po_no', '=', $po_no)->update([
-                    'po_status'     => '6',
+                    'po_status'     => '7',
                     'updated_at'    => date('Y-m-d h:i:s')
                 ]);
 
                 $pr_data = PurchaseRequest::where('pr_no', '=', $pr_no)->update([
-                    'pr_status'     => '6',
+                    'pr_status'     => '7',
                     'updated_at'    => date('Y-m-d h:i:s')
                 ]);
                 //  Mail Data
@@ -246,6 +265,41 @@ class EPurchaseManagerController extends Controller
             ->join('users', 'users.id', '=', 'employee.id_users')
             ->where('pr.pr_no', '=', $id)->get();
         return view('components.modals.pr_manager_show', ['data_pr' => $pr_data]);
+    }
+    public function show_modal_po_price_manager(string $id)
+    {
+        $data_po = DB::table('po')
+            ->join('pr', 'pr.id_pr', '=', 'po.id_pr')
+            ->join('employee', 'employee.id_employee', '=', 'pr.id_employee')
+            ->join('users', 'users.id', '=', 'employee.id_users')
+            ->where('po.po_no', '=', $id)->get();
+        // $pr_data = DB::table('pr')->where('pr_no', '=', $id)->get();
+        $total_prices = DB::table('po')->selectRaw('SUM(total_price) as grand_total')->where('po_no', '=', $id)->get();
+        return view('components.modals.po_price_manager', compact('data_po', 'total_prices'));
+    }
+    public function show_modal_po_price_manager_comp(string $id)
+    {
+        $data_po = DB::table('po')
+            ->join('pr', 'pr.id_pr', '=', 'po.id_pr')
+            ->join('employee', 'employee.id_employee', '=', 'pr.id_employee')
+            ->join('users', 'users.id', '=', 'employee.id_users')
+            ->join('vendor', 'vendor.id_vendor', '=', 'po.id_vendor')
+            ->where('po.po_no', '=', $id)->get();
+        // $pr_data = DB::table('pr')->where('pr_no', '=', $id)->get();
+        foreach ($data_po as $po_datas) {
+            $disc = $po_datas->po_disc;
+            $tax = $po_datas->po_tax;
+        }
+        $sub_total = DB::table('po')->selectRaw('SUM(total_price) as sub_total')->where('po_no', '=', $id)->get();
+        foreach ($sub_total as $subs) {
+            $sub = $subs->sub_total;
+        }
+
+        $a_disc = ($disc / 100) * $sub;
+        $a_tax = ($tax / 100) * $sub;
+
+        $grand_total = $sub - $a_disc + $a_tax;
+        return view('components.modals.po_price_manager_comp', compact('data_po', 'sub', 'grand_total', 'disc', 'tax'));
     }
 
 

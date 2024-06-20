@@ -63,7 +63,9 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
             Route::POST('/Admin/EPurchase/Vendor/Update/{id}', [EPurchaseController::class, 'update_vendor'])->name('update_vendor_admin');
             Route::delete('/Admin/EPurchase/Vendor/Destroy/{id}', [EPurchaseController::class, 'destroy_vendor'])->name('destroy_vendor_admin');
 
-
+            // Report e-Purchase
+            Route::post('/Admin/EPurchase/PR/Print/', [EPurchaseController::class, 'print_pr_admin'])->name('print_pr_admin');
+            Route::post('/Admin/EPurchase/PO/Print/', [EPurchaseController::class, 'print_po_admin'])->name('print_po_admin');
             // Show Modal Data
             Route::get('show_modal_pr_admin/{id}', [EPurchaseController::class, 'show_modal_pr_admin'])->name('show_modal_pr_admin');
             Route::get('show_modal_price_admin/{id}', [EPurchaseController::class, 'show_modal_price_admin'])->name('show_modal_price_admin');
@@ -100,9 +102,12 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
             Route::POST('/Admin/EPurchase/Vendor/Update/{id}', [EPurchaseController::class, 'update_vendor'])->name('update_vendor_admin');
             Route::delete('/Admin/EPurchase/Vendor/Destroy/{id}', [EPurchaseController::class, 'destroy_vendor'])->name('destroy_vendor_admin');
             // Report e-Purchase
-            // 
+            Route::post('/Manager/EPurchase/PR/Print/', [EPurchaseManagerController::class, 'print_pr_manager'])->name('print_pr_manager');
+            Route::post('/Manager/EPurchase/PO/Print/', [EPurchaseManagerController::class, 'print_po_manager'])->name('print_po_manager');
             // Show Modal Data
             Route::get('show_modal_pr_manager/{id}', [EPurchaseManagerController::class, 'show_modal_pr_manager'])->name('show_modal_pr_manager');
+            Route::get('show_modal_po_price_manager/{id}', [EPurchaseManagerController::class, 'show_modal_po_price_manager'])->name('show_modal_po_price_manager');
+            Route::get('show_modal_po_price_manager_comp/{id}', [EPurchaseManagerController::class, 'show_modal_po_price_manager_comp'])->name('show_modal_po_price_manager_comp');
         });
         // Route::middleware(['auth', 'userLevel:2'])->group(function () {
         //     echo json_encode("User Level = 2");

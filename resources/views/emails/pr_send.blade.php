@@ -11,6 +11,46 @@
             width: auto;
         }
     </style>
+    <style>
+        #pr {
+          font-family: Arial, Helvetica, sans-serif;
+          border-collapse: collapse;
+          width: 100%;
+        }
+        
+        #pr td, #pr th {
+          border: 1px solid #ddd;
+          padding: 8px;
+        }
+        
+        #pr tr:nth-child(even){background-color: #f2f2f2;}
+        
+        #pr tr:hover {background-color: #ddd;}
+        
+        #pr th {
+          padding-top: 12px;
+          padding-bottom: 12px;
+          text-align: left;
+          background-color: #2563d4;
+          color: white;
+        }
+
+        #pr #sub {
+          padding-top: 12px;
+          padding-bottom: 12px;
+          text-align: right;
+          background-color: #2563d4;
+          color: white;
+        }
+
+        #pr #sub2 {
+          padding-top: 12px;
+          padding-bottom: 12px;
+          text-align: center;
+          background-color: #2563d4;
+          color: white;
+        }
+    </style>
 </head>
 
 <body style="margin:0px; background: #f8f8f8; ">
@@ -32,13 +72,16 @@
                         <td>
                             <b>Dear {{ $manager }},</b>
                             <p>You get a message from {{ $fullname }}, waiting for PR ( Purchase Request ) approval.</p>
-                            
+                            @foreach ($data as $pr_title)
+                                
+                            @endforeach
                             <ul>
                                 <li><b>Job Number : {{ $job_number }}</b> </li>
                                 <li><b>PR Number : {{ $pr_no }}</b> </li>
+                                <li><b>PR Title : {{ $pr_title['pr_title'] }}</b> </li>
                                 <li><b>Items :</b> </li>
                             </ul>
-                            <table class="table" border="1" cellpadding="0" cellspacing="0" style="width: 100%;">
+                            <table id="pr">
                                 <thead>
                                     <tr align="center">
                                         <th style="font-weight: 900;">No.</th>

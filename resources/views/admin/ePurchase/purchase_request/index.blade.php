@@ -35,6 +35,7 @@
                                     <tr>
                                         <th>#</th>
                                         <th>PR Number</th>
+                                        <th>Title</th>
                                         <th>Status</th>
                                         <th><i class="fas fa-cog"></i></th>
                                     </tr>
@@ -44,38 +45,68 @@
                                         <tr>
                                           <td>{{ $loop->iteration }}</td>
                                           <td>{{ $item_pr->pr_no }}</td>
+                                          <td>{{ $item_pr->pr_title }}</td>
                                           <td>
-                                            @if ( $item_pr->pr_status  == 4)
+                                            @if ( $item_pr->pr_status  == 5)
                                               Waiting Manager Approval
-                                            @elseif ( $item_pr->pr_status == 3)
+                                            @elseif ( $item_pr->pr_status == 4)
                                               PR Approved
+                                            @elseif ( $item_pr->pr_status == 3)
+                                              PR Approved - PO Submitting
                                             @elseif ( $item_pr->pr_status == 2)
-                                              PO Submitting
+                                              PR Approved - PO Submitting
                                             @elseif ( $item_pr->pr_status == 1)
                                               PR PO Completed
-                                            @elseif ( $item_pr->pr_status == 5)
-                                              PR Rejected
                                             @elseif ( $item_pr->pr_status == 6)
+                                              PR Rejected
+                                            @elseif ( $item_pr->pr_status == 7)
                                               PO Rejected
                                             @endif
                                           </td>
                                           <td>
                                             <div class="btn-group">
-                                                <button type="button" class="btn btn-default btn-flat" data-toggle="dropdown" aria-expanded="false">
-                                                    <i class="fas fa-align-justify"></i>
-                                                </button>
-                                                <div class="dropdown-menu" role="menu" style="">
+                                              @if ($item_pr->pr_status  == 5)
+                                                  <div class="col-md-7">
+                                                    <button type="button" class="btn btn-outline-primary" title="Show Data" data-toggle="modal" data-target="#modal_pr_show" id="getPR" data-url="{{ route('show_modal_pr_admin',['id'=>$item_pr->pr_no])}}"><i class="fas fa-eye">&nbsp;View Data</i></button>
+                                                  </div>
+                                                  <div class="col-md-8">
                                                     <form onsubmit="return confirm('Apakah Anda Yakin ingin Menghapus data ?');" action="{{ route('destroy_pr_admin',[$item_pr->pr_no]) }}" method="POST">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        
-                                                        <a href="javascript:void(0)" id="show-data_update" data-url="{{ route('edit_pr_admin',$item_pr->pr_no) }}" class="dropdown-item"><i class="fas fa-pencil-alt"> Update</i></a>
-                                                        <button type="submit" class="dropdown-item"><i class="fas fa-trash-alt"> Delete </i></button>
+                                                      @csrf
+                                                      @method('DELETE')
+                                                      <button type="submit" class="btn btn-outline-danger" title="Show Data" data-toggle="modal" data-target="#modal_pr_show_manager" id="getPR" data-url="{{ route('show_modal_pr_admin',['id'=>$item_pr->pr_no])}}"><i class="fas fa-trash">&nbsp;&nbsp;Delete &nbsp;&nbsp;</i></button>
                                                     </form>
-                                                    <button data-toggle="modal" data-target="#modal_pr_show" id="getPR"  type="button" class="dropdown-item" data-url="{{ route('show_modal_pr_admin',['id'=>$item_pr->pr_no])}}">
-                                                      <i class="far fa-eye">&nbsp;View</i>
-                                                    </button>
-                                                </div>
+                                                  </div>
+                                              @elseif ( $item_pr->pr_status == 4 || $item_pr->pr_status == 3 || $item_pr->pr_status == 2 )
+                                                  <div class="col-md-7">
+                                                    <button type="button" class="btn btn-outline-primary" title="Show Data" data-toggle="modal" data-target="#modal_pr_show" id="getPR" data-url="{{ route('show_modal_pr_admin',['id'=>$item_pr->pr_no])}}"><i class="fas fa-eye">&nbsp;View Data</i></button>
+                                                  </div>
+                                                  <div class="col-md-8">
+                                                    <form action="{{ route('print_pr_admin') }}" method="POST">
+                                                      @csrf
+                                                      <input type="hidden" name="txt_pr_no" id="txt_pr_no" value="{{ $item_pr->pr_no }}">
+                                                      <button type="submit" class="btn btn-outline-success" id="print_pr"><i class="fas fa-print">&nbsp;Print PR</i></button>
+                                                    </form>
+                                                  </div>
+                                              @elseif ( $item_pr->pr_status == 1)
+                                                  <div class="col-md-7">
+                                                    <button type="button" class="btn btn-outline-primary" title="Show Data" data-toggle="modal" data-target="#modal_pr_show" id="getPR" data-url="{{ route('show_modal_pr_admin',['id'=>$item_pr->pr_no])}}"><i class="fas fa-eye">&nbsp;View Data</i></button>
+                                                  </div>
+                                                  <div class="col-md-8">
+                                                    <button type="button" class="btn btn-outline-success" title="Show Data" data-toggle="modal" data-target="#modal_pr_show_manager" id="getPR" data-url="{{ route('show_modal_pr_admin',['id'=>$item_pr->pr_no])}}"><i class="fas fa-print">&nbsp;Print PO</i></button>
+                                                  </div>
+                                              @endif
+                                                  <div class="dropdown-menu" role="menu" style="">
+                                                      <form onsubmit="return confirm('Apakah Anda Yakin ingin Menghapus data ?');" action="{{ route('destroy_pr_admin',[$item_pr->pr_no]) }}" method="POST">
+                                                          @csrf
+                                                          @method('DELETE')
+                                                          
+                                                          <a href="javascript:void(0)" id="show-data_update" data-url="{{ route('edit_pr_admin',$item_pr->pr_no) }}" class="dropdown-item"><i class="fas fa-pencil-alt"> Update</i></a>
+                                                          <button type="submit" class="dropdown-item"><i class="fas fa-trash-alt"> Delete </i></button>
+                                                      </form>
+                                                      <button data-toggle="modal" data-target="#modal_pr_show" id="getPR"  type="button" class="dropdown-item" data-url="{{ route('show_modal_pr_admin',['id'=>$item_pr->pr_no])}}">
+                                                        <i class="far fa-eye">&nbsp;View</i>
+                                                      </button>
+                                                  </div>
                                             </div>
                                           </td>
                                         </tr>

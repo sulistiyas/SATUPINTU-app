@@ -52,38 +52,55 @@
                                             @endif
                                           </td>
                                           <td>
-                                            @if ( $item_pr->pr_status  == 4)
+                                            @if ( $item_pr->pr_status  == 5)
                                               Waiting Manager Approval
+                                            @elseif ( $item_pr->pr_status == 4)
+                                              PR Approved
                                             @elseif ( $item_pr->pr_status == 3)
                                               PR Approved - PO Submitting
                                             @elseif ( $item_pr->pr_status == 2)
-                                              PO Submitting
+                                              PR Approved - PO Submitting
                                             @elseif ( $item_pr->pr_status == 1)
-                                              Waiting PO Approval
-                                            @elseif ( $item_pr->pr_status == 0)
-                                              PR & PO Approved
-                                            @elseif ( $item_pr->pr_status == 5)
-                                              PR Rejected
+                                              PR PO Completed
                                             @elseif ( $item_pr->pr_status == 6)
+                                              PR Rejected
+                                            @elseif ( $item_pr->pr_status == 7)
                                               PO Rejected
                                             @endif
                                           </td>
                                           <td>
                                             <div class="btn-group">
-                                                <div class="col-md-8">
+                                                
+                                                @if ( $item_pr->pr_status  == 5)
+                                                  <div class="col-12">
                                                     <button type="button" class="btn btn-block btn-outline-primary" title="Show Data" data-toggle="modal" data-target="#modal_pr_show_manager" id="getPR" data-url="{{ route('show_modal_pr_admin',['id'=>$item_pr->pr_no_1])}}"><i class="fas fa-eye">&nbsp;View Data</i></button>
-                                                </div>
-                                                @if ( $item_pr->pr_status  == 3)
-                                                  <div class="col-md-8">
+                                                  </div>    
+                                                @elseif ($item_pr->pr_status  == 4)
+                                                  <div class="col-7">
+                                                    <button type="button" class="btn btn-block btn-outline-primary" title="Show Data" data-toggle="modal" data-target="#modal_pr_show_manager" id="getPR" data-url="{{ route('show_modal_pr_admin',['id'=>$item_pr->pr_no_1])}}"><i class="fas fa-eye">&nbsp;View Data</i></button>
+                                                  </div>
+                                                  <div class="col-8">
                                                     <button type="button" class="btn btn-block btn-outline-success" title="Add Price" data-toggle="modal" data-target="#modal_price_add" id="getPrice" data-url="{{ route('show_modal_price_admin',['id'=>$item_pr->pr_no_1])}}"><i class="fas fa-plus">&nbsp;Add Price</i></button>
                                                   </div>
-                                                @elseif ( $item_pr->pr_status == 2)
-                                                  <div class="col-md-8">
+                                                @endif
+                                                @if ( $item_pr->pr_status  == 3)
+                                                  <div class="col-7">
+                                                    <button type="button" class="btn btn-block btn-outline-primary" title="Show Data" data-toggle="modal" data-target="#modal_po_show_admin" id="showPO" data-url="{{ route('show_modal_po_admin',['id'=>$item_pr->po_no])}}"><i class="fas fa-eye">&nbsp;View Data</i></button>
+                                                  </div>
+                                                  <div class="col-8">
                                                     <button type="button" class="btn btn-block btn-outline-success" title="Add PO" data-toggle="modal" data-target="#modal_po_add" id="getPO" data-url="{{ route('show_modal_po_admin',['id'=>$item_pr->po_no])}}"><i class="fas fa-plus">&nbsp;Submit PO</i></button>
                                                   </div>
+                                                @elseif ( $item_pr->pr_status == 2)
+                                                  <div class="col-12">
+                                                    <button type="button" class="btn btn-block btn-outline-primary" title="Show Data" data-toggle="modal" data-target="#modal_po_show_admin" id="showPO" data-url="{{ route('show_modal_po_admin',['id'=>$item_pr->po_no])}}"><i class="fas fa-eye">&nbsp;View Data</i></button>
+                                                  </div>
                                                 @elseif ( $item_pr->pr_status == 1)
-                                                  <div class="col-md-8">
-                                                    <button type="button" class="btn btn-block btn-outline-success" title="Print PO" data-toggle="modal" data-target="#modal_po_add" id="getPO" data-url="{{ route('show_modal_po_admin',['id'=>$item_pr->po_no])}}"><i class="fas fa-print">&nbsp;Print</i></button>
+                                                  <div class="col-12">
+                                                    <form action="{{ route('print_po_admin') }}" method="POST">
+                                                      @csrf
+                                                      <input type="hidden" name="txt_po_no" id="txt_po_no" value="{{ $item_pr->po_no }}">
+                                                      <button type="submit" class="btn btn-block btn-outline-success" title="Print PO"><i class="fas fa-print">&nbsp;Print PO</i></button>
+                                                    </form>
                                                   </div>
                                                 @endif
                                                 
@@ -150,7 +167,7 @@
                   <table class="table">
                     <tr>
                       <th><Label for="txt_disc">Discount</Label></th>
-                      <th><input type="number" name="txt_disc" id="txt_disc" required class="form-control"></th>
+                      <th><input type="number" name="txt_disc" id="txt_disc" class="form-control"></th>
                     </tr>
                     <tr>
                       <th><label for="txt_tax">Tax</label></th>
@@ -187,7 +204,7 @@
             <i class="fas fa-2x fa-sync fa-spin"></i>
           </div>
           <div class="modal-header">
-              <h4 class="modal-title">PO Detail</h4>
+              <h4 class="modal-title">PR Detail</h4>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
               </button>
@@ -203,6 +220,29 @@
       </div>
     </div>
     {{-- End View --}}
+    {{-- Modal Show PO --}}
+    <div class="modal fade" id="modal_po_show_admin">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="overlay" id="modal-loader_4">
+            <i class="fas fa-2x fa-sync fa-spin"></i>
+          </div>
+          <div class="modal-header">
+              <h4 class="modal-title">PO Detail</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="modal-body">
+             <div id="dynamic-content_4"></div>
+             
+          </div>
+          <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
 </div>
 @include('admin.includes.footer')
 <script>
@@ -306,6 +346,38 @@
           .fail(function(){
               $('#dynamic-content_3').html('<i class="glyphicon glyphicon-info-sign"></i> Something went wrong, Please try again...');
               $('#modal-loader_3').hide();
+          });
+  
+      });
+
+  });
+</script>
+<script>
+  $(document).ready(function(){
+
+      $(document).on('click', '#showPO', function(e){
+  
+          e.preventDefault();
+  
+          var url = $(this).data('url');
+  
+          $('#dynamic-content_4').html(''); // leave it blank before ajax call
+          $('#modal-loader_4').show();      // load ajax loader
+  
+          $.ajax({
+              url: url,
+              type: 'GET',
+              dataType: 'html'
+          })
+          .done(function(data){
+              console.log(data);  
+              $('#dynamic-content_4').html('');    
+              $('#dynamic-content_4').html(data); // load response 
+              $('#modal-loader_4').hide();        // hide ajax loader   
+          })
+          .fail(function(){
+              $('#dynamic-content_4').html('<i class="glyphicon glyphicon-info-sign"></i> Something went wrong, Please try again...');
+              $('#modal-loader_4').hide();
           });
   
       });

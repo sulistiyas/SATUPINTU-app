@@ -9,6 +9,8 @@ use App\Models\PurchaseRequest;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\PurchaseOrder;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Dompdf\Adapter\PDFLib;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -25,7 +27,7 @@ class EPurchaseController extends Controller
     {
         $id_usr = Auth::user()->id;
         $get_data = DB::table('pr')
-            ->join('po', 'po.id_pr', '=', 'pr.id_pr')
+            ->leftJoin('po', 'po.id_pr', '=', 'pr.id_pr')
             ->join('employee', 'employee.id_employee', '=', 'pr.id_employee')
             ->join('users', 'users.id', '=', 'employee.id_users')
             ->where('users.id', '=', $id_usr)
@@ -60,6 +62,7 @@ class EPurchaseController extends Controller
 
         try {
             $rows       = $request->rows;
+            $pr_title   = $request->txt_pr_title;
             $desc       = $request->description;
             $qty        = $request->quantity;
             $unit       = $request->unit;
@@ -87,10 +90,11 @@ class EPurchaseController extends Controller
                     'pr_no'                 => $pr_no,
                     'job_number'            => $jn,
                     'id_employee'           => $idusers,
+                    'pr_title'              => $pr_title,
                     'pr_desc'               => $desc[$key],
                     'pr_qty'                => $qty[$key],
                     'pr_unit'               => $unit[$key],
-                    'pr_status'             => 4,
+                    'pr_status'             => 5,
                     'pr_date'               => date('Y-m-d'),
                     'id_manager'            => $manager_id,
                     'created_at'            => date('Y-m-d h:i:s'),
@@ -117,6 +121,15 @@ class EPurchaseController extends Controller
             Alert::error('error', 'Failed to Create Data!!');
             return redirect()->route('create_pr_admin');
         }
+    }
+
+    public function print_pr_admin(Request $request)
+    {
+        $pr_no = $request->txt_pr_no;
+        $data = ['pr_no' => $pr_no];
+        $pdf = Pdf::loadView('components.pdf.pr_print', $data);
+        // $pdf->loadHTML($pr_no);
+        return $pdf->stream("$pr_no.pdf");
     }
 
 
@@ -234,11 +247,11 @@ class EPurchaseController extends Controller
                     'id_vendor'     => $vendor,
                     'po_disc'     => $disc,
                     'po_tax'     => $tax,
-                    'po_status'     => '1',
+                    'po_status'     => '2',
                     'updated_at'    => date('Y-m-d h:i:s')
                 ]);
                 $pr_data = PurchaseRequest::where('pr_no', '=', $pr_no)->update([
-                    'pr_status'     => '1',
+                    'pr_status'     => '2',
                     'updated_at'    => date('Y-m-d h:i:s')
                 ]);
                 $emp_data = DB::table('po')
@@ -260,7 +273,7 @@ class EPurchaseController extends Controller
                     ->join('employee', 'employee.id_employee', '=', 'pr.id_employee')
                     ->join('users', 'users.id', '=', 'employee.id_users')
                     ->where('po.po_no', '=', $po_no)
-                    ->where('po.po_status', '=', '1')->get();
+                    ->where('po.po_status', '=', '2')->get();
 
                 $sub_total = DB::table('po')->selectRaw('SUM(total_price) as sub_total')->where('po_no', '=', $po_no)->get();
                 foreach ($sub_total as $subs) {
@@ -317,14 +330,14 @@ class EPurchaseController extends Controller
                         'price'         => $price[$key],
                         'total_price'   => $price_total_unit,
                         'po_date'       => date('Y-m-d'),
-                        'po_status'     => '2',
+                        'po_status'     => '3   ',
                         'created_at'    => date('Y-m-d h:i:s'),
                         'updated_at'    => date('Y-m-d h:i:s'),
                     );
                 }
                 PurchaseOrder::insert($array_data);
                 $pr_data = PurchaseRequest::where('pr_no', '=', $txt_pr_no)->update([
-                    'pr_status'     => '2',
+                    'pr_status'     => '3',
                     'updated_at'    => date('Y-m-d h:i:s')
                 ]);
                 Alert::success('Success', 'Successfully Insert Price');
@@ -345,7 +358,14 @@ class EPurchaseController extends Controller
     {
         //
     }
-
+    public function print_po_admin(Request $request)
+    {
+        $po_no = $request->txt_po_no;
+        $data = ['po_no' => $po_no];
+        $pdf = Pdf::loadView('components.pdf.po_print', $data);
+        // $pdf->loadHTML($po_no);
+        return $pdf->stream("$po_no.pdf");
+    }
     public function edit_po(string $id)
     {
         //

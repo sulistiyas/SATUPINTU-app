@@ -24,17 +24,19 @@
             <th>Status </th>
             <td>:</td>
             <th>
-              @if ( $item_pr->pr_status  == 4)
+              @if ( $item_single->pr_status  == 5)
                 Waiting Manager Approval
-              @elseif ( $item_pr->pr_status == 3)
+              @elseif ( $item_single->pr_status == 4)
                 PR Approved
-              @elseif ( $item_pr->pr_status == 2)
-                PO Submitting
-              @elseif ( $item_pr->pr_status == 1)
+              @elseif ( $item_single->pr_status == 3)
+                PR Approved - PO Submitting
+              @elseif ( $item_single->pr_status == 2)
+                PR Approved - PO Submitting
+              @elseif ( $item_single->pr_status == 1)
                 PR PO Completed
-              @elseif ( $item_pr->pr_status == 5)
+              @elseif ( $item_single->pr_status == 6)
                 PR Rejected
-              @elseif ( $item_pr->pr_status == 6)
+              @elseif ( $item_single->pr_status == 7)
                 PO Rejected
               @endif
             </th>

@@ -43,67 +43,95 @@
                                     @foreach ($data as $item_pr)
                                         <tr>
                                           <td>{{ $loop->iteration }}</td>
-                                          <td>{{ $item_pr->pr_no_1 }}</td>
+                                          <td><b>{{ $item_pr->pr_no_1 }}</b></td>
                                           <td>
                                             @if ($item_pr->po_no == "")
                                                 <p style="color: gray">PO Empty</p>
                                             @else
-                                                {{ $item_pr->po_no }}
+                                                <p style="color: rgb(0, 0, 238)"><b>{{ $item_pr->po_no }}</b></p>
                                             @endif
                                           </td>
                                           <td>
-                                            @if ( $item_pr->pr_status  == 4)
+                                            @if ( $item_pr->pr_status  == 5)
                                               Waiting Manager Approval
+                                            @elseif ( $item_pr->pr_status == 4)
+                                              PR Approved
                                             @elseif ( $item_pr->pr_status == 3)
                                               PR Approved - PO Submitting
                                             @elseif ( $item_pr->pr_status == 2)
-                                              PO Submitting
+                                              PR Approved - PO Submitting
                                             @elseif ( $item_pr->pr_status == 1)
-                                              Waiting PO Approval
-                                            @elseif ( $item_pr->pr_status == 0)
-                                              PR & PO Approved
-                                            @elseif ( $item_pr->pr_status == 5)
-                                              PR Rejected
+                                              PR PO Completed
                                             @elseif ( $item_pr->pr_status == 6)
+                                              PR Rejected
+                                            @elseif ( $item_pr->pr_status == 7)
                                               PO Rejected
                                             @endif
                                           </td>
-                                          <td align="center">
+                                          <td>
                                             <div class="btn-group">
-                                                <div class="col-md-4">
-                                                    <button type="button" class="btn btn-block btn-outline-primary" title="Show Data" data-toggle="modal" data-target="#modal_pr_show_manager" id="getPR" data-url="{{ route('show_modal_pr_admin',['id'=>$item_pr->pr_no_1])}}"><i class="fas fa-eye">&nbsp;</i></button>
-                                                </div>
-                                                @if ( $item_pr->pr_status  == 3)
-                                                  <div class="col-md-8">
-                                                    <button type="button" class="btn btn-block btn-outline-success" title="Add Price" data-toggle="modal" data-target="#modal_price_add" id="getPrice" data-url="{{ route('show_modal_price_admin',['id'=>$item_pr->pr_no_1])}}"><i class="fas fa-plus">&nbsp;Add Price</i></button>
+                                                @if ( $item_pr->pr_status  == 5)
+                                                  <div class="col-12">
+                                                    <button type="button" class="btn btn-outline-primary" title="Show Data" data-toggle="modal" data-target="#modal_pr_show_manager" id="getPR" data-url="{{ route('show_modal_pr_manager',['id'=>$item_pr->pr_no_1])}}"><i class="fas fa-eye">&nbsp;View Data</i></button>
+                                                  </div>
+                                                @elseif ($item_pr->pr_status  == 4)
+                                                  <div class="col-7">
+                                                    <button type="button" class="btn btn-outline-primary" title="Show Data" data-toggle="modal" data-target="#modal_pr_show_manager" id="getPR" data-url="{{ route('show_modal_pr_manager',['id'=>$item_pr->pr_no_1])}}"><i class="fas fa-eye">&nbsp;View Data</i></button>
+                                                  </div>
+                                                  <div class="col-6">
+                                                    <form action="{{ route('print_pr_manager') }}" method="POST">
+                                                      @csrf
+                                                      <input type="hidden" name="txt_pr_no" id="txt_pr_no" value="{{ $item_pr->pr_no }}">
+                                                      <button type="submit" class="btn btn-outline-success" id="print_pr"><i class="fas fa-print">&nbsp;Print PR</i></button>
+                                                    </form>
+                                                  </div>
+                                                @elseif ( $item_pr->pr_status  == 3)
+                                                  <div class="col-7">
+                                                    <button type="button" class="btn btn-outline-primary" title="Show Data" data-toggle="modal" data-target="#modal_show_price_manager" id="getPOPrice" data-url="{{ route('show_modal_po_price_manager',['id'=>$item_pr->po_no])}}"><i class="fas fa-eye">&nbsp;View Data</i></button>
+                                                  </div>
+                                                  <div class="col-6">
+                                                    <form action="{{ route('print_pr_manager') }}" method="POST">
+                                                      @csrf
+                                                      <input type="hidden" name="txt_pr_no" id="txt_pr_no" value="{{ $item_pr->pr_no }}">
+                                                      <button type="submit" class="btn btn-outline-success" id="print_pr"><i class="fas fa-print">&nbsp;Print PR</i></button>
+                                                    </form>
                                                   </div>
                                                 @elseif ( $item_pr->pr_status == 2)
-                                                  <div class="col-md-8">
-                                                    <button type="button" class="btn btn-block btn-outline-success" title="Add PO" data-toggle="modal" data-target="#modal_po_add" id="getPO" data-url="{{ route('show_modal_po_admin',['id'=>$item_pr->po_no])}}"><i class="fas fa-plus">&nbsp;Submit PO</i></button>
+                                                  <div class="col-5">
+                                                    <button type="button" class="btn btn-outline-primary" title="Show Data" data-toggle="modal" data-target="#modal_show_price_manager_comp" id="getPOPrice_comp" data-url="{{ route('show_modal_po_price_manager_comp',['id'=>$item_pr->po_no])}}"><i class="fas fa-eye">&nbsp;View Data</i></button>
+                                                  </div>
+                                                  <div class="col-5">
+                                                    <form onsubmit="return confirm('Are you sure you want to APPROVE this request ?');" action="{{ route('approve_po_manager') }}" method="POST">
+                                                      @csrf
+                                                        <input type="hidden" name="txt_po_no" id="txt_po_no" value="{{ $item_pr->po_no }}" readonly>
+                                                        <input type="hidden" name="txt_pr_no" id="txt_pr_no" value="{{ $item_pr->pr_no }}" readonly>
+                                                        <button type="submit" name="btn_approval" id="btn_approval" value="approve_po" class="btn btn-outline-success" title="Approve PO"><i class="fas fa-check"></i>&nbsp; Approve</i></button>
+                                                    </form>
+                                                  </div>
+                                                  <div class="col-4">
+                                                    <form onsubmit="return confirm('Are you sure you want to REJECT this request ?');" action="{{ route('approve_po_manager') }}" method="POST">
+                                                      @csrf
+                                                          <input type="hidden" name="txt_po_no" id="txt_po_no" value="{{ $item_pr->po_no }}" readonly>
+                                                          <input type="hidden" name="txt_pr_no" id="txt_pr_no" value="{{ $item_pr->pr_no }}" readonly>
+                                                          <button type="submit" name="btn_approval" id="btn_approval" value="reject_po" class="btn btn-outline-danger" title="Reject PO"><i class="fas fa-times">&nbsp; Reject</i></button>
+                                                    </form>
                                                   </div>
                                                 @elseif ( $item_pr->pr_status == 1)
-                                                <form onsubmit="return confirm('Are you sure you want to APPROVE this request ?');" action="{{ route('approve_po_manager') }}" method="POST">
-                                                    @csrf
-                                                    <div class="col-md-4">
-                                                        <input type="hidden" name="txt_po_no" id="txt_po_no" value="{{ $item_pr->po_no }}" readonly>
-                                                        <input type="hidden" name="txt_pr_no" id="txt_pr_no" value="{{ $item_pr->pr_no }}" readonly>
-                                                        <button type="submit" name="btn_approval" id="btn_approval" value="approve_po" class="btn btn-outline-success" title="Approve PO"><i class="fas fa-check"></i></i></button>
-                                                    </div>
-                                                </form>
-                                                <form onsubmit="return confirm('Are you sure you want to REJECT this request ?');" action="{{ route('approve_po_manager') }}" method="POST">
-                                                    @csrf
-                                                    <div class="col-md-4">
-                                                        <input type="hidden" name="txt_po_no" id="txt_po_no" value="{{ $item_pr->po_no }}" readonly>
-                                                        <input type="hidden" name="txt_pr_no" id="txt_pr_no" value="{{ $item_pr->pr_no }}" readonly>
-                                                        <button type="submit" name="btn_approval" id="btn_approval" value="reject_po" class="btn btn-outline-danger" title="Reject PO"><i class="fas fa-times"></i></button>
-                                                    </div>
-                                                </form>
-                                                @elseif ( $item_pr->pr_status == 0)
-                                                  <div class="col-md-8">
-                                                    <button type="button" class="btn btn-block btn-outline-success" title="Print PO" data-toggle="modal" data-target="#modal_po_add" id="getPO" data-url="{{ route('show_modal_po_admin',['id'=>$item_pr->po_no])}}"><i class="fas fa-print">&nbsp;Print</i></button>
+                                                  <div class="col-7">
+                                                    <button type="button" class="btn btn-outline-primary" title="Show Data" data-toggle="modal" data-target="#modal_pr_show_manager" id="getPR" data-url="{{ route('show_modal_pr_manager',['id'=>$item_pr->pr_no_1])}}"><i class="fas fa-eye">&nbsp;View Data</i></button>
+                                                  </div>
+                                                  <div class="col-6">
+                                                    <form action="{{ route('print_po_manager') }}" method="POST">
+                                                      @csrf
+                                                      <input type="hidden" name="txt_po_no" id="txt_po_no" value="{{ $item_pr->po_no }}">
+                                                      <button type="submit" class="btn btn-block btn-outline-success" title="Print PO"><i class="fas fa-print">&nbsp;Print PO</i></button>
+                                                    </form>
+                                                  </div>
+                                                @else
+                                                  <div class="col-12">
+                                                    <button type="button" class="btn btn-outline-primary" title="Show Data" data-toggle="modal" data-target="#modal_pr_show_manager" id="getPR" data-url="{{ route('show_modal_pr_manager',['id'=>$item_pr->pr_no_1])}}"><i class="fas fa-eye">&nbsp;View Data</i></button>
                                                   </div>
                                                 @endif
-                                                
                                             </div>
                                           </td>
                                         </tr>
@@ -118,35 +146,7 @@
     </section>
     <!-- /.content -->
     {{-- End Content --}}
-    {{-- Create Modal --}}
-    <form action="{{ route('store_price_admin') }}" method="POST" enctype="multipart/form-data" id="pr" name="pr">
-        @csrf
-        <div class="modal fade" id="modal_price_add">
-            <div class="modal-dialog modal-lg">
-              <div class="modal-content">
-                <div class="overlay" id="modal-loader_2">
-                  <i class="fas fa-2x fa-sync fa-spin"></i>
-                </div>
-                <div class="modal-header">
-                    <h4 class="modal-title">PO Detail</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                   <div id="dynamic-content_2"></div>
-                </div>
-                <div class="modal-footer justify-content-between">
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-outline-warning" data-dismiss="modal">Close</button>&nbsp;
-                        <button type="submit" class="btn btn-outline-primary">Submit</button>
-                    </div>
-                </div>
-              </div>
-            </div>
-          </div>
-    </form>
-    {{-- End Create --}}
+    
     {{-- Create Modal --}}
     <form action="{{ route('store_po_admin') }}" method="POST" enctype="multipart/form-data" id="po" name="po">
       @csrf
@@ -220,6 +220,53 @@
       </div>
     </div>
     {{-- End View --}}
+    {{-- Modal Price --}}
+    <div class="modal fade" id="modal_show_price_manager">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="overlay" id="modal-loader_1">
+            <i class="fas fa-2x fa-sync fa-spin"></i>
+          </div>
+          <div class="modal-header">
+              <h4 class="modal-title">PO Detail</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="modal-body">
+             <div id="dynamic-content_1"></div>
+             
+          </div>
+          <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    {{-- Modal Price Complete --}}
+    <div class="modal fade" id="modal_show_price_manager_comp">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="overlay" id="modal-loader_2">
+            <i class="fas fa-2x fa-sync fa-spin"></i>
+          </div>
+          <div class="modal-header">
+              <h4 class="modal-title">PO Detail</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="modal-body">
+             <div id="dynamic-content_2"></div>
+             
+          </div>
+          <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
 </div>
 @include('manager.includes.footer')
 <script>
@@ -267,14 +314,14 @@
 <script>
     $(document).ready(function(){
   
-        $(document).on('click', '#getPrice', function(e){
+        $(document).on('click', '#getPOPrice', function(e){
     
             e.preventDefault();
     
             var url = $(this).data('url');
     
-            $('#dynamic-content_2').html(''); // leave it blank before ajax call
-            $('#modal-loader_2').show();      // load ajax loader
+            $('#dynamic-content_1').html(''); // leave it blank before ajax call
+            $('#modal-loader_1').show();      // load ajax loader
     
             $.ajax({
                 url: url,
@@ -283,18 +330,50 @@
             })
             .done(function(data){
                 console.log(data);  
-                $('#dynamic-content_2').html('');    
-                $('#dynamic-content_2').html(data); // load response 
-                $('#modal-loader_2').hide();        // hide ajax loader   
+                $('#dynamic-content_1').html('');    
+                $('#dynamic-content_1').html(data); // load response 
+                $('#modal-loader_1').hide();        // hide ajax loader   
             })
             .fail(function(){
-                $('#dynamic-content_2').html('<i class="glyphicon glyphicon-info-sign"></i> Something went wrong, Please try again...');
-                $('#modal-loader_2').hide();
+                $('#dynamic-content_1').html('<i class="glyphicon glyphicon-info-sign"></i> Something went wrong, Please try again...');
+                $('#modal-loader_1').hide();
             });
     
         });
   
     });
+</script>
+<script>
+  $(document).ready(function(){
+
+      $(document).on('click', '#getPOPrice_comp', function(e){
+  
+          e.preventDefault();
+  
+          var url = $(this).data('url');
+  
+          $('#dynamic-content_2').html(''); // leave it blank before ajax call
+          $('#modal-loader_2').show();      // load ajax loader
+  
+          $.ajax({
+              url: url,
+              type: 'GET',
+              dataType: 'html'
+          })
+          .done(function(data){
+              console.log(data);  
+              $('#dynamic-content_2').html('');    
+              $('#dynamic-content_2').html(data); // load response 
+              $('#modal-loader_2').hide();        // hide ajax loader   
+          })
+          .fail(function(){
+              $('#dynamic-content_2').html('<i class="glyphicon glyphicon-info-sign"></i> Something went wrong, Please try again...');
+              $('#modal-loader_2').hide();
+          });
+  
+      });
+
+  });
 </script>
 {{-- PO --}}
 <script>

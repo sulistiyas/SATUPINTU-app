@@ -50,7 +50,7 @@
           background-color: #2563d4;
           color: white;
         }
-        </style>
+    </style>
 </head>
 
 <body style="margin:0px; background: #f8f8f8; ">
@@ -97,10 +97,10 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($po_data as $item_po)
-                                        <tr align="center">
+                                        <tr align="left">
                                             <td>{{ $loop->iteration }}.</td>
                                             <td>{{ $item_po->pr_desc }}</td>
-                                            <td>{{ $item_po->pr_qty }}</td>
+                                            <td align="center">{{ $item_po->pr_qty }}</td>
                                             <td>{{ $item_po->pr_unit }}</td>
                                             <td>@currency($item_po->price)</td>
                                             <td>@currency($item_po->total_price)</td>

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('pr_no')->nullable();
             $table->string('job_number');
             $table->foreignId('id_employee')->references('id_employee')->on('employee')->onUpdate('cascade')->onDelete('cascade');
+            $table->string('pr_title');
             $table->string('pr_desc');
             $table->string('pr_qty');
             $table->string('pr_unit');

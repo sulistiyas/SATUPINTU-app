@@ -16,6 +16,7 @@ class PurchaseRequest extends Model
         'pr_no',
         'job_number',
         'id_employee',
+        'pr_title',
         'pr_desc',
         'pr_qty',
         'pr_unit',
