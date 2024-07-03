@@ -454,7 +454,7 @@ class EPurchaseManagerController extends Controller
             $mail->from(config('mail.from.name'));
             $mail->subject('SATUPINTU - APP | Purchase Order Approval');
         });
-        Alert::success('Success', 'Successfully');
-        return redirect()->route('index_po_manager');
+        // Alert::success('Success', 'Successfully');
+        // return redirect()->route('index_po_manager');
     }
 }

@@ -75,7 +75,7 @@
                         <td>
                             <b>Dear {{ $ga }},</b>
                             <br>
-                            <p>You get a message from {{ $manager }}, PO {{ $status }}</b>.</p>
+                            <p>You get a message from {{ $manager }}, PO <b>{{ $status }}</b>.</p>
                             {{-- <p>Please Confirm to General Affair (GA) for Purchase Order (PO) Request</p> --}}
                             
                             <ul>

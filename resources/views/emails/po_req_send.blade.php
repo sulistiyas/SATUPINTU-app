@@ -11,6 +11,46 @@
             width: auto;
         }
     </style>
+    <style>
+        #pr {
+          font-family: Arial, Helvetica, sans-serif;
+          border-collapse: collapse;
+          width: 100%;
+        }
+        
+        #pr td, #pr th {
+          border: 1px solid #ddd;
+          padding: 8px;
+        }
+        
+        #pr tr:nth-child(even){background-color: #f2f2f2;}
+        
+        #pr tr:hover {background-color: #ddd;}
+        
+        #pr th {
+          padding-top: 12px;
+          padding-bottom: 12px;
+          text-align: left;
+          background-color: #2563d4;
+          color: white;
+        }
+
+        #pr #sub {
+          padding-top: 12px;
+          padding-bottom: 12px;
+          text-align: right;
+          background-color: #2563d4;
+          color: white;
+        }
+
+        #pr #sub2 {
+          padding-top: 12px;
+          padding-bottom: 12px;
+          text-align: center;
+          background-color: #2563d4;
+          color: white;
+        }
+    </style>
 </head>
 
 <body style="margin:0px; background: #f8f8f8; ">
