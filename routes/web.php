@@ -71,6 +71,10 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
             Route::get('show_modal_price_admin/{id}', [EPurchaseController::class, 'show_modal_price_admin'])->name('show_modal_price_admin');
             Route::get('show_modal_po_admin/{id}', [EPurchaseController::class, 'show_modal_po_admin'])->name('show_modal_po_admin');
             // Report 
+            Route::get('/Admin/EPurchase/Search', [EPurchaseController::class, 'search_epurchase_admin'])->name('search_epurchase_admin');
+            Route::post('/Admin/EPurchase/Search/Submit', [EPurchaseController::class, 'search_epurchase_admin_result'])->name('search_epurchase_admin_result');
+            Route::get('/Admin/EPurchase/Search/Print/PR/{id}', [EPurchaseController::class, 'print_pr_epurchase_admin'])->name('print_pr_epurchase_admin');
+            Route::get('/Admin/EPurchase/Search/Print/PO/{id}', [EPurchaseController::class, 'print_po_epurchase_admin'])->name('print_po_epurchase_admin');
         });
         Route::middleware(['auth', 'userLevel:2'])->group(function () {
 

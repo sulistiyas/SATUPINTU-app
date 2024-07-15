@@ -615,4 +615,57 @@ class EPurchaseController extends Controller
             return redirect()->route('create_pr_admin');
         }
     }
+
+    public function search_epurchase_admin()
+    {
+        return view('admin.ePurchase.report.index');
+    }
+
+    public function search_epurchase_admin_result(Request $request)
+    {
+        // 
+        // $pr_data = DB::table('pr')
+        //     ->join('employee', 'employee.id_employee', '=', 'pr.id_employee')
+        //     ->join('users', 'users.id', '=', 'employee.id_users')
+        //     ->where('pr.pr_no', '=', $id)->get();
+        // $pr_data = DB::table('pr')->where('pr_no', '=', $id)->get();
+        $validator = Validator::make($request->all(), []);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status'    => false,
+                'message'   => 'Validation Error',
+                'errors'    => $validator->errors()
+            ], 401);
+        } else {
+            $date_start = $request->txt_date_start;
+            $date_end = $request->txt_date_end;
+
+            $get_report = DB::table('pr')
+                ->leftJoin('po', 'pr.id_pr', '=', 'po.id_pr')
+                ->join('employee', 'employee.id_employee', '=', 'pr.id_employee')
+                ->join('users', 'users.id', '=', 'employee.id_users')
+                ->whereBetween('pr.pr_date', [$date_start, $date_end])
+                ->groupBy('pr.pr_no')
+                ->get();
+        }
+        return view('components.show_report', ['data_pr' => $get_report]);
+    }
+
+    public function print_pr_epurchase_admin($id)
+    {
+        $pr_no = $id;
+        $data = ['pr_no' => $pr_no];
+        $pdf = Pdf::loadView('components.pdf.pr_print', $data);
+        // $pdf->loadHTML($pr_no);
+        return $pdf->stream("$pr_no.pdf");
+    }
+    public function print_po_epurchase_admin($id)
+    {
+        $po_no = $id;
+        $data = ['po_no' => $po_no];
+        $pdf = Pdf::loadView('components.pdf.po_print', $data);
+        // $pdf->loadHTML($po_no);
+        return $pdf->stream("$po_no.pdf");
+    }
 }
