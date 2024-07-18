@@ -22,13 +22,13 @@
                       <td>{{ $loop->iteration }}.</td>
                       <td>{{ $item_report->name }}</td>
                       <td>{{ $item_report->pr_title }}</td>
-                      <td align="center"><a href="{{ route('print_pr_epurchase_admin',['id'=>$item_report->pr_no]) }}">{{ $item_report->pr_no }} <i class="fas fa-file"></i></a> </td>
+                      <td align="center"><a href="{{ route('print_pr_epurchase_admin',['id'=>$item_report->pr_no]) }}">{{ $item_report->pr_no }} <i class="fas fa-file-download"></i></a> </td>
                       <td>{{ $item_report->pr_date }}</td>
                       <td align="center">
                         @if ($item_report->po_no == "")
-                            <b style="color: gray;">Data Empty</b>
+                          <b style="color: gray;">Data Empty</b>
                         @else
-                          <a href="{{ route('print_po_epurchase_admin',['id'=>$item_report->po_no]) }}">{{ $item_report->po_no }} <i class="fas fa-file"></i></a>    
+                          <a href="{{ route('print_po_epurchase_admin',['id'=>$item_report->po_no]) }}">{{ $item_report->po_no }} <i class="fas fa-file-download"></i></a>    
                         @endif
                         
                       </td>

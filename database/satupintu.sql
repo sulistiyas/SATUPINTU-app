@@ -10,6 +10,7 @@
 CREATE DATABASE IF NOT EXISTS `satupintu-app` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `satupintu-app`;
 
+DROP TABLE IF EXISTS `cache`;
 CREATE TABLE IF NOT EXISTS `cache` (
   `key` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `value` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -20,11 +21,12 @@ CREATE TABLE IF NOT EXISTS `cache` (
 INSERT INTO `cache` (`key`, `value`, `expiration`) VALUES
 	('1d6965678580cdb74cb5cb476fa97d17', 'i:1;', 1719889575),
 	('1d6965678580cdb74cb5cb476fa97d17:timer', 'i:1719889575;', 1719889575),
-	('228997b02cc862a35fa25663f3b258cd', 'i:1;', 1719996637),
-	('228997b02cc862a35fa25663f3b258cd:timer', 'i:1719996637;', 1719996637),
+	('228997b02cc862a35fa25663f3b258cd', 'i:1;', 1721037103),
+	('228997b02cc862a35fa25663f3b258cd:timer', 'i:1721037103;', 1721037103),
 	('ab26af459c4c09b4da5f85fd22c199f0', 'i:1;', 1719996314),
 	('ab26af459c4c09b4da5f85fd22c199f0:timer', 'i:1719996314;', 1719996314);
 
+DROP TABLE IF EXISTS `cache_locks`;
 CREATE TABLE IF NOT EXISTS `cache_locks` (
   `key` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `owner` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -33,6 +35,7 @@ CREATE TABLE IF NOT EXISTS `cache_locks` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
+DROP TABLE IF EXISTS `client`;
 CREATE TABLE IF NOT EXISTS `client` (
   `id_client` bigint unsigned NOT NULL AUTO_INCREMENT,
   `nama_perusahaan` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -447,6 +450,7 @@ INSERT INTO `client` (`id_client`, `nama_perusahaan`, `almt_perusahaan`, `npwp`,
 	(397, 'Erin', '', '', '', '', '', '', '', '', 'Kamila Nurizkya', NULL, NULL, NULL),
 	(398, 'Keane Reyner Nathanael', '', '', '', '', '', '', '', '', 'Kamila Nurizkya', NULL, NULL, NULL);
 
+DROP TABLE IF EXISTS `employee`;
 CREATE TABLE IF NOT EXISTS `employee` (
   `id_employee` bigint unsigned NOT NULL AUTO_INCREMENT,
   `id_users` bigint unsigned NOT NULL,
@@ -500,6 +504,7 @@ INSERT INTO `employee` (`id_employee`, `id_users`, `personal_email`, `emp_positi
 	(22, 22, 'karinanurher@gmail.com', 'Users', 'i-Link', 'Jakarta', '1993-12-31', 'Female', '3174067112930000', '722564655016000', NULL, '1472988183', '0', '2023-01-01', 'Contract', 'Single', 'JALAN ASEM BUNTU NOMOR 49 KOMPLEKS PLN CIPETE JAKARTA', '081294045077', NULL, '2024-02-19 02:49:49', '2024-02-19 02:49:49', NULL),
 	(23, 23, 'mumpuni.hadi@gmail.com', 'Users', 'i-Link', 'Jakarta', '2001-01-01', 'Female', '0', '0', NULL, '0', '0', '2023-01-01', 'Contract', 'Single', 'Jakarta', '087877666446', NULL, '2024-02-19 02:51:34', '2024-02-19 02:51:34', NULL);
 
+DROP TABLE IF EXISTS `failed_jobs`;
 CREATE TABLE IF NOT EXISTS `failed_jobs` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `uuid` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -513,6 +518,7 @@ CREATE TABLE IF NOT EXISTS `failed_jobs` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
+DROP TABLE IF EXISTS `jobnumber`;
 CREATE TABLE IF NOT EXISTS `jobnumber` (
   `id_jn` bigint unsigned NOT NULL AUTO_INCREMENT,
   `id_client` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -598,6 +604,7 @@ INSERT INTO `jobnumber` (`id_jn`, `id_client`, `bulan`, `job_number`, `contract_
 	(166, '303', '04', '2024/031/KUFPEC/Ticket.Farhan/Jkt/Apr', '', '', '0', '0', '', '0', 'Ticket Jakarta-Kuwait-Jakarta ', 'Mawar', '', 'Aty', '', '', '--Select Day--', '--Select Day 2--', '00:00:00', '00:00:00', '1900-05-27', '0000-00-00', '0', '0', '', '', '2024-04-29', 'Munarti Supriatno', 'Marketing', '0', '', '', '', '', '0', '', '', NULL, NULL, NULL),
 	(167, '163', '05', '2024/006E/PHR/JPP-SDM/Jkt/May', 'SPHR00326A', '', '0', '0', '', '0', 'Jasa-Jasa Pusat Pelayanan Sumber Daya Manusia', 'Pak Tegun', '', 'Christina Marlina', '', '', '--Select Day--', '--Select Day 2--', '00:00:00', '00:00:00', '2024-05-01', '2024-05-31', '30', '0', 'Monthly May 2024\r\n', '', '2024-05-13', 'Natasha Delanoverina', 'Marketing', '0', '', '', '', '', '0', '', '', NULL, NULL, NULL);
 
+DROP TABLE IF EXISTS `jobs`;
 CREATE TABLE IF NOT EXISTS `jobs` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `queue` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -611,6 +618,7 @@ CREATE TABLE IF NOT EXISTS `jobs` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
+DROP TABLE IF EXISTS `job_batches`;
 CREATE TABLE IF NOT EXISTS `job_batches` (
   `id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -626,6 +634,7 @@ CREATE TABLE IF NOT EXISTS `job_batches` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
+DROP TABLE IF EXISTS `migrations`;
 CREATE TABLE IF NOT EXISTS `migrations` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `migration` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -647,6 +656,7 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 	(110, '2024_04_24_035100_create_po_table', 1),
 	(111, '2024_05_14_091601_create_old_jobnumber_table', 1);
 
+DROP TABLE IF EXISTS `old_jobnumber`;
 CREATE TABLE IF NOT EXISTS `old_jobnumber` (
   `id_jn` bigint unsigned NOT NULL AUTO_INCREMENT,
   `id_client` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -1863,6 +1873,7 @@ INSERT INTO `old_jobnumber` (`id_jn`, `id_client`, `bulan`, `job_number`, `contr
 	(1169, '0', '12', '2023/117/Bio/Webinar/OL/Dec', NULL, '20000000', '0', '0', NULL, '0', NULL, NULL, NULL, NULL, NULL, NULL, '--Select Day--', '--Select Day 2--', '00:00:00', '00:00:00', '0000-00-00', '0000-00-00', '0', '0', NULL, NULL, '2023-12-15 00:00:00', 'Munarti Supriatno', 'Marketing', '0', NULL, NULL, NULL, NULL, '0', NULL, NULL, '2024-02-14 20:16:12', '2024-02-14 20:16:12', NULL),
 	(1170, '163', '12', '2023/001L/PHR/JPP-SDM/Jkt/Dec', 'SPHR00326A', '0', '0', '0', NULL, '0', 'Jasa-Jasa Pusat Pelayanan Sumber Daya Manusia', 'Pak Tegun', NULL, 'Christina Marlina', NULL, NULL, '--Select Day--', '--Select Day 2--', '00:00:00', '00:00:00', '2023-12-01 00:00:00', '2023-12-31 00:00:00', '30', '0', 'Monthly December 2023', NULL, '2023-12-15 00:00:00', 'Natasha Delanoverina', 'Marketing', '0', NULL, NULL, NULL, NULL, '0', NULL, NULL, '2024-02-14 20:16:12', '2024-02-14 20:16:12', NULL);
 
+DROP TABLE IF EXISTS `password_reset_tokens`;
 CREATE TABLE IF NOT EXISTS `password_reset_tokens` (
   `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `token` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -1871,6 +1882,7 @@ CREATE TABLE IF NOT EXISTS `password_reset_tokens` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
+DROP TABLE IF EXISTS `personal_access_tokens`;
 CREATE TABLE IF NOT EXISTS `personal_access_tokens` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `tokenable_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -1888,6 +1900,7 @@ CREATE TABLE IF NOT EXISTS `personal_access_tokens` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
+DROP TABLE IF EXISTS `po`;
 CREATE TABLE IF NOT EXISTS `po` (
   `id_po` bigint unsigned NOT NULL AUTO_INCREMENT,
   `po_no` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -1918,6 +1931,7 @@ INSERT INTO `po` (`id_po`, `po_no`, `id_pr`, `id_vendor`, `price`, `total_price`
 	(7, 'PO20240620003', 16, 79, '60000', '60000', '2024-06-20', '1', '', NULL, '0', '2024-06-19 20:02:03', '2024-06-19 21:55:33', NULL),
 	(8, 'PO20240703004', 17, 66, '2000', '2000', '2024-07-03', '7', '', NULL, '0', '2024-07-03 01:43:17', '2024-07-03 01:47:03', NULL);
 
+DROP TABLE IF EXISTS `pr`;
 CREATE TABLE IF NOT EXISTS `pr` (
   `id_pr` bigint unsigned NOT NULL AUTO_INCREMENT,
   `pr_no` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -1957,6 +1971,7 @@ INSERT INTO `pr` (`id_pr`, `pr_no`, `job_number`, `id_employee`, `pr_title`, `pr
 	(16, 'PR20240620006', 'Operational Office', 1, 'ATK June', 'HVS Folio 75 gram', '1', 'Pack', '1', '2024-06-20', 3, NULL, '2024-06-19 19:53:44', '2024-06-19 21:55:33', NULL),
 	(17, 'PR20240703007', 'Operational Office', 1, 'testing new', 'asdasdasdas', '1', 'Pack', '7', '2024-07-03', 3, NULL, '2024-07-03 01:26:03', '2024-07-03 01:47:03', NULL);
 
+DROP TABLE IF EXISTS `sessions`;
 CREATE TABLE IF NOT EXISTS `sessions` (
   `id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `user_id` bigint unsigned DEFAULT NULL,
@@ -1970,12 +1985,11 @@ CREATE TABLE IF NOT EXISTS `sessions` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-	('2P3ZEq05yFFQr2VA7a6lfZ45O5ASer2vAuuoyTDm', 15, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoid1NoZFF3YUxsOUpsV0lLdEIwd0t3S2k4S1JCbXg0c0VHeEY1aFFyeCI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDA6Imh0dHA6Ly9zYXR1cGludHUtYXBwLnRlc3Q6ODA4MC9kYXNoYm9hcmQiO31zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToxNTtzOjIxOiJwYXNzd29yZF9oYXNoX3NhbmN0dW0iO3M6NjA6IiQyeSQxMiRrZ0k0UnkxazVnVTA0d2U0cVVCLkYuTVRJL2pIV1FQdnFucGpEUU1ZMWtaTDNvS1piZ0NZeSI7fQ==', 1719889586),
-	('lDUB9AwHzRD4X01Do36L2pDT6oBcnDXo2oQBOnrx', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36', 'YTo2OntzOjY6Il90b2tlbiI7czo0MDoiMGU4R0ZjV1F3VFIxSlF0RGVuU1R6ZGNhMEVFMjdkdkhpR0pDWXRWayI7czozOiJ1cmwiO2E6MDp7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjU0OiJodHRwOi8vc2F0dXBpbnR1LWFwcC50ZXN0OjgwODAvQWRtaW4vRVB1cmNoYXNlL1BSL0xpc3QiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX1zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToxO3M6MjE6InBhc3N3b3JkX2hhc2hfc2FuY3R1bSI7czo2MDoiJDJ5JDEyJHpFTXZDanlodUNUNmVEQXpRQjN2Uk9OS0Q4S2J1OEZIT1RLeFVrSm5KTS93RS9LUWh0NmJlIjt9', 1719889631),
-	('SjBcHUXWi4WtwwVhVntYMGMM8Ha1rcRY4XBJOqwC', 3, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36', 'YTo2OntzOjY6Il90b2tlbiI7czo0MDoiRjh1MTBnUFRjYWNVMWh2SkFKRzBLZ3FOSHN5cWdvNzhVdmRQQ3kzMiI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NTY6Imh0dHA6Ly9zYXR1cGludHUtYXBwLnRlc3Q6ODA4MC9NYW5hZ2VyL0VQdXJjaGFzZS9QTy9MaXN0Ijt9czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MztzOjIxOiJwYXNzd29yZF9oYXNoX3NhbmN0dW0iO3M6NjA6IiQyeSQxMiQ1cEx6VjBMWC5TYzVFVW1NY2hrOUdlWFJBUldRTjhlcnoxWHdKaHgyNjBYdXg5akx3VGI1eSI7czo1OiJhbGVydCI7YTowOnt9fQ==', 1718859365),
-	('tyXphNLuNlp1Rbgr3vl3GQ0hXQoNk53H5EXlyIRd', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36', 'YTo2OntzOjY6Il90b2tlbiI7czo0MDoiT0lhb2NDcWtvOGRrUkRkMkVPSnNQWGx5QkdSc2NvRnU0Y2doM3JxSyI7czozOiJ1cmwiO2E6MDp7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjQwOiJodHRwOi8vc2F0dXBpbnR1LWFwcC50ZXN0OjgwODAvZGFzaGJvYXJkIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MTtzOjIxOiJwYXNzd29yZF9oYXNoX3NhbmN0dW0iO3M6NjA6IiQyeSQxMiR6RU12Q2p5aHVDVDZlREF6UUIzdlJPTktEOEtidThGSE9US3hVa0puSk0vd0UvS1FodDZiZSI7fQ==', 1718868726),
-	('XGrqfsIMNbyH1jIha3rgUu8zQLkDWUvbHumFbR8F', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiRFdkbDlYdVViYXdMdklndTByb21lTzJSNFp5Z3o0TDhUVzVSNWJPUiI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDA6Imh0dHA6Ly9zYXR1cGludHUtYXBwLnRlc3Q6ODA4MC9kYXNoYm9hcmQiO31zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToxO3M6MjE6InBhc3N3b3JkX2hhc2hfc2FuY3R1bSI7czo2MDoiJDJ5JDEyJHpFTXZDanlodUNUNmVEQXpRQjN2Uk9OS0Q4S2J1OEZIT1RLeFVrSm5KTS93RS9LUWh0NmJlIjt9', 1719996578);
+	('AIEBpe679tYCZsYm3lvmDjv1LFf3mz7AnF2rzhCT', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiMGcwbG9PUzFKWmdnRjZ1QmZHQlBKVjd2TUo3N3dQWDZrZVBiN3h0NCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NTM6Imh0dHA6Ly9zYXR1cGludHUtYXBwLnRlc3Q6ODA4MC9BZG1pbi9FUHVyY2hhc2UvU2VhcmNoIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MTtzOjIxOiJwYXNzd29yZF9oYXNoX3NhbmN0dW0iO3M6NjA6IiQyeSQxMiR6RU12Q2p5aHVDVDZlREF6UUIzdlJPTktEOEtidThGSE9US3hVa0puSk0vd0UvS1FodDZiZSI7fQ==', 1721016194),
+	('QidH6m2n55qRz9LrvZvc6UqF1ielevUqE53kzyet', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36', 'YTo2OntzOjY6Il90b2tlbiI7czo0MDoiSm1KVFpMQm5yVkF5RlM4ck9qVHE3OUYzU3JWWUZOdHRzVHpZd2FWciI7czozOiJ1cmwiO2E6MDp7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjc2OiJodHRwOi8vc2F0dXBpbnR1LWFwcC50ZXN0OjgwODAvQWRtaW4vRVB1cmNoYXNlL1NlYXJjaC9QcmludC9QTy9QTzIwMjQwNTI3MDAxIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MTtzOjIxOiJwYXNzd29yZF9oYXNoX3NhbmN0dW0iO3M6NjA6IiQyeSQxMiR6RU12Q2p5aHVDVDZlREF6UUIzdlJPTktEOEtidThGSE9US3hVa0puSk0vd0UvS1FodDZiZSI7fQ==', 1721029248),
+	('X2PHIFMLLgpsM0wDyLgyyyCd6kFncftbJaPRyPTw', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36', 'YTo2OntzOjY6Il90b2tlbiI7czo0MDoiUTM0Qmk0ZFlQSTNvYVdaOWdkSEpOYmtJM2c2akl6UW1NSkJ4TU02cyI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czozOiJ1cmwiO2E6MDp7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjUzOiJodHRwOi8vc2F0dXBpbnR1LWFwcC50ZXN0OjgwODAvQWRtaW4vRVB1cmNoYXNlL1NlYXJjaCI7fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjE7czoyMToicGFzc3dvcmRfaGFzaF9zYW5jdHVtIjtzOjYwOiIkMnkkMTIkekVNdkNqeWh1Q1Q2ZURBelFCM3ZST05LRDhLYnU4RkhPVEt4VWtKbkpNL3dFL0tRaHQ2YmUiO30=', 1721037053);
 
+DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -2021,6 +2035,7 @@ INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `tw
 	(22, 'Karuna Nurherbyanti Herbowo', 'karina.nur@ilink.co.id', NULL, '$2y$12$w.py5gxq1OUv4T1ES0RPFO.uorqfdDnMsqOxDSsPsVPgguSAMcPMu', NULL, NULL, NULL, NULL, NULL, NULL, '3', '2024-02-19 02:49:49', '2024-02-19 02:49:49', NULL),
 	(23, 'Mumpuni Hadi', 'mumpuni.hadi@ilink.co.id', NULL, '$2y$12$yxFVB1JuSNO.qGWl75XKn.A164fag/15Zjq.8Aez1gs16t3/r80d.', NULL, NULL, NULL, NULL, NULL, NULL, '3', '2024-02-19 02:51:34', '2024-02-19 02:51:34', NULL);
 
+DROP TABLE IF EXISTS `vendor`;
 CREATE TABLE IF NOT EXISTS `vendor` (
   `id_vendor` bigint unsigned NOT NULL AUTO_INCREMENT,
   `vendor` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,

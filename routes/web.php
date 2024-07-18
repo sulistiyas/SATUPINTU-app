@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AssetController;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
@@ -75,6 +76,14 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
             Route::post('/Admin/EPurchase/Search/Submit', [EPurchaseController::class, 'search_epurchase_admin_result'])->name('search_epurchase_admin_result');
             Route::get('/Admin/EPurchase/Search/Print/PR/{id}', [EPurchaseController::class, 'print_pr_epurchase_admin'])->name('print_pr_epurchase_admin');
             Route::get('/Admin/EPurchase/Search/Print/PO/{id}', [EPurchaseController::class, 'print_po_epurchase_admin'])->name('print_po_epurchase_admin');
+
+            // Office Asset
+            Route::get('/Admin/Asset/Office/Asset', [AssetController::class, 'index_office_asset'])->name('index_office_asset');
+            Route::get('/Admin/Asset/Device/Master', [AssetController::class, 'index_device_master'])->name('index_device_master');
+            Route::post('/Admin/Asset/Device/Master/Store', [AssetController::class, 'store_device_master'])->name('store_device_master');
+            Route::post('/Admin/Asset/Office/Store', [AssetController::class, 'store_office_asset'])->name('store_office_asset');
+            Route::post('/Admin/Asset/Office/QRCode', [AssetController::class, 'QR_Code_Generate'])->name('QR_Code_Generate');
+            Route::get('/Admin/Asset/Office/QR', [AssetController::class, 'test_qr'])->name('test_qr');
         });
         Route::middleware(['auth', 'userLevel:2'])->group(function () {
 
