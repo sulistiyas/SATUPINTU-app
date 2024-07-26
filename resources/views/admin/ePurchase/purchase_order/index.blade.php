@@ -121,7 +121,7 @@
     {{-- Create Modal --}}
     <form action="{{ route('store_price_admin') }}" method="POST" enctype="multipart/form-data" id="pr" name="pr">
         @csrf
-        <div class="modal fade" id="modal_price_add">
+          <div class="modal fade" id="modal_price_add">
             <div class="modal-dialog modal-lg">
               <div class="modal-content">
                 <div class="overlay" id="modal-loader_2">

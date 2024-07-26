@@ -88,10 +88,54 @@
         </div>
         <!-- /.row -->
         <!-- Main row -->
-        
+        <div class="row">
+          <section class="col-lg-6 connectedSortable">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">
+                  <i class="fas fa-file-alt"></i>
+                  Legalitas Office
+                </h3>
+              </div><!-- /.card-header -->
+              <div class="card-body">
+                <table id="tbl_legalitas" class="table table-bordered table-striped">
+                  <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Dokumen</th>
+                        {{-- <th>Number</th> --}}
+                        <th>End Date</th>
+                        <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @foreach(Illuminate\Support\Facades\DB::table('legalitas_office')->where('status','=','3')->orderBy('berakhir','DESC')->get() as $item_legalitas)
+                        <tr>
+                          <td>{{ $loop->iteration }}.</td>
+                          <td>{{ $item_legalitas->dokumen }} &nbsp;&nbsp;<a href="{{ route('index_office_legalitas') }}"><i class="fas fa-external-link-alt"></i></a></td>
+                          {{-- <td>{{ $item_legalitas->no_legalitas }}</td> --}}
+                          <td>{{ $item_legalitas->berakhir }}</td>
+                          <td><p style="color: red; font-weight: 900;">Expired</p></td>
+                        </tr>
+                    @endforeach
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+        </div>
         <!-- /.row (main row) -->
       </div><!-- /.container-fluid -->
     </section>
     <!-- /.content -->
   </div>
 @include('admin.includes.footer')
+<script>
+  // Datatables
+  $(function () {
+    $("#tbl_legalitas").DataTable({
+      "responsive": true, "lengthChange": false, "autoWidth": false,
+      "buttons": ["copy", "excel", "pdf"]
+    }).buttons().container().appendTo('#tbl_legalitas_wrapper .col-md-6:eq(0)');
+  });
+</script>

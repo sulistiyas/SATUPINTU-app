@@ -12,6 +12,7 @@
         "haruncpi/laravel-id-generator": "*",
         "laravel/framework": "^11.0",
         "laravel/jetstream": "^5.0",
+        "laravel/pulse": "^1.2",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
         "livewire/livewire": "^3.0",

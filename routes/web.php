@@ -1,12 +1,14 @@
 <?php
 
-use App\Http\Controllers\Admin\AssetController;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\Admin\AssetController;
 use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\Admin\EPurchaseController;
 use App\Http\Controllers\Admin\JobNumberController;
+use App\Http\Controllers\Admin\LegalitasController;
+use App\Http\Controllers\Admin\LetterNumberController;
 use App\Http\Controllers\Manager\ManagerController;
 use App\Http\Controllers\Manager\EPurchaseManagerController;
 
@@ -84,6 +86,18 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
             Route::post('/Admin/Asset/Office/Store', [AssetController::class, 'store_office_asset'])->name('store_office_asset');
             Route::post('/Admin/Asset/Office/QRCode', [AssetController::class, 'QR_Code_Generate'])->name('QR_Code_Generate');
             Route::get('/Admin/Asset/Office/QR', [AssetController::class, 'test_qr'])->name('test_qr');
+
+            // Legalitas
+            Route::get('/Admin/Legalitas/Office', [LegalitasController::class, 'index'])->name('index_office_legalitas');
+            Route::post('/Admin/Legalitas/Office/Store', [LegalitasController::class, 'store'])->name('store_office_legalitas');
+            Route::post('/Admin/Legalitas/Office/Update', [LegalitasController::class, 'update'])->name('update_office_legalitas');
+            Route::get('/Admin/Legalitas/Office/Edit/{id}', [LegalitasController::class, 'edit'])->name('edit_office_legalitas');
+
+            // Letter Number
+            Route::get('/Admin/LetterNumber', [LetterNumberController::class, 'index'])->name('index_letter_number');
+            Route::post('/Admin/LetterNumber/Store', [LetterNumberController::class, 'store'])->name('store_letter_number');
+            Route::get('/Admin/LetterNumber/Store/Create', [LetterNumberController::class, 'show'])->name('show_modal_create_letter_number');
+            Route::get('/refresh/number', [LetterNumberController::class, 'refresh_last_number'])->name('refresh_last_number');
         });
         Route::middleware(['auth', 'userLevel:2'])->group(function () {
 
@@ -108,13 +122,13 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
             // Purchase Order
             Route::get('/Manager/EPurchase/PO/List', [EPurchaseManagerController::class, 'index_po'])->name('index_po_manager');
             Route::POST('/Manager/EPurchase/PO/Approve', [EPurchaseManagerController::class, 'approve_po_manager'])->name('approve_po_manager');
-            // Vendor
-            Route::get('/Admin/EPurchase/Vendor/List', [EPurchaseController::class, 'index_vendor'])->name('index_vendor_admin');
-            Route::get('/Admin/EPurchase/Vendor/Create', [EPurchaseController::class, 'create_vendor'])->name('create_vendor_admin');
-            Route::post('/Admin/EPurchase/Vendor/Store', [EPurchaseController::class, 'store_vendor'])->name('store_vendor_admin');
-            Route::get('/Admin/EPurchase/Vendor/Edit/{id}', [EPurchaseController::class, 'edit_vendor'])->name('edit_vendor_admin');
-            Route::POST('/Admin/EPurchase/Vendor/Update/{id}', [EPurchaseController::class, 'update_vendor'])->name('update_vendor_admin');
-            Route::delete('/Admin/EPurchase/Vendor/Destroy/{id}', [EPurchaseController::class, 'destroy_vendor'])->name('destroy_vendor_admin');
+            // // Vendor
+            // Route::get('/Admin/EPurchase/Vendor/List', [EPurchaseController::class, 'index_vendor'])->name('index_vendor_admin');
+            // Route::get('/Admin/EPurchase/Vendor/Create', [EPurchaseController::class, 'create_vendor'])->name('create_vendor_admin');
+            // Route::post('/Admin/EPurchase/Vendor/Store', [EPurchaseController::class, 'store_vendor'])->name('store_vendor_admin');
+            // Route::get('/Admin/EPurchase/Vendor/Edit/{id}', [EPurchaseController::class, 'edit_vendor'])->name('edit_vendor_admin');
+            // Route::POST('/Admin/EPurchase/Vendor/Update/{id}', [EPurchaseController::class, 'update_vendor'])->name('update_vendor_admin');
+            // Route::delete('/Admin/EPurchase/Vendor/Destroy/{id}', [EPurchaseController::class, 'destroy_vendor'])->name('destroy_vendor_admin');
             // Report e-Purchase
             Route::post('/Manager/EPurchase/PR/Print/', [EPurchaseManagerController::class, 'print_pr_manager'])->name('print_pr_manager');
             Route::post('/Manager/EPurchase/PO/Print/', [EPurchaseManagerController::class, 'print_po_manager'])->name('print_po_manager');

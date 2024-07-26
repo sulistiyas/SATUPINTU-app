@@ -47,7 +47,7 @@
                         <div class="col-md-10 offset-md-1">
                           <div class="form-group">
                             <button type="submit" class="btn btn-lg btn-default" id="getReport"  data-target="#show_report">
-                              <i class="fa fa-search"> Search Report</i>
+                              <i class="fa fa-search"> Search Report </i>
                             </button>
                             {{-- <button type="button" class="btn btn-block btn-outline-primary" title="Show Data" data-target="#show_report" id="getReport" data-url="{{ route('search_epurchase_admin_result')}}"><i class="fas fa-eye">&nbsp;View Data</i></button> --}}
                           </div>

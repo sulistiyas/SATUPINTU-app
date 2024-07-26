@@ -106,8 +106,8 @@
               </li>
             </ul>
           </li>
-          <li class="{{ Request::routeIs('index_device_master') || Request::routeIs('index_office_asset') ? 'nav-item menu-open' : 'nav-item menu' }}">
-            <a href="#"  class="{{ Request::routeIs('index_device_master') || Request::routeIs('index_office_asset') ? 'nav-link active' : 'nav-link' }}">
+          <li class="{{ Request::routeIs('index_device_master') || Request::routeIs('index_office_asset') || Request::routeIs('index_office_legalitas') || Request::routeIs('index_letter_number') ? 'nav-item menu-open' : 'nav-item menu' }}">
+            <a href="#"  class="{{ Request::routeIs('index_device_master') || Request::routeIs('index_office_asset') || Request::routeIs('index_office_legalitas') || Request::routeIs('index_letter_number') ? 'nav-link active' : 'nav-link' }}">
               <i class="fas fa-users-cog"></i>
               <p>
                 Administration Area
@@ -121,12 +121,18 @@
                   <p>Office Asset</p>
                 </a>
               </li>
-              {{-- <li class="nav-item">
-                <a href="nav-link">
+              <li class="nav-item">
+                <a href="{{ route('index_office_legalitas') }}" class="{{ Request::routeIs('index_office_legalitas') ? 'nav-link active' : 'nav-link' }}">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Office Asset</p>
+                  <p>Legalitas</p>
                 </a>
-              </li> --}}
+              </li>
+              <li class="nav-item">
+                <a href="{{ route('index_letter_number') }}" class="{{ Request::routeIs('index_letter_number') ? 'nav-link active' : 'nav-link' }}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Letter Number</p>
+                </a>
+              </li>
             </ul>
           </li>
           

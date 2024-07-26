@@ -25,7 +25,7 @@ class AssetController extends Controller
     public function index_device_master()
     {
         $device_master = DB::table('device_master')->where('deleted_at', '=', NULL)->orderBy('device_name', 'asc')->get();
-        return view('admin.ePurchase.administration.device_master', ['device_master' => $device_master]);
+        return view('admin.administration.device_master', ['device_master' => $device_master]);
     }
 
     public function index_office_asset()
@@ -37,8 +37,10 @@ class AssetController extends Controller
             ->get();
         $device_master = DB::table('device_master')->where('deleted_at', '=', NULL)->orderBy('device_name', 'asc')->get();
         $user_data = DB::table('users')->join('employee', 'employee.id_users', '=', 'users.id')->get();
-        return view('admin.ePurchase.administration.office_asset', compact('office_asset', 'device_master', 'user_data'));
+        return view('admin.administration.office_asset', compact('office_asset', 'device_master', 'user_data'));
     }
+
+    
 
     /**
      * Show the form for creating a new resource.
@@ -183,7 +185,7 @@ class AssetController extends Controller
         $img = public_path('assets\dist\img\logo.png');
         $pngImage = QrCode::format('png')
             ->merge($img, 0.3, true)
-            ->size(300)
+            ->size(150)
             ->errorCorrection('H')
             ->style('dot')
             ->eye('circle')
