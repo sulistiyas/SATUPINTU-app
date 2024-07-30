@@ -36,6 +36,13 @@ class EPurchaseController extends Controller
         return view('admin.ePurchase.purchase_request.index', ['data' => $get_data]);
     }
 
+    public function refresh_pr()
+    {
+        $id_pr = IdGenerator::generate(['table' => 'pr', 'field' => 'pr_no', 'length' => 13, 'prefix' => 'PR' . +date('Ymd')]);
+        return view('components.modals.e-purchase.refresh_pr', ['id_pr' => $id_pr]);
+    }
+
+
     public function create_pr()
     {
         $id = IdGenerator::generate(['table' => 'pr', 'field' => 'pr_no', 'length' => 13, 'prefix' => 'PR' . +date('Ymd')]);

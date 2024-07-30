@@ -4,12 +4,13 @@ use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\Admin\AssetController;
+use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\Admin\EPurchaseController;
 use App\Http\Controllers\Admin\JobNumberController;
 use App\Http\Controllers\Admin\LegalitasController;
-use App\Http\Controllers\Admin\LetterNumberController;
 use App\Http\Controllers\Manager\ManagerController;
+use App\Http\Controllers\Admin\LetterNumberController;
 use App\Http\Controllers\Manager\EPurchaseManagerController;
 
 Route::get('/', function () {
@@ -49,6 +50,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
             Route::get('/Admin/EPurchase/PR/Edit/{id}', [EPurchaseController::class, 'edit_pr'])->name('edit_pr_admin');
             Route::POST('/Admin/EPurchase/PR/Update/{id}', [EPurchaseController::class, 'update_pr'])->name('update_pr_admin');
             Route::delete('/Admin/EPurchase/PR/Destroy/{id}', [EPurchaseController::class, 'destroy_pr'])->name('destroy_pr_admin');
+            Route::get('/refresh/pr', [EPurchaseController::class, 'refresh_pr'])->name('refresh_pr');
             // Purchase Order
             Route::get('/Admin/EPurchase/PO/List', [EPurchaseController::class, 'index_po'])->name('index_po_admin');
             Route::get('/Admin/EPurchase/PO/Create', [EPurchaseController::class, 'create_po'])->name('create_po_admin');
@@ -98,6 +100,14 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
             Route::post('/Admin/LetterNumber/Store', [LetterNumberController::class, 'store'])->name('store_letter_number');
             Route::get('/Admin/LetterNumber/Store/Create', [LetterNumberController::class, 'show'])->name('show_modal_create_letter_number');
             Route::get('/refresh/number', [LetterNumberController::class, 'refresh_last_number'])->name('refresh_last_number');
+
+            // User Management
+            Route::get('/Admin/Users', [UsersController::class, 'index'])->name('index_users');
+            Route::POST('/Admin/Users/Store', [UsersController::class, 'store'])->name('store_users');
+            Route::get('/Admin/Users/Show', [UsersController::class, 'show'])->name('show_modal_users');
+            Route::get('/Admin/Users/Edit', [UsersController::class, 'edit'])->name('edit_users');
+            Route::get('/Admin/Users/Update', [UsersController::class, 'update'])->name('update_users');
+            Route::delete('/Admin/Users/Delete', [UsersController::class, 'destroy'])->name('destroy_users');
         });
         Route::middleware(['auth', 'userLevel:2'])->group(function () {
 

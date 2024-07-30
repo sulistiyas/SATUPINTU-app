@@ -52,7 +52,17 @@ class LetterNumberController extends Controller
             ]);
         } else {
             try {
-                $nomor_urut = $request->txt_nomor_urut;
+                $latest_id = LetterNumber::whereRaw('id_letter = (select max(`id_letter`) from letter_number)')->get();
+                foreach ($latest_id as $id) {
+                    $last_id = $id->id_letter;
+                }
+                $latest_number = DB::table('letter_number')->where('id_letter', '=', $last_id)->get();
+
+                foreach ($latest_number as $lat_num) {
+                    $nomor_urut = $lat_num->nomor_urut;
+                }
+
+                $nomor_urut_plus = $nomor_urut + 1;
                 $bln_num = date('n');
                 $thn = date('y');
                 $get_users = DB::table('employee')->where('id_users', '=', Auth::user()->id)->get();
@@ -101,10 +111,10 @@ class LetterNumberController extends Controller
                         # code...
                         break;
                 }
-                $nomor_surat = $nomor_urut . "/" . $request->txt_type . "/" . $request->txt_comp . "/" . $bln . "/" . $thn;
+                $nomor_surat = $nomor_urut_plus . "/" . $request->txt_type . "/" . $request->txt_comp . "/" . $bln . "/" . $thn;
                 LetterNumber::create([
                     'nomor_surat'       => $nomor_surat,
-                    'nomor_urut'        => $nomor_urut,
+                    'nomor_urut'        => $nomor_urut_plus,
                     'tipe_srt'          => $request->txt_type,
                     'comp'              => $request->txt_form,
                     'nama_perusahaan'   => $request->txt_comp,

@@ -29,9 +29,24 @@
                         <div class="card">
                             <div class="card-header">
                                 <h3 class="card-title">Purchase Request Form</h3>
-                                
                             </div>
                             <div class="card-body">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="form-group" id="pr_refresh">
+                                            <label for="txt_pr_num">PR Number</label>
+                                            <input type="text" name="txt_pr_num" id="txt_pr_num" class="form-control" readonly required value="{{ $id }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label for="refresh_number" style="color: transparent">T</label><br>
+                                            <button type="button" class="btn btn-outline-primary" title="Refresh Data" id="refresh_number" data-url="{{ route('refresh_pr')}}">
+                                                <i class="fas fa-sync"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="row">
                                     <div class="col-6">
                                         <div class="form-group">
@@ -56,6 +71,17 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="card-footer">
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
                                 <div class="row">
                                     <div class="col-6">
                                         <button type="button" class="float-sm-left btn btn-primary" id="add_btn" name="add_btn">
@@ -63,9 +89,11 @@
                                         </button>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="card-body">
                                 <div class="row">
                                     <div class="col-12">
-                                        <table id="tbl_create_pr" class="table table-bordered table-striped">
+                                        <table id="tbl_create_pr" class="table table-bordered table-head-fixed text-nowrap">
                                             <thead>
                                                 <tr>
                                                     <th>Description</th>
@@ -81,18 +109,18 @@
                                     </div>
                                 </div>
                             </div>
-                             <div class="card-footer">
+                            <div class="card-footer">
                                 <div class="row">
-                                <div class="col-3">
-                                    <div class="form-group">
-                                        <input type="submit" value="Submit" name="submit" id="submit" class="form-control btn btn-success">
+                                    <div class="col-3">
+                                        <div class="form-group">
+                                            <input type="submit" value="Submit" name="submit" id="submit" class="form-control btn btn-success">
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-3">
-                                    <div class="form-group">
-                                        <a href="{{ route('index_pr_admin') }}" class="form-control btn btn-danger">Cancel</a>
+                                    <div class="col-3">
+                                        <div class="form-group">
+                                            <a href="{{ route('index_pr_admin') }}" class="form-control btn btn-danger">Cancel</a>
+                                        </div>
                                     </div>
-                                </div>
                                 </div>
                             </div>
                         </div>
@@ -106,12 +134,12 @@
 @include('admin.includes.footer')
 <script type="text/javascript">
     // Datatables
-    $(function () {
-      $("#tbl_create_pr").DataTable({
-        "responsive": true, "lengthChange": false, "autoWidth": false,
+    // $(function () {
+    //   $("#tbl_create_pr").DataTable({
+    //     "responsive": true, "lengthChange": false, "autoWidth": false,
         
-      }).buttons().container().appendTo('#tbl_create_pr_wrapper .col-md-6:eq(0)');
-    });
+    //   }).buttons().container().appendTo('#tbl_create_pr_wrapper .col-md-6:eq(0)');
+    // });
     $(document).ready(function() {
         var count = 0;
         $("#add_btn").click(function(){
@@ -139,5 +167,37 @@
         $("body").on("click", "#DeleteRow", function () {
             $(this).parents("#row").remove();
         })
+    });
+</script>
+<script>
+    $(document).ready(function(){
+  
+        $(document).on('click', '#refresh_number', function(e){
+    
+            e.preventDefault();
+    
+            var url = $(this).data('url');
+    
+            $('#pr_refresh').html(''); // leave it blank before ajax call
+            // $('#modal-loader').show();      // load ajax loader
+    
+            $.ajax({
+                url: url,
+                type: 'GET',
+                dataType: 'html'
+            })
+            .done(function(data){
+                console.log(data);  
+                $('#pr_refresh').html('');    
+                $('#pr_refresh').html(data); // load response 
+                // $('#modal-loader').hide();        // hide ajax loader   
+            })
+            .fail(function(){
+                $('#pr_refresh').html('<i class="glyphicon glyphicon-info-sign"></i> Something went wrong, Please try again...');
+                // $('#modal-loader').hide();
+            });
+    
+        });
+  
     });
 </script>

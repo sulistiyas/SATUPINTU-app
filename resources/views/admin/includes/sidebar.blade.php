@@ -11,6 +11,11 @@
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
+          @php
+              $user_id = Auth::user()->id;
+              // if women : pict women 
+              // if men : pict men
+          @endphp
           <img src="{{ asset('assets/dist/img/avatar4.png') }}" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
@@ -106,8 +111,8 @@
               </li>
             </ul>
           </li>
-          <li class="{{ Request::routeIs('index_device_master') || Request::routeIs('index_office_asset') || Request::routeIs('index_office_legalitas') || Request::routeIs('index_letter_number') ? 'nav-item menu-open' : 'nav-item menu' }}">
-            <a href="#"  class="{{ Request::routeIs('index_device_master') || Request::routeIs('index_office_asset') || Request::routeIs('index_office_legalitas') || Request::routeIs('index_letter_number') ? 'nav-link active' : 'nav-link' }}">
+          <li class="{{ Request::routeIs('index_device_master') || Request::routeIs('index_office_asset') || Request::routeIs('index_office_legalitas') || Request::routeIs('index_letter_number') || Request::routeIs('index_users') ? 'nav-item menu-open' : 'nav-item menu' }}">
+            <a href="#"  class="{{ Request::routeIs('index_device_master') || Request::routeIs('index_office_asset') || Request::routeIs('index_office_legalitas') || Request::routeIs('index_letter_number') || Request::routeIs('index_users') ? 'nav-link active' : 'nav-link' }}">
               <i class="fas fa-users-cog"></i>
               <p>
                 Administration Area
@@ -131,6 +136,12 @@
                 <a href="{{ route('index_letter_number') }}" class="{{ Request::routeIs('index_letter_number') ? 'nav-link active' : 'nav-link' }}">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Letter Number</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ route('index_users') }}" class="{{ Request::routeIs('index_users') ? 'nav-link active' : 'nav-link' }}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>User Management</p>
                 </a>
               </li>
             </ul>

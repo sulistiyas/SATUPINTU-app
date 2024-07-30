@@ -30,6 +30,8 @@
     <!-- Select2 -->
     <link rel="stylesheet" href="{{ asset('assets/plugins/select2/css/select2.min.css')}}">
     <link rel="stylesheet" href="{{ asset('assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+  <!-- BS Stepper -->
+  <link rel="stylesheet" href="{{ asset('assets/plugins/bs-stepper/css/bs-stepper.min.css') }}">
 </head>
 <body class="hold-transition sidebar-mini layout-fixed layout-footer-fixed">
     <div class="wrapper">

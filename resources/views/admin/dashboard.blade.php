@@ -24,34 +24,30 @@
     <section class="content">
       <div class="container-fluid">
         <!-- Small boxes (Stat box) -->
+        {{-- Purchase Request --}}
         <div class="row">
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-info">
-              <div class="inner">
-                <h3>0</h3>
-
-                <p>Letter Numbers</p>
-              </div>
-              <div class="icon">
-                <i class="fas fa-box-open"></i>
-              </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-          </div>
-          <!-- ./col -->
+          
           <div class="col-lg-3 col-6">
             <!-- small box -->
             <div class="small-box bg-success">
               <div class="inner">
-                <h3>0</h3>
+                <h3>
+                  @php
+                      $query_pr = Illuminate\Support\Facades\DB::table('pr')->where('pr_status','=','4')
+                      ->orWhere('pr_status','=','3')
+                      ->orWhere('pr_status','=','2')
+                      ->orWhere('pr_status','=','1')->get();
+                      $pr_count =  $query_pr->count();
+                  @endphp
+                  {{ $pr_count }}
+                </h3>
 
                 <p>PR Approved</p>
               </div>
               <div class="icon">
                 <i class="far fa-thumbs-up"></i>
               </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+              <a href="{{ route('index_pr_admin') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
           <!-- ./col -->
@@ -59,14 +55,23 @@
             <!-- small box -->
             <div class="small-box bg-warning">
               <div class="inner">
-                <h3>0</h3>
+                <h3>
+                  @php
+                      $query_pr = Illuminate\Support\Facades\DB::table('pr')->where('pr_status','=','5')
+                      ->orWhere('pr_status','=','4')
+                      ->orWhere('pr_status','=','3')
+                      ->orWhere('pr_status','=','2')->get();
+                      $pr_count =  $query_pr->count();
+                  @endphp
+                  {{ $pr_count }}
+                </h3>
 
                 <p>PR On Process</p>
               </div>
               <div class="icon">
                 <i class="fas fa-user-clock"></i>
               </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+              <a href="{{ route('index_pr_admin') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
           <!-- ./col -->
@@ -74,17 +79,116 @@
             <!-- small box -->
             <div class="small-box bg-danger">
               <div class="inner">
-                <h3>0</h3>
+                <h3>
+                  @php
+                      $query_pr = Illuminate\Support\Facades\DB::table('pr')->where('pr_status','=','6')->get();
+                      $pr_count =  $query_pr->count();
+                  @endphp
+                  {{ $pr_count }}
+                </h3>
 
                 <p>PR Rejected</p>
               </div>
               <div class="icon">
                 <i class="far fa-thumbs-down"></i>
               </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+              <a href="{{ route('index_pr_admin') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
           <!-- ./col -->
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-info">
+              <div class="inner">
+                <h3>
+                  @php
+                      $query_letter = Illuminate\Support\Facades\DB::table('letter_number')->where('deleted_at','=',NULL)->get();
+                      $letter_count =  $query_letter->count();
+                  @endphp
+                  {{ $letter_count }}
+                </h3>
+
+                <p>Letter Numbers</p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-box-open"></i>
+              </div>
+              <a href="{{ route('index_letter_number') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+        </div>
+        <!-- /.row -->
+        {{-- Purchase Order --}}
+        <!-- Small boxes (Stat box) -->
+        <div class="row">
+          
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-success">
+              <div class="inner">
+                <h3>
+                  @php
+                      $query_po = Illuminate\Support\Facades\DB::table('po')->where('po_status','=','1')->get();
+                      $po_count =  $query_po->count();
+                  @endphp
+                  {{ $po_count }}
+                </h3>
+
+                <p>PO Approved</p>
+              </div>
+              <div class="icon">
+                <i class="far fa-thumbs-up"></i>
+              </div>
+              <a href="{{ route('index_po_admin') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-warning">
+              <div class="inner">
+                <h3>
+                  @php
+                      $query_po = Illuminate\Support\Facades\DB::table('po')->where('po_status','=','4')
+                      ->orWhere('po_status','=','3')
+                      ->orWhere('po_status','=','2')->get();
+                      $po_count =  $query_po->count();
+                  @endphp
+                  {{ $po_count }}
+                </h3>
+
+                <p>PO On Process</p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-user-clock"></i>
+              </div>
+              <a href="{{ route('index_po_admin') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-danger">
+              <div class="inner">
+                <h3>
+                  @php
+                      $query_po = Illuminate\Support\Facades\DB::table('po')->where('po_status','=','7')->get();
+                      $po_count =  $query_po->count();
+                  @endphp
+                  {{ $po_count }}
+                </h3>
+
+                <p>PR Rejected</p>
+              </div>
+              <div class="icon">
+                <i class="far fa-thumbs-down"></i>
+              </div>
+              <a href="{{ route('index_po_admin') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+          
         </div>
         <!-- /.row -->
         <!-- Main row -->

@@ -11,7 +11,7 @@
     <div class="col-1">
         <div class="form-group">
             <label for="refresh_number" style="color: transparent">T</label><br>
-            <button type="button" class="btn btn-outline-primary" title="Edit Data" id="refresh_number" data-url="{{ route('refresh_last_number')}}">
+            <button type="button" class="btn btn-outline-primary" title="Refresh Data" id="refresh_number" data-url="{{ route('refresh_last_number')}}">
                 <i class="fas fa-sync"></i>
             </button>
         </div>
