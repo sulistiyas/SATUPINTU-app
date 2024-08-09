@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\Admin\AssetController;
+use App\Http\Controllers\Admin\ATKController;
 use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\Admin\EPurchaseController;
@@ -67,6 +68,11 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
             Route::get('/Admin/EPurchase/Vendor/Edit/{id}', [EPurchaseController::class, 'edit_vendor'])->name('edit_vendor_admin');
             Route::POST('/Admin/EPurchase/Vendor/Update/{id}', [EPurchaseController::class, 'update_vendor'])->name('update_vendor_admin');
             Route::delete('/Admin/EPurchase/Vendor/Destroy/{id}', [EPurchaseController::class, 'destroy_vendor'])->name('destroy_vendor_admin');
+            // ATK
+            Route::get('/Admin/ATK/Master/List',[ATKController::class,'index'])->name('index_atk_master');
+            Route::post('/Admin/ATK/Master/Store',[ATKController::class,'store'])->name('store_atk_master');
+            Route::get('/Admin/ATK/Master/Update',[ATKController::class,'update'])->name('update_atk_master');
+            Route::get('/Admin/ATK/Master/Create',[ATKController::class,'create'])->name('show_modal_create_atk');
 
             // Print e-Purchase
             Route::post('/Admin/EPurchase/PR/Print/', [EPurchaseController::class, 'print_pr_admin'])->name('print_pr_admin');

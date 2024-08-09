@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('nomor_urut');
             $table->string('tipe_srt');
             $table->string('comp');
-            $table->string('kode_client');
+            $table->string('kode_client')->nullable();
             $table->string('nama_perusahaan');
             $table->string('bln');
             $table->string('thn');

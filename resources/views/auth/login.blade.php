@@ -15,7 +15,9 @@
 
         <form method="POST" action="{{ route('login') }}">
             @csrf
-
+            <div>
+                <h1 style="font-weight: 900;font-size: 25px;text-align: center;margin-bottom: 20px">SATU-PINTU</h1>
+            </div>
             <div>
                 <x-label for="email" value="{{ __('Email') }}" />
                 <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />

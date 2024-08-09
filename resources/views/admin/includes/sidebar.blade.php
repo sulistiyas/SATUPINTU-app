@@ -111,6 +111,23 @@
               </li>
             </ul>
           </li>
+          <li class="{{ Request::routeIs('index_atk_master') ? 'nav-item menu-open' : 'nav-item menu' }}">
+            <a href="#" class="{{ Request::routeIs('index_atk_master')  ? 'nav-link active' : 'nav-link' }}">
+              <i class="fas fa-pencil-ruler"></i>
+              <p>
+                ATK
+                <i class="fas fa-angle-left right"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{{ route('index_atk_master') }}" class="{{ Request::routeIs('index_atk_master') ? 'nav-link active' : 'nav-link' }}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Master Data</p>
+                </a>
+              </li>
+            </ul>
+          </li>
           <li class="{{ Request::routeIs('index_device_master') || Request::routeIs('index_office_asset') || Request::routeIs('index_office_legalitas') || Request::routeIs('index_letter_number') || Request::routeIs('index_users') ? 'nav-item menu-open' : 'nav-item menu' }}">
             <a href="#"  class="{{ Request::routeIs('index_device_master') || Request::routeIs('index_office_asset') || Request::routeIs('index_office_legalitas') || Request::routeIs('index_letter_number') || Request::routeIs('index_users') ? 'nav-link active' : 'nav-link' }}">
               <i class="fas fa-users-cog"></i>

@@ -1,21 +1,58 @@
 @include('admin.includes.header')
+<style type="text/css">
+  .dataTables_wrapper .dataTables_filter {
+    float: none;
+    text-align: center;
+}
+</style>
 @include('admin.includes.sidebar')
+
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <div class="content-header">
       <div class="container-fluid">
         <div class="row mb-2">
-          <div class="col-sm-6">
+          {{-- <div class="col-sm-6">
             <h1 class="m-0">Dashboard</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Dashboard v1</li>
+              <li class="breadcrumb-item active">Dashboard</li>
             </ol>
-          </div><!-- /.col -->
+          </div><!-- /.col --> --}}
+          <div class="col-12">
+            <div class="alert alert-success alert-dismissible">
+              <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+              
+              @php
+                  $time_now = date('H:i');
+                  $date_now = date('l, j F Y');
+              @endphp
+              <h5>
+                
+                {{-- <i class="icon fas fa-check"></i> Alert!{{ $time_now }} --}}
+                @if ($time_now >= "05:00" && $time_now <= "11:59")
+                    <p style="font-weight: 300; font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; font-size:30px;">Good Morning !!!</p> 
+                @elseif ($time_now >= "12:00" && $time_now <= "16:59")
+                    <p style="font-weight: 300; font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; font-size:30px;">Good Afternoon !!! </p> 
+                @elseif ($time_now >= "17:00" && $time_now <= "04:59")
+                    <p style="font-weight: 300; font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; font-size:30px;">Good Evening !!! </p> 
+                @endif
+              </h5>
+              <br>
+              <div class="row-mb-2">
+                <div class="col-12">
+                  
+                </div>
+              </div>
+              {{ $date_now }}
+              <div id="time"></div>
+            </div>
+          </div>
         </div><!-- /.row -->
+        
       </div><!-- /.container-fluid -->
     </div>
     <!-- /.content-header -->
@@ -192,9 +229,10 @@
         </div>
         <!-- /.row -->
         <!-- Main row -->
+        {{-- Left Row --}}
         <div class="row">
           <section class="col-lg-6 connectedSortable">
-            <div class="card">
+            <div class="card card-info">
               <div class="card-header">
                 <h3 class="card-title">
                   <i class="fas fa-file-alt"></i>
@@ -202,7 +240,7 @@
                 </h3>
               </div><!-- /.card-header -->
               <div class="card-body">
-                <table id="tbl_legalitas" class="table table-bordered table-striped">
+                <table id="tbl_legalitas" class="table table-hover table-bordered table-striped">
                   <thead>
                     <tr>
                         <th>No</th>
@@ -216,7 +254,12 @@
                     @foreach(Illuminate\Support\Facades\DB::table('legalitas_office')->where('status','=','3')->orderBy('berakhir','DESC')->get() as $item_legalitas)
                         <tr>
                           <td>{{ $loop->iteration }}.</td>
-                          <td>{{ $item_legalitas->dokumen }} &nbsp;&nbsp;<a href="{{ route('index_office_legalitas') }}"><i class="fas fa-external-link-alt"></i></a></td>
+                          <td>
+                            
+                            <a href="{{ route('index_office_legalitas') }}">
+                              {{ $item_legalitas->dokumen }}
+                            </a>
+                          </td>
                           {{-- <td>{{ $item_legalitas->no_legalitas }}</td> --}}
                           <td>{{ $item_legalitas->berakhir }}</td>
                           <td><p style="color: red; font-weight: 900;">Expired</p></td>
@@ -227,7 +270,106 @@
               </div>
             </div>
           </section>
+          <section class="col-lg-6 connectedSortable">
+            <div class="card card-success">
+              <div class="card-header">
+                <h3 class="card-title">
+                  <i class="fas fa-shopping-cart"></i>
+                  Purchase Request
+                </h3>
+              </div>
+              <div class="card-body">
+                <table id="tbl_epurchase" class="table table-hover table-bordered table-striped">
+                  <thead>
+                    <tr>
+                      <th>No.</th>
+                      <th>PR Number</th>
+                      <th>Requester</th>
+                      <th>Desc</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @foreach(Illuminate\Support\Facades\DB::table('pr')->where('pr_status','=','5')
+                                                          ->join('employee','employee.id_employee','=','pr.id_employee')
+                                                          ->join('users','users.id','=','employee.id_users')
+                                                          ->orderBy('id_pr','DESC')->get() as $item_pr)
+                        <tr>
+                          <td>{{ $loop->iteration }}.</td>
+                          <td>
+                            <a href="{{ route('index_pr_admin') }}">
+                              {{ $item_pr->pr_no }}
+                            </a>
+                          </td>
+                          <td>{{ $item_pr->name }}</td>
+                          <td>{{ $item_pr->pr_desc }}</td>
+                          <td>
+                            @if ($item_pr->pr_status == 5)
+                                <p style="color: orange; font-weight: 900">Waiting Approval</p>
+                            @else
+                                <p style="color: orange; font-weight: 900">Approved</p>
+                            @endif
+                          </td>
+                        </tr>
+                    @endforeach
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">
+                  <i class="fas fa-cart-plus"></i>
+                  Purchase Order
+                </h3>
+              </div>
+              <div class="card-body">
+                <table id="tbl_po" class="table table-bordered table-striped">
+                  <thead>
+                    <tr>
+                      <th>No.</th>
+                      <th>PO Number</th>
+                      <th>Requester</th>
+                      <th>Desc</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @foreach(Illuminate\Support\Facades\DB::table('po')
+                                                          ->join('pr','pr.pr_no','=','po.po_no')
+                                                          ->join('employee','employee.id_employee','=','pr.id_employee')
+                                                          ->join('users','users.id','=','employee.id_users')
+                                                          ->where('po_status','=','3')
+                                                          ->orWhere('po_status','=','2')
+                                                          ->orderBy('id_po','DESC')->get() as $item_po)
+                        <tr>
+                          <td>{{ $loop->iteration }}.</td>
+                          <td>
+                            <a href="{{ route('index_po_admin') }}">
+                              {{ $item_po->po_no }}
+                            </a>
+                          </td>
+                          <td>{{ $item_po->name }}</td>
+                          <td>{{ $item_po->pr_desc }}</td>
+                          <td>
+                            @if ($item_po->po_status == 3 || $item_po->po_status == 2)
+                                <p style="color: orange; font-weight: 900">Waiting Approval</p>
+                            @else
+                                <p style="color: orange; font-weight: 900">Approved</p>
+                            @endif
+                          </td>
+                        </tr>
+                    @endforeach
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
         </div>
+        {{-- End Left Row --}}
+        {{-- Right Row --}}
+
+        {{-- End Right Row --}}
         <!-- /.row (main row) -->
       </div><!-- /.container-fluid -->
     </section>
@@ -238,8 +380,42 @@
   // Datatables
   $(function () {
     $("#tbl_legalitas").DataTable({
+      pageLength : 5,
+      lengthMenu: [[5, 10, 20, -1], [5, 10, 20, 'Todos']],
       "responsive": true, "lengthChange": false, "autoWidth": false,
-      "buttons": ["copy", "excel", "pdf"]
+      
     }).buttons().container().appendTo('#tbl_legalitas_wrapper .col-md-6:eq(0)');
   });
+  // Datatables
+  $(function () {
+    $("#tbl_epurchase").DataTable({
+      
+      "responsive": true, "lengthChange": false, "autoWidth": false,
+      
+    }).buttons().container().appendTo('#tbl_epurchase_wrapper .col-md-6:eq(0)');
+  });
+  // Datatables
+  $(function () {
+    $("#tbl_po").DataTable({
+      "responsive": true, "lengthChange": false, "autoWidth": false,
+      
+    }).buttons().container().appendTo('#tbl_po_wrapper .col-md-6:eq(0)');
+  });
+</script>
+<script type="text/javascript">
+  function showTime() {
+    var date = new Date(),
+        utc = new Date(Date(
+          date.getFullYear(),
+          date.getMonth(),
+          date.getDate(),
+          date.getHours(),
+          date.getMinutes(),
+          date.getSeconds()
+        ));
+
+    document.getElementById('time').innerHTML = date.toLocaleTimeString('id', { timeZone: 'Asia/Jakarta' });
+  }
+
+  setInterval(showTime, 1000);
 </script>

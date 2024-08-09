@@ -55,6 +55,8 @@
                                             <select name="txt_jn" id="txt_jn" class="form-control select2bs4">
                                                 <option value="Operational Office">Operational Office</option>
                                                 <option value="I-Link">I-Link</option>
+                                                <option value="WSCC">WSCC</option>
+                                                <option value="WSCE">WSCE</option>
                                                 <option value="PT. Conexus">PT. Conexus</option>
                                                 @foreach ($data as $list_jn)
                                                     <option value="{{ $list_jn->id_jn }}">{{ $list_jn->job_number }}</option>
