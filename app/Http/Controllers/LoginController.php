@@ -26,7 +26,9 @@ class LoginController extends Controller
         } elseif ($user_level == "2") {
             return view('manager.dashboard');
         } elseif ($user_level == "3") {
-            // return view('layouts.employee.home');
+            return view('users.dashboard');
+        } elseif ($user_level == "4") {
+            return view('hr_ga.dashboard');
         }
     }
 

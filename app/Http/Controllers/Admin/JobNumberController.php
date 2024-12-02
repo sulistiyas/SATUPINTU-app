@@ -140,7 +140,7 @@ class JobNumberController extends Controller
         //
     }
 
-    public function refresh_jn()
+    public function refresh_jn_admin()
     {
         $latest_jn = DB::table('jobnumber')->where('jobnumber.deleted_at', '=', NULL)->orderBy('jobnumber.id_jn', 'desc')->limit(1)->get();
         foreach ($latest_jn as $data) {

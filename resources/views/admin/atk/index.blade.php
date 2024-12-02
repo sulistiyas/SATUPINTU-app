@@ -46,13 +46,24 @@
                                 <tbody>
                                     @foreach ($atk_list as $item_atk)
                                         <tr>
-                                            <td>{{ $loop->iteration }}</td>
+                                            <td>{{ $loop->iteration }}.</td>
                                             <td>{{ $item_atk->atk_name }}</td>
                                             <td>{{ $item_atk->atk_brand }}</td>
                                             <td>{{ $item_atk->atk_stock }}</td>
                                             <td>{{ $item_atk->atk_unit }}</td>
                                             <td>
-                                                {{--  --}}
+                                                <div class="btn-group">
+                                                    <div class="col-md-5">
+                                                        <button type="button" class="btn btn-outline-primary" title="Show Data" data-toggle="modal" data-target="#modal_legalitas_show" id="get_legalitas" data-url="{{ route('show_modal_pr_admin',['id'=>$item_atk->id_atk])}}"><i class="fas fa-eye"></i></button>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <form onsubmit="return confirm('Apakah Anda Yakin ingin Menghapus data ?');" action="{{ route('destroy_client_admin',[$item_atk->id_atk]) }}" method="POST">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-outline-danger" title="Delete Data" id="delete_atk"><i class="fas fa-trash-alt"></i></button>
+                                                        </form>
+                                                    </div>
+                                                </div>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -66,6 +77,7 @@
     </section>
     <!-- /.content -->
     {{-- End Content --}}
+</div>
 @include('admin.includes.footer')
 {{-- Create Modal --}}
 <form action="{{ route('store_atk_master') }}" method="POST" enctype="multipart/form-data" id="atk_form" name="atk_form">

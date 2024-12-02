@@ -76,8 +76,8 @@
             </ul>
           </li>
 
-          <li class="{{ Request::routeIs('index_pr_admin') || Request::routeIs('index_po_admin') || Request::routeIs('index_vendor_admin') || Request::routeIs('create_pr_admin') || Request::routeIs('search_epurchase_admin') ? 'nav-item menu-open' : 'nav-item menu' }}">
-            <a href="#"  class="{{ Request::routeIs('index_pr_admin') || Request::routeIs('index_po_admin') || Request::routeIs('index_vendor_admin') || Request::routeIs('create_pr_admin') || Request::routeIs('search_epurchase_admin') ? 'nav-link active' : 'nav-link' }}">
+          <li class="{{ Request::routeIs('index_pr_admin') || Request::routeIs('index_po_admin') || Request::routeIs('index_vendor_admin') || Request::routeIs('create_pr_admin') || Request::routeIs('search_epurchase_admin') || Request::routeIs('index_old_pr')? 'nav-item menu-open' : 'nav-item menu' }}">
+            <a href="#"  class="{{ Request::routeIs('index_pr_admin') || Request::routeIs('index_po_admin') || Request::routeIs('index_vendor_admin') || Request::routeIs('create_pr_admin') || Request::routeIs('search_epurchase_admin') || Request::routeIs('index_old_pr')? 'nav-link active' : 'nav-link' }}">
               <i class="fas fa-shopping-cart"></i>
               <p>
                 e-Purchase
@@ -109,10 +109,16 @@
                   <p>Vendor</p>
                 </a>
               </li>
+              <li class="nav-item">
+                <a href="{{ route('index_old_pr') }}" class="{{ Request::routeIs('index_old_pr') ? 'nav-link active' : 'nav-link' }}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Old PR PO</p>
+                </a>
+              </li>
             </ul>
           </li>
-          <li class="{{ Request::routeIs('index_atk_master') ? 'nav-item menu-open' : 'nav-item menu' }}">
-            <a href="#" class="{{ Request::routeIs('index_atk_master')  ? 'nav-link active' : 'nav-link' }}">
+          <li class="{{ Request::routeIs('index_atk_master') || Request::routeIs('index_atk_in')? 'nav-item menu-open' : 'nav-item menu' }}">
+            <a href="#" class="{{ Request::routeIs('index_atk_master')  || Request::routeIs('index_atk_in')? 'nav-link active' : 'nav-link' }}">
               <i class="fas fa-pencil-ruler"></i>
               <p>
                 ATK
@@ -124,6 +130,12 @@
                 <a href="{{ route('index_atk_master') }}" class="{{ Request::routeIs('index_atk_master') ? 'nav-link active' : 'nav-link' }}">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Master Data</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ route('index_atk_in') }}" class="{{ Request::routeIs('index_atk_in') ? 'nav-link active' : 'nav-link' }}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>ATK in</p>
                 </a>
               </li>
             </ul>

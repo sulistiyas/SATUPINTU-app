@@ -70,7 +70,7 @@
                 <tbody>
                     <tr>
                         <td>
-                            <b>Dear {{ $manager }},</b>
+                            <b>Dear {{ $hr_ga }},</b>
                             <p>You get a message from {{ $fullname }}, waiting for PR ( Purchase Request ) approval.</p>
                             @foreach ($data as $pr_title)
                                 
@@ -83,11 +83,11 @@
                             </ul>
                             <table id="pr">
                                 <thead>
-                                    <tr align="center">
-                                        <th style="font-weight: 900;">No.</th>
-                                        <th style="font-weight: 900;">Desc</th>
-                                        <th style="font-weight: 900;">Qty</th>
-                                        <th style="font-weight: 900;">Unit</th>
+                                    <tr>
+                                        <th style="font-weight: 900; text-align: center">No.</th>
+                                        <th style="font-weight: 900; text-align: center">Desc</th>
+                                        <th style="font-weight: 900; text-align: center">Qty</th>
+                                        <th style="font-weight: 900; text-align: center">Unit</th>
                                     </tr>
                                 </thead>
                                 <tbody>

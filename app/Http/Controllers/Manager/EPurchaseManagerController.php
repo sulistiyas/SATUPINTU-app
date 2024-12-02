@@ -30,6 +30,7 @@ class EPurchaseManagerController extends Controller
             ->join('users', 'users.id', '=', 'employee.id_users')
             ->where('employee.emp_division', '=', $division)
             ->where('pr.deleted_at', '=', NULL)
+            ->orderBy('pr.created_at', 'desc')
             ->groupBy('pr.pr_no')->get();
         return view('manager.includes.ePurchase.index_pr', ['data' => $get_pr_data]);
     }
@@ -106,6 +107,7 @@ class EPurchaseManagerController extends Controller
             ->join('employee', 'employee.id_employee', '=', 'pr.id_employee')
             ->join('users', 'users.id', '=', 'employee.id_users')
             ->where('pr.deleted_at', '=', NULL)
+            ->orderBy('pr.created_at', 'desc')
             ->groupBy('pr.pr_no')->get();
         return view('manager.includes.ePurchase.index_po', ['data' => $get_po_data]);
     }

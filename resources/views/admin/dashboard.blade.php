@@ -33,11 +33,11 @@
               <h5>
                 
                 {{-- <i class="icon fas fa-check"></i> Alert!{{ $time_now }} --}}
-                @if ($time_now >= "05:00" && $time_now <= "11:59")
+                @if ($time_now >= "00:00" && $time_now <= "11:59")
                     <p style="font-weight: 300; font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; font-size:30px;">Good Morning !!!</p> 
                 @elseif ($time_now >= "12:00" && $time_now <= "16:59")
                     <p style="font-weight: 300; font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; font-size:30px;">Good Afternoon !!! </p> 
-                @elseif ($time_now >= "17:00" && $time_now <= "04:59")
+                @elseif ($time_now >= "17:00" && $time_now <= "23:59")
                     <p style="font-weight: 300; font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; font-size:30px;">Good Evening !!! </p> 
                 @endif
               </h5>

@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use App\Models\PurchaseRequest;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\JobNumber;
+use App\Models\OldPR;
 use App\Models\PurchaseOrder;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Dompdf\Adapter\PDFLib;
@@ -17,8 +19,7 @@ use Illuminate\Support\Facades\Mail;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\Validator;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
-
-
+use Yajra\DataTables\Facades\DataTables;
 
 class EPurchaseController extends Controller
 {
@@ -30,8 +31,9 @@ class EPurchaseController extends Controller
             ->leftJoin('po', 'po.id_pr', '=', 'pr.id_pr')
             ->join('employee', 'employee.id_employee', '=', 'pr.id_employee')
             ->join('users', 'users.id', '=', 'employee.id_users')
-            ->where('users.id', '=', $id_usr)
+            // ->where('users.id', '=', $id_usr)
             ->where('pr.deleted_at', '=', NULL)
+            ->orderBy('pr.created_at', 'desc')
             ->groupBy('pr.pr_no')->get();
         return view('admin.ePurchase.purchase_request.index', ['data' => $get_data]);
     }
@@ -148,7 +150,7 @@ class EPurchaseController extends Controller
             ->join('users', 'users.id', '=', 'employee.id_users')
             ->where('pr.pr_no', '=', $id)->get();
         // $pr_data = DB::table('pr')->where('pr_no', '=', $id)->get();
-        return view('components.modals.pr_admin_show', ['data_pr' => $pr_data]);
+        return view('components.modals.admin_modals.e_purchase.pr.pr_admin_show', ['data_pr' => $pr_data]);
     }
 
     public function show_modal_price_admin($id)
@@ -159,10 +161,24 @@ class EPurchaseController extends Controller
             ->join('users', 'users.id', '=', 'employee.id_users')
             ->where('pr.pr_no', '=', $id)->get();
         // $pr_data = DB::table('pr')->where('pr_no', '=', $id)->get();
-        return view('components.modals.price_admin', compact('po_no', 'data_pr'));
+        return view('components.modals.admin_modals.e_purchase.po.price_admin', compact('po_no', 'data_pr'));
     }
 
     public function show_modal_po_admin($id)
+    {
+        $data_po = DB::table('po')
+            ->join('pr', 'pr.id_pr', '=', 'po.id_pr')
+            ->join('employee', 'employee.id_employee', '=', 'pr.id_employee')
+            ->join('users', 'users.id', '=', 'employee.id_users')
+            ->leftJoin('vendor', 'vendor.id_vendor', '=', 'po.id_vendor')
+            ->where('po.po_no', '=', $id)->get();
+        // $pr_data = DB::table('pr')->where('pr_no', '=', $id)->get();
+        $total_prices = DB::table('po')->selectRaw('SUM(total_price) as grand_total')->where('po_no', '=', $id)->get();
+        $vendor_data = DB::table('vendor')->where('deleted_at', '=', NULL)->orderBy('vendor', 'asc')->get();
+        return view('components.modals.admin_modals.e_purchase.po.po_admin', compact('data_po', 'total_prices', 'vendor_data'));
+    }
+
+    public function show_modal_create_po_admin($id)
     {
         $data_po = DB::table('po')
             ->join('pr', 'pr.id_pr', '=', 'po.id_pr')
@@ -172,12 +188,18 @@ class EPurchaseController extends Controller
         // $pr_data = DB::table('pr')->where('pr_no', '=', $id)->get();
         $total_prices = DB::table('po')->selectRaw('SUM(total_price) as grand_total')->where('po_no', '=', $id)->get();
         $vendor_data = DB::table('vendor')->where('deleted_at', '=', NULL)->orderBy('vendor', 'asc')->get();
-        return view('components.modals.po_admin', compact('data_po', 'total_prices', 'vendor_data'));
+        return view('components.modals.admin_modals.e_purchase.po.po_create_admin', compact('data_po', 'total_prices', 'vendor_data'));
     }
 
     public function edit_pr(string $id)
     {
-        //
+        // 
+        $pr_data = DB::table('pr')
+            ->join('employee', 'employee.id_employee', '=', 'pr.id_employee')
+            ->join('users', 'users.id', '=', 'employee.id_users')
+            ->where('pr.pr_no', '=', $id)->get();
+        // $pr_data = DB::table('pr')->where('pr_no', '=', $id)->get();
+        return view('components.modals.admin_modals.e_purchase.pr.pr_admin_show', ['data_pr' => $pr_data]);
     }
 
     public function update_pr(Request $request, string $id)
@@ -198,6 +220,7 @@ class EPurchaseController extends Controller
             ->join('employee', 'employee.id_employee', '=', 'pr.id_employee')
             ->join('users', 'users.id', '=', 'employee.id_users')
             ->where('pr.deleted_at', '=', NULL)
+            ->orderBy('pr.created_at', 'desc')
             ->groupBy('pr.pr_no')->get();
         // dd($get_pr_data);
         return view('admin.ePurchase.purchase_order.index', ['data' => $get_pr_data]);
@@ -236,6 +259,8 @@ class EPurchaseController extends Controller
                 $total_price = $request->txt_total_price;
                 $disc = $request->txt_disc;
                 $tax = $request->txt_tax;
+                $service_charge = $request->txt_service_charge;
+                $delivery_fee = $request->txt_delivery_fee;
                 $vendor = $request->txt_id_vendor;
                 $count_data = $request->txt_count_data;
 
@@ -251,11 +276,13 @@ class EPurchaseController extends Controller
                     );
                 }
                 $po_data = PurchaseOrder::where('po_no', '=', $po_no)->update([
-                    'id_vendor'     => $vendor,
-                    'po_disc'     => $disc,
-                    'po_tax'     => $tax,
-                    'po_status'     => '2',
-                    'updated_at'    => date('Y-m-d h:i:s')
+                    'id_vendor'             => $vendor,
+                    'po_disc'               => $disc,
+                    'po_tax'                => $tax,
+                    'po_service_charge'     => $service_charge,
+                    'po_delivery_fee'       => $delivery_fee,
+                    'po_status'             => '2',
+                    'updated_at'            => date('Y-m-d h:i:s')
                 ]);
                 $pr_data = PurchaseRequest::where('pr_no', '=', $pr_no)->update([
                     'pr_status'     => '2',
@@ -290,7 +317,7 @@ class EPurchaseController extends Controller
                 $a_disc = ($disc / 100) * $sub;
                 $a_tax = ($tax / 100) * $sub;
 
-                $grand_total = $sub - $a_disc + $a_tax;
+                $grand_total = $sub - $a_disc + $a_tax + $service_charge + $delivery_fee;
 
                 return $this->SendMailPO($emp_name, $mng_name, $po_data, $a_disc, $a_tax, $sub, $grand_total);
                 Alert::success('Success', 'Successfully Insert PO');
@@ -324,6 +351,7 @@ class EPurchaseController extends Controller
                 $txt_pr_no = $request->txt_pr_no;
                 $txt_po_no = $request->txt_po_no;
                 $txt_id_pr = $request->txt_id_pr;
+                $currency = $request->txt_currency;
                 $price = $request->txt_price;
                 $txt_qty = $request->txt_qty_pr;
                 $txt_count = $request->txt_count;
@@ -334,6 +362,7 @@ class EPurchaseController extends Controller
                     $array_data[] = array(
                         'po_no'         => $txt_po_no[$key],
                         'id_pr'         => $txt_id_pr[$key],
+                        'currency'      => $currency[$key],
                         'price'         => $price[$key],
                         'total_price'   => $price_total_unit,
                         'po_date'       => date('Y-m-d'),
@@ -347,16 +376,16 @@ class EPurchaseController extends Controller
                     'pr_status'     => '3',
                     'updated_at'    => date('Y-m-d h:i:s')
                 ]);
-                Alert::success('Success', 'Successfully Insert Price');
-                return redirect()->route('index_po_admin');
+                // Alert::success('Success', 'Successfully Insert Price');
+                // return redirect()->route('index_po_admin');
             } catch (\Exception $ex) {
                 return response()->json([
                     'status'    => false,
                     'message'   => 'Error : ',
                     'errors'    => $ex
                 ], 401);
-                Alert::error('Error', 'Error Insert Price');
-                return redirect()->route('index_po_admin');
+                // Alert::error('Error', 'Error Insert Price');
+                // return redirect()->route('index_po_admin');
             }
         }
     }
@@ -518,7 +547,13 @@ class EPurchaseController extends Controller
                 $emp_div = $item_emp->emp_division;
                 $emp_name = $item_emp->name;
             }
-
+            $ga_data = DB::table('users')
+                ->where('user_level', '=', '4')
+                ->where('deleted_at', '=', NULL)->get();
+            foreach ($ga_data as $data_ga) {
+                $GA_email = $data_ga->email;
+                $GA_name = $data_ga->name;
+            }
             $manager_data = DB::table('employee')
                 ->join('users', 'users.id', '=', 'employee.id_users')
                 ->where('emp_division', '=', $emp_div)
@@ -529,6 +564,7 @@ class EPurchaseController extends Controller
             Mail::send('emails.pr_send', [
                 'fullname'      => $emp_name,
                 'manager'       => $manager_name,
+                'hr_ga'         => $GA_name,
                 'data'          => $array_data,
                 'pr_no'         => $pr_no,
                 'job_number'    => $jn,
@@ -541,6 +577,13 @@ class EPurchaseController extends Controller
                     $emp_div = $item_emp->emp_division;
                 }
 
+                $ga_data = DB::table('users')
+                    ->where('user_level', '=', '4')
+                    ->where('deleted_at', '=', NULL)->get();
+                foreach ($ga_data as $data_ga) {
+                    $GA_email = $data_ga->email;
+                }
+
                 $manager_data = DB::table('employee')
                     ->join('users', 'users.id', '=', 'employee.id_users')
                     ->where('emp_division', '=', $emp_div)
@@ -548,8 +591,9 @@ class EPurchaseController extends Controller
                 foreach ($manager_data as $manager) {
                     $manager_email = $manager->email;
                 }
-                // $mail->to($manager_email);
-                $mail->to('sulis.nugroho@inlingua.co.id');
+                $mail->to($GA_email);
+                $mail->cc('sulis.nugroho@inlingua.co.id');
+                $mail->cc($manager_email);
                 $mail->from(config('mail.from.name'));
                 $mail->subject('SATUPINTU - APP | Purchase Request Order');
             });
@@ -674,5 +718,16 @@ class EPurchaseController extends Controller
         $pdf = Pdf::loadView('components.pdf.po_print', $data);
         // $pdf->loadHTML($po_no);
         return $pdf->stream("$po_no.pdf");
+    }
+
+    public function get_old_pr()
+    {
+        return DataTables::of(OldPR::query())->toJson();
+    }
+    public function index_old_pr()
+    {
+        return view('admin.ePurchase.old_pr');
+        // $get_data = DB::table('tbl_pr')->orderBy('id_pr', 'desc')->get();
+        // return view('admin.ePurchase.old_pr', ['old_pr' => $get_data]);
     }
 }

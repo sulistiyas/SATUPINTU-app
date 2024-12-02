@@ -38,10 +38,10 @@
                 <td>:</td>
                 <th>
                     <select name="txt_id_vendor" id="txt_id_vendor" class="form-control select2bs4">
-                        @foreach ($vendor_data as $item_vendor)
-                            <option value="{{ $item_vendor->id_vendor }}">{{ $item_vendor->vendor }}</option>
+                        <option value="" disabled> - Select Vendor - </option>
+                        @foreach ($vendor_data as $vendor_drop)
+                            <option value="{{ $vendor_drop->id_vendor }}">{{ $vendor_drop->vendor }}</option>
                         @endforeach
-                        
                     </select>
                 </th>
             </tr>

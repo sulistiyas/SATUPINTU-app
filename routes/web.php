@@ -12,7 +12,10 @@ use App\Http\Controllers\Admin\JobNumberController;
 use App\Http\Controllers\Admin\LegalitasController;
 use App\Http\Controllers\Manager\ManagerController;
 use App\Http\Controllers\Admin\LetterNumberController;
+use App\Http\Controllers\HRGA\HRJobNumberController;
 use App\Http\Controllers\Manager\EPurchaseManagerController;
+use App\Http\Controllers\Users\EPurchaseController as UsersEPurchaseController;
+use App\Http\Controllers\Users\UsersController as UsersUsersController;
 
 Route::get('/', function () {
     return view('auth.login');
@@ -36,7 +39,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
             Route::get('/Admin/JobNumber/Edit/{id}', [JobNumberController::class, 'edit'])->name('edit_jn_admin');
             Route::POST('/Admin/JobNumber/Update/{id}', [JobNumberController::class, 'update'])->name('update_jn_admin');
             Route::delete('/Admin/JobNumber/Destroy/{id}', [JobNumberController::class, 'destroy'])->name('destroy_jn_admin');
-            Route::get('/List_JN', [JobNumberController::class, 'refresh_jn'])->name('refresh_jn_admin');
+            Route::get('/List_JN', [JobNumberController::class, 'refresh_jn_admin'])->name('refresh_jn_admin');
             // Client
             Route::get('/Admin/Client/List', [ClientController::class, 'index'])->name('index_client_admin');
             Route::get('/Admin/Client/Create', [ClientController::class, 'create'])->name('create_client_admin');
@@ -52,6 +55,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
             Route::POST('/Admin/EPurchase/PR/Update/{id}', [EPurchaseController::class, 'update_pr'])->name('update_pr_admin');
             Route::delete('/Admin/EPurchase/PR/Destroy/{id}', [EPurchaseController::class, 'destroy_pr'])->name('destroy_pr_admin');
             Route::get('/refresh/pr', [EPurchaseController::class, 'refresh_pr'])->name('refresh_pr');
+            Route::get('/Admin/Epurchase/PR/OLD', [EPurchaseController::class, 'index_old_pr'])->name('index_old_pr');
             // Purchase Order
             Route::get('/Admin/EPurchase/PO/List', [EPurchaseController::class, 'index_po'])->name('index_po_admin');
             Route::get('/Admin/EPurchase/PO/Create', [EPurchaseController::class, 'create_po'])->name('create_po_admin');
@@ -69,10 +73,13 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
             Route::POST('/Admin/EPurchase/Vendor/Update/{id}', [EPurchaseController::class, 'update_vendor'])->name('update_vendor_admin');
             Route::delete('/Admin/EPurchase/Vendor/Destroy/{id}', [EPurchaseController::class, 'destroy_vendor'])->name('destroy_vendor_admin');
             // ATK
-            Route::get('/Admin/ATK/Master/List',[ATKController::class,'index'])->name('index_atk_master');
-            Route::post('/Admin/ATK/Master/Store',[ATKController::class,'store'])->name('store_atk_master');
-            Route::get('/Admin/ATK/Master/Update',[ATKController::class,'update'])->name('update_atk_master');
-            Route::get('/Admin/ATK/Master/Create',[ATKController::class,'create'])->name('show_modal_create_atk');
+            Route::get('/Admin/ATK/Master/List', [ATKController::class, 'index'])->name('index_atk_master');
+            Route::post('/Admin/ATK/Master/Store', [ATKController::class, 'store'])->name('store_atk_master');
+            Route::get('/Admin/ATK/Master/Update', [ATKController::class, 'update'])->name('update_atk_master');
+            Route::get('/Admin/ATK/Master/Create', [ATKController::class, 'create'])->name('show_modal_create_atk');
+
+            Route::get('/Admin/ATK/In', [ATKController::class, 'index_atk_in'])->name('index_atk_in');
+            Route::post('/Admin/ATK/In/Store', [ATKController::class, 'store_atk_in'])->name('store_atk_in');
 
             // Print e-Purchase
             Route::post('/Admin/EPurchase/PR/Print/', [EPurchaseController::class, 'print_pr_admin'])->name('print_pr_admin');
@@ -81,6 +88,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
             Route::get('show_modal_pr_admin/{id}', [EPurchaseController::class, 'show_modal_pr_admin'])->name('show_modal_pr_admin');
             Route::get('show_modal_price_admin/{id}', [EPurchaseController::class, 'show_modal_price_admin'])->name('show_modal_price_admin');
             Route::get('show_modal_po_admin/{id}', [EPurchaseController::class, 'show_modal_po_admin'])->name('show_modal_po_admin');
+            Route::get('show_modal_create_po_admin/{id}', [EPurchaseController::class, 'show_modal_create_po_admin'])->name('show_modal_create_po_admin');
             // Report 
             Route::get('/Admin/EPurchase/Search', [EPurchaseController::class, 'search_epurchase_admin'])->name('search_epurchase_admin');
             Route::post('/Admin/EPurchase/Search/Submit', [EPurchaseController::class, 'search_epurchase_admin_result'])->name('search_epurchase_admin_result');
@@ -110,10 +118,15 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
             // User Management
             Route::get('/Admin/Users', [UsersController::class, 'index'])->name('index_users');
             Route::POST('/Admin/Users/Store', [UsersController::class, 'store'])->name('store_users');
-            Route::get('/Admin/Users/Show', [UsersController::class, 'show'])->name('show_modal_users');
-            Route::get('/Admin/Users/Edit', [UsersController::class, 'edit'])->name('edit_users');
-            Route::get('/Admin/Users/Update', [UsersController::class, 'update'])->name('update_users');
-            Route::delete('/Admin/Users/Delete', [UsersController::class, 'destroy'])->name('destroy_users');
+            Route::get('/Admin/Users/Show/{id}', [UsersController::class, 'show'])->name('show_modal_users');
+            Route::get('/Admin/Users/Edit/{id}', [UsersController::class, 'edit'])->name('edit_users');
+            Route::post('/Admin/Users/Update', [UsersController::class, 'update'])->name('update_users');
+            Route::delete('/Admin/Users/Delete/{id}', [UsersController::class, 'destroy'])->name('destroy_users');
+            Route::post('/Admin/Users/Update/Status/{id}', [UsersController::class, 'update_status_users'])->name('update_status_users');
+            Route::get('/Admin/Users/SendEmail/{id}', [UsersController::class, 'sendEmailUsersInformation'])->name('sendEmailUsersInformation');
+
+            // Adds on
+            Route::get('/data/json', [EPurchaseController::class, 'get_old_pr'])->name('get_old_pr');
         });
         Route::middleware(['auth', 'userLevel:2'])->group(function () {
 
@@ -156,8 +169,108 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
         // Route::middleware(['auth', 'userLevel:2'])->group(function () {
         //     echo json_encode("User Level = 2");
         // });
-        // Route::middleware(['auth', 'userLevel:3'])->group(function () {
-        //     echo json_encode("User Level = 3");
-        // });
+
+        Route::middleware(['auth', 'userLevel:3'])->group(function () {
+            // Client
+            Route::get('/Users/Client/List', [UsersUsersController::class, 'index_client_users'])->name('index_client_users');
+            Route::get('/Users/Client/Create', [UsersUsersController::class, 'create_client_users'])->name('create_client_users');
+            Route::post('/Users/Client/Store', [UsersUsersController::class, 'store_client_users'])->name('store_client_users');
+            Route::get('/Users/Client/Edit/{id}', [UsersUsersController::class, 'edit_client_users'])->name('edit_client_users');
+            Route::POST('/Users/Client/Update/{id}', [UsersUsersController::class, 'update_client_users'])->name('update_client_users');
+            Route::delete('/Users/Client/Destroy/{id}', [UsersUsersController::class, 'destroy_client_users'])->name('destroy_client_users');
+            // JobNumber
+            Route::get('/Users/JobNumber/List', [UsersUsersController::class, 'index_jn_users'])->name('index_jn_users');
+            Route::get('/Users/JobNumber/List/Old', [UsersUsersController::class, 'index_jn_old_users'])->name('index_jn_old_users');
+            Route::get('/Users/JobNumber/Show/JN_OLD/{id}', [UsersUsersController::class, 'show_jn_old_users'])->name('show_jn_old_users');
+            Route::post('/Users/JobNumber/Store', [UsersUsersController::class, 'store_jn_users'])->name('store_jn_users');
+            Route::get('/Users/JobNumber/Edit/{id}', [UsersUsersController::class, 'edit_jn_users'])->name('edit_jn_users');
+            Route::POST('/Users/JobNumber/Update/{id}', [UsersUsersController::class, 'update_jn_users'])->name('update_jn_users');
+            Route::delete('/Users/JobNumber/Destroy/{id}', [UsersUsersController::class, 'destroy_jn_users'])->name('destroy_jn_users');
+            Route::get('/List_JNUsers', [UsersUsersController::class, 'refresh_jn_users'])->name('refresh_jn_users');
+            // E-Purchase
+            Route::get('/Users/Epurchase/List', [UsersEPurchaseController::class, 'index_pr_users'])->name('index_pr_users');
+            Route::get('/Users/Epurchase/Create', [UsersEPurchaseController::class, 'create_pr_users'])->name('create_pr_users');
+            Route::post('/Users/Epurchase/Store', [UsersEPurchaseController::class, 'store_pr_users'])->name('store_pr_users');
+            Route::get('/refresh/pr/users', [UsersEPurchaseController::class, 'refresh_pr_users'])->name('refresh_pr_users');
+            Route::get('show_modal_pr_users/{id}', [UsersEPurchaseController::class, 'show_modal_pr_users'])->name('show_modal_pr_users');
+            // Print e-Purchase
+            Route::post('/Users/EPurchase/PR/Print/', [UsersEPurchaseController::class, 'print_pr_users'])->name('print_pr_users');
+            // Etc
+        });
+
+        Route::middleware(['auth', 'userLevel:4'])->group(function () {
+            //  JobNumber
+            Route::get('/HRGA/JobNumber/List', [HRJobNumberController::class, 'index_jn'])->name('index_jn_hr_ga');
+            Route::get('/HRGA/JobNumber/List/Old', [HRJobNumberController::class, 'index_old_jn'])->name('index_jn_old_hr_ga');
+            Route::get('/HRGA/JobNumber/Show/JN_OLD/{id}', [HRJobNumberController::class, 'show_jn_old_hr_ga'])->name('show_jn_old_hr_ga');
+            Route::get('/HRGA/JobNumber/Create', [HRJobNumberController::class, 'create'])->name('create_jn_hr_ga');
+            Route::post('/HRGA/JobNumber/Store', [HRJobNumberController::class, 'store'])->name('store_jn_hr_ga');
+            Route::get('/HRGA/JobNumber/Edit/{id}', [HRJobNumberController::class, 'edit'])->name('edit_jn_hr_ga');
+            Route::POST('/HRGA/JobNumber/Update/{id}', [HRJobNumberController::class, 'update'])->name('update_jn_hr_ga');
+            Route::delete('/HRGA/JobNumber/Destroy/{id}', [HRJobNumberController::class, 'destroy'])->name('destroy_jn_hr_ga');
+            Route::get('/List_JN', [HRJobNumberController::class, 'refresh_jn_hr_ga'])->name('refresh_jn_hr_ga');
+            // Client
+            Route::get('/HRGA/Client/List', [HRJobNumberController::class, 'index_client'])->name('index_client_hr_ga');
+            Route::get('/HRGA/Client/Create', [ClientController::class, 'create'])->name('create_client_admin');
+            Route::post('/HRGA/Client/Store', [ClientController::class, 'store'])->name('store_client_admin');
+            Route::get('/HRGA/Client/Edit/{id}', [ClientController::class, 'edit'])->name('edit_client_admin');
+            Route::POST('/HRGA/Client/Update/{id}', [ClientController::class, 'update'])->name('update_client_admin');
+            Route::delete('/HRGA/Client/Destroy/{id}', [ClientController::class, 'destroy'])->name('destroy_client_admin');
+            // Purchase Request
+            Route::get('/HRGA/EPurchase/PR/List', [EPurchaseController::class, 'index_pr'])->name('index_pr_hr_ga');
+            Route::get('/HRGA/EPurchase/PR/Create', [EPurchaseController::class, 'create_pr'])->name('create_pr_hr_ga');
+            Route::POST('/HRGA/EPurchase/PR/Store', [EPurchaseController::class, 'store_pr'])->name('store_pr_hr_ga');
+            Route::get('/HRGA/EPurchase/PR/Edit/{id}', [EPurchaseController::class, 'edit_pr'])->name('edit_pr_hr_ga');
+            Route::POST('/HRGA/EPurchase/PR/Update/{id}', [EPurchaseController::class, 'update_pr'])->name('update_pr_hr_ga');
+            Route::delete('/HRGA/EPurchase/PR/Destroy/{id}', [EPurchaseController::class, 'destroy_pr'])->name('destroy_pr_hr_ga');
+            Route::get('/refresh/pr', [EPurchaseController::class, 'refresh_pr'])->name('refresh_pr');
+            Route::get('/HRGA/Epurchase/PR/OLD', [EPurchaseController::class, 'index_old_pr'])->name('index_old_pr');
+            // Purchase Order
+            Route::get('/HRGA/EPurchase/PO/List', [EPurchaseController::class, 'index_po'])->name('index_po_hr_ga');
+            Route::get('/HRGA/EPurchase/PO/Create', [EPurchaseController::class, 'create_po'])->name('create_po_hr_ga');
+            Route::post('/HRGA/EPurchase/PO/Store', [EPurchaseController::class, 'store_po'])->name('store_po_hr_ga');
+            // Route::post('/HRGA/EPurchase/PO/Store', [EPurchaseController::class, 'store_po_2'])->name('store_po_hr_ga');
+            Route::post('/HRGA/EPurchase/PO/Price/Store', [EPurchaseController::class, 'store_price'])->name('store_price_hr_ga');
+            Route::get('/HRGA/EPurchase/PO/Edit/{id}', [EPurchaseController::class, 'edit_po'])->name('edit_po_hr_ga');
+            Route::POST('/HRGA/EPurchase/PO/Update/{id}', [EPurchaseController::class, 'update_po'])->name('update_po_hr_ga');
+            Route::delete('/HRGA/EPurchase/PO/Destroy/{id}', [EPurchaseController::class, 'destroy_po'])->name('destroy_po_hr_ga');
+            // Vendor
+            Route::get('/HRGA/EPurchase/Vendor/List', [EPurchaseController::class, 'index_vendor'])->name('index_vendor_hr_ga');
+            Route::get('/HRGA/EPurchase/Vendor/Create', [EPurchaseController::class, 'create_vendor'])->name('create_vendor_hr_ga');
+            Route::post('/HRGA/EPurchase/Vendor/Store', [EPurchaseController::class, 'store_vendor'])->name('store_vendor_hr_ga');
+            Route::get('/HRGA/EPurchase/Vendor/Edit/{id}', [EPurchaseController::class, 'edit_vendor'])->name('edit_vendor_hr_ga');
+            Route::POST('/HRGA/EPurchase/Vendor/Update/{id}', [EPurchaseController::class, 'update_vendor'])->name('update_vendor_hr_ga');
+            Route::delete('/HRGA/EPurchase/Vendor/Destroy/{id}', [EPurchaseController::class, 'destroy_vendor'])->name('destroy_vendor_hr_ga');
+            
+
+            // Print e-Purchase
+            Route::post('/HRGA/EPurchase/PR/Print/', [EPurchaseController::class, 'print_pr_admin'])->name('print_pr_admin');
+            Route::post('/HRGA/EPurchase/PO/Print/', [EPurchaseController::class, 'print_po_admin'])->name('print_po_admin');
+            // Show Modal Data
+            Route::get('show_modal_pr_admin/{id}', [EPurchaseController::class, 'show_modal_pr_admin'])->name('show_modal_pr_admin');
+            Route::get('show_modal_price_admin/{id}', [EPurchaseController::class, 'show_modal_price_admin'])->name('show_modal_price_admin');
+            Route::get('show_modal_po_admin/{id}', [EPurchaseController::class, 'show_modal_po_admin'])->name('show_modal_po_admin');
+            Route::get('show_modal_create_po_admin/{id}', [EPurchaseController::class, 'show_modal_create_po_admin'])->name('show_modal_create_po_admin');
+            // Report 
+            Route::get('/HRGA/EPurchase/Search', [EPurchaseController::class, 'search_epurchase_admin'])->name('search_epurchase_admin');
+            Route::post('/HRGA/EPurchase/Search/Submit', [EPurchaseController::class, 'search_epurchase_admin_result'])->name('search_epurchase_hr_ga');
+            Route::get('/HRGA/EPurchase/Search/Print/PR/{id}', [EPurchaseController::class, 'print_pr_epurchase_admin'])->name('print_pr_epurchase_admin');
+            Route::get('/HRGA/EPurchase/Search/Print/PO/{id}', [EPurchaseController::class, 'print_po_epurchase_admin'])->name('print_po_epurchase_admin');
+
+            // Legalitas
+            Route::get('/HRGA/Legalitas/Office', [LegalitasController::class, 'index'])->name('index_office_legalitas');
+            Route::post('/HRGA/Legalitas/Office/Store', [LegalitasController::class, 'store'])->name('store_office_legalitas');
+            Route::post('/HRGA/Legalitas/Office/Update', [LegalitasController::class, 'update'])->name('update_office_legalitas');
+            Route::get('/HRGA/Legalitas/Office/Edit/{id}', [LegalitasController::class, 'edit'])->name('edit_office_legalitas');
+
+            // Letter Number
+            Route::get('/HRGA/LetterNumber', [LetterNumberController::class, 'index'])->name('index_letter_number');
+            Route::post('/HRGA/LetterNumber/Store', [LetterNumberController::class, 'store'])->name('store_letter_number');
+            Route::get('/HRGA/LetterNumber/Store/Create', [LetterNumberController::class, 'show'])->name('show_modal_create_letter_number');
+            Route::get('/refresh/number', [LetterNumberController::class, 'refresh_last_number'])->name('refresh_last_number');
+
+            // Adds on
+            Route::get('/data/json', [EPurchaseController::class, 'get_old_pr'])->name('get_old_pr');
+        });
     });
 });

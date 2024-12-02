@@ -55,7 +55,7 @@
                                             @if ( $item_pr->pr_status  == 5)
                                               Waiting Manager Approval
                                             @elseif ( $item_pr->pr_status == 4)
-                                              PR Approved
+                                              PR Approved - Please Add Price
                                             @elseif ( $item_pr->pr_status == 3)
                                               PR Approved - PO Submitting
                                             @elseif ( $item_pr->pr_status == 2)
@@ -73,14 +73,38 @@
                                                 
                                                 @if ( $item_pr->pr_status  == 5)
                                                   <div class="col-12">
-                                                    <button type="button" class="btn btn-block btn-outline-primary" title="Show Data" data-toggle="modal" data-target="#modal_pr_show_manager" id="getPR" data-url="{{ route('show_modal_pr_admin',['id'=>$item_pr->pr_no_1])}}"><i class="fas fa-eye">&nbsp;View Data</i></button>
+                                                    <div class="btn-group">
+                                                      <button type="button" class="btn btn-flat" data-toggle="dropdown">
+                                                          <span class="sr-only">Toggle Dropdown</span>
+                                                          <i class="fas fa-ellipsis-v"></i>
+                                                      </button>
+                                                      <div class="dropdown-menu" role="menu">
+                                                          <button type="button" class="dropdown-item" title="Show Data" data-toggle="modal" data-target="#modal_pr_show_admin" id="getPR" data-url="{{ route('show_modal_pr_admin',['id'=>$item_pr->pr_no_1])}}">
+                                                              View Data
+                                                          </button>
+                                                      <div class="dropdown-divider"></div>
+                                                        {{-- <a class="dropdown-item" href=""></a> --}}
+                                                        <button class="dropdown-item toastrDefaultError" >Print</button>
+                                                      </div>
+                                                    </div>
                                                   </div>    
                                                 @elseif ($item_pr->pr_status  == 4)
-                                                  <div class="col-7">
-                                                    <button type="button" class="btn btn-block btn-outline-primary" title="Show Data" data-toggle="modal" data-target="#modal_pr_show_manager" id="getPR" data-url="{{ route('show_modal_pr_admin',['id'=>$item_pr->pr_no_1])}}"><i class="fas fa-eye">&nbsp;View Data</i></button>
-                                                  </div>
-                                                  <div class="col-8">
-                                                    <button type="button" class="btn btn-block btn-outline-success" title="Add Price" data-toggle="modal" data-target="#modal_price_add" id="getPrice" data-url="{{ route('show_modal_price_admin',['id'=>$item_pr->pr_no_1])}}"><i class="fas fa-plus">&nbsp;Add Price</i></button>
+                                                  <div class="btn-group">
+                                                    <button type="button" class="btn btn-flat" data-toggle="dropdown">
+                                                        <span class="sr-only">Toggle Dropdown</span>
+                                                        <i class="fas fa-ellipsis-v"></i>
+                                                    </button>
+                                                    <div class="dropdown-menu" role="menu">
+                                                        <button type="button" class="dropdown-item" title="Show Data" data-toggle="modal" data-target="#modal_pr_show_admin" id="getPR" data-url="{{ route('show_modal_pr_admin',['id'=>$item_pr->pr_no_1])}}">
+                                                            View Data
+                                                        </button>
+                                                        <button type="button" class="dropdown-item" title="Add Price" data-toggle="modal" data-target="#modal_price_add" id="getPrice" data-url="{{ route('show_modal_price_admin',['id'=>$item_pr->pr_no_1])}}">
+                                                            Add Price
+                                                        </button>
+                                                    <div class="dropdown-divider"></div>
+                                                      {{-- <a class="dropdown-item" href=""></a> --}}
+                                                      <button class="dropdown-item toastrDefaultError" >Print</button>
+                                                    </div>
                                                   </div>
                                                 @endif
                                                 @if ( $item_pr->pr_status  == 3)
@@ -88,7 +112,7 @@
                                                     <button type="button" class="btn btn-block btn-outline-primary" title="Show Data" data-toggle="modal" data-target="#modal_po_show_admin" id="showPO" data-url="{{ route('show_modal_po_admin',['id'=>$item_pr->po_no])}}"><i class="fas fa-eye">&nbsp;View Data</i></button>
                                                   </div>
                                                   <div class="col-8">
-                                                    <button type="button" class="btn btn-block btn-outline-success" title="Add PO" data-toggle="modal" data-target="#modal_po_add" id="getPO" data-url="{{ route('show_modal_po_admin',['id'=>$item_pr->po_no])}}"><i class="fas fa-plus">&nbsp;Submit PO</i></button>
+                                                    <button type="button" class="btn btn-block btn-outline-success" title="Add PO" data-toggle="modal" data-target="#modal_po_add" id="getPO" data-url="{{ route('show_modal_create_po_admin',['id'=>$item_pr->po_no])}}"><i class="fas fa-plus">&nbsp;Submit PO</i></button>
                                                   </div>
                                                 @elseif ( $item_pr->pr_status == 2)
                                                   <div class="col-12">
@@ -164,11 +188,8 @@
               </div>
               <div class="modal-body">
                   <div id="dynamic-content_3"></div>
+                  <br>
                   <table class="table">
-                    <tr>
-                      <th><Label for="txt_disc">Discount</Label></th>
-                      <th><input type="number" name="txt_disc" id="txt_disc" class="form-control"></th>
-                    </tr>
                     <tr>
                       <th><label for="txt_tax">Tax</label></th>
                       <th>
@@ -181,6 +202,14 @@
                           <label for="txt_tax_1" class="custom-control-label">No Ppn</label>
                         </div>
                       </th>
+                      <th><Label for="txt_disc">Discount</Label></th>
+                      <th><input type="number" name="txt_disc" id="txt_disc" class="form-control"></th>
+                    </tr>
+                    <tr>
+                      <th><Label for="txt_service_charge">Service Charge</Label></th>
+                      <th><input type="number" name="txt_service_charge" id="txt_service_charge" class="form-control"></th>
+                      <th><Label for="txt_delivery_fee">Delivery Fee</Label></th>
+                      <th><input type="number" name="txt_delivery_fee" id="txt_delivery_fee" class="form-control"></th>
                     </tr>
                   </table>
               </div>
@@ -197,7 +226,7 @@
   {{-- End Create --}}
     {{-- View Modal --}}
     {{-- @include('components.modals.pr_admin_show',['pr_data' => $item_pr->pr_no]) --}}
-    <div class="modal fade" id="modal_pr_show_manager">
+    <div class="modal fade" id="modal_pr_show_admin">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="overlay" id="modal-loader">
@@ -382,5 +411,23 @@
   
       });
 
+  });
+</script>
+<!-- SweetAlert2 -->
+<script src="{{ asset('assets/plugins/sweetalert2/sweetalert2.min.js')}}"></script>
+<!-- Toastr -->
+<script src="{{ asset('assets/plugins/toastr/toastr.min.js')}}"></script>
+<script>
+  $(function() {
+    var Toast = Swal.mixin({
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 3000
+    });
+
+    $('.toastrDefaultError').click(function() {
+      toastr.error('PR NOT APPROVED by MANAGER or GA.')
+    });
   });
 </script>

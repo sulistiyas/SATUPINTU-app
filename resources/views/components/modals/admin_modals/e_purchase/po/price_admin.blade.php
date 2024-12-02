@@ -22,6 +22,16 @@
           <td>:</td>
           <th>{{ $item_single->name }}</th>
         </tr>
+        <tr>
+          <th>Currency </th>
+          <td>:</td>
+          <th>
+            <select name="txt_currency" id="txt_currency" class="form-control">
+              <option value="IDR">IDR</option>
+              <option value="$">USD</option>
+            </select>
+          </th>
+        </tr>
       </table>
     </div>
   </div>

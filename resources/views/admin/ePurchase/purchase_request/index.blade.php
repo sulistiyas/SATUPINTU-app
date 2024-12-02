@@ -66,33 +66,58 @@
                                           <td>
                                             <div class="btn-group">
                                               @if ($item_pr->pr_status  == 5)
-                                                  <div class="col-md-7">
-                                                    <button type="button" class="btn btn-outline-primary" title="Show Data" data-toggle="modal" data-target="#modal_pr_show" id="getPR" data-url="{{ route('show_modal_pr_admin',['id'=>$item_pr->pr_no])}}"><i class="fas fa-eye">&nbsp;View Data</i></button>
-                                                  </div>
-                                                  <div class="col-md-8">
-                                                    <form onsubmit="return confirm('Apakah Anda Yakin ingin Menghapus data ?');" action="{{ route('destroy_pr_admin',[$item_pr->pr_no]) }}" method="POST">
-                                                      @csrf
-                                                      @method('DELETE')
-                                                      <button type="submit" class="btn btn-outline-danger" title="Show Data" data-toggle="modal" data-target="#modal_pr_show_manager" id="getPR" data-url="{{ route('show_modal_pr_admin',['id'=>$item_pr->pr_no])}}"><i class="fas fa-trash">&nbsp;&nbsp;Delete &nbsp;&nbsp;</i></button>
-                                                    </form>
+                                                  <div class="btn-group">
+                                                    <button type="button" class="btn btn-flat" data-toggle="dropdown">
+                                                        <span class="sr-only">Toggle Dropdown</span>
+                                                        <i class="fas fa-ellipsis-v"></i>
+                                                    </button>
+                                                    <div class="dropdown-menu" role="menu">
+                                                        <button type="button" class="dropdown-item" title="Show Data" data-toggle="modal" data-target="#modal_pr_show" id="getPR" data-url="{{ route('show_modal_pr_admin',['id'=>$item_pr->pr_no])}}">
+                                                            View Data
+                                                        </button>
+                                                    <div class="dropdown-divider"></div>
+                                                      {{-- <a class="dropdown-item" href=""></a> --}}
+                                                      <button class="dropdown-item toastrDefaultError" >Print</button>
+                                                    </div>
                                                   </div>
                                               @elseif ( $item_pr->pr_status == 4 || $item_pr->pr_status == 3 || $item_pr->pr_status == 2 )
-                                                  <div class="col-md-7">
-                                                    <button type="button" class="btn btn-outline-primary" title="Show Data" data-toggle="modal" data-target="#modal_pr_show" id="getPR" data-url="{{ route('show_modal_pr_admin',['id'=>$item_pr->pr_no])}}"><i class="fas fa-eye">&nbsp;View Data</i></button>
-                                                  </div>
-                                                  <div class="col-md-8">
-                                                    <form action="{{ route('print_pr_admin') }}" method="POST">
-                                                      @csrf
-                                                      <input type="hidden" name="txt_pr_no" id="txt_pr_no" value="{{ $item_pr->pr_no }}">
-                                                      <button type="submit" class="btn btn-outline-success" id="print_pr"><i class="fas fa-print">&nbsp;Print PR</i></button>
-                                                    </form>
+                                                  <div class="btn-group">
+                                                    <button type="button" class="btn btn-flat" data-toggle="dropdown">
+                                                        <span class="sr-only">Toggle Dropdown</span>
+                                                        <i class="fas fa-ellipsis-v"></i>
+                                                    </button>
+                                                    <div class="dropdown-menu" role="menu">
+                                                        <button type="button" class="dropdown-item" title="Show Data" data-toggle="modal" data-target="#modal_pr_show" id="getPR" data-url="{{ route('show_modal_pr_admin',['id'=>$item_pr->pr_no])}}">
+                                                            View Data
+                                                        </button>
+                                                    <div class="dropdown-divider"></div>
+                                                        <form action="{{ route('print_pr_admin') }}" method="POST">
+                                                          @csrf
+                                                          <input type="hidden" name="txt_pr_no" id="txt_pr_no" value="{{ $item_pr->pr_no }}">
+                                                          <button type="submit" class="dropdown-item" id="print_pr">Print PR</button>
+                                                        </form>
+                                                    </div>
                                                   </div>
                                               @elseif ( $item_pr->pr_status == 1)
-                                                  <div class="col-md-7">
-                                                    <button type="button" class="btn btn-outline-primary" title="Show Data" data-toggle="modal" data-target="#modal_pr_show" id="getPR" data-url="{{ route('show_modal_pr_admin',['id'=>$item_pr->pr_no])}}"><i class="fas fa-eye">&nbsp;View Data</i></button>
-                                                  </div>
-                                                  <div class="col-md-8">
-                                                    <button type="button" class="btn btn-outline-success" title="Show Data" data-toggle="modal" data-target="#modal_pr_show_manager" id="getPR" data-url="{{ route('show_modal_pr_admin',['id'=>$item_pr->pr_no])}}"><i class="fas fa-print">&nbsp;Print PO</i></button>
+                                                  <div class="btn-group">
+                                                    <button type="button" class="btn btn-flat" data-toggle="dropdown">
+                                                        <span class="sr-only">Toggle Dropdown</span>
+                                                        <i class="fas fa-ellipsis-v"></i>
+                                                    </button>
+                                                    <div class="dropdown-menu" role="menu">
+                                                        <button type="button" class="dropdown-item" title="Show Data" data-toggle="modal" data-target="#modal_pr_show" id="getPR" data-url="{{ route('show_modal_pr_admin',['id'=>$item_pr->pr_no])}}">
+                                                            View Data
+                                                        </button>
+                                                    <div class="dropdown-divider"></div>
+                                                        <form action="{{ route('print_pr_admin') }}" method="POST">
+                                                          @csrf
+                                                          <input type="hidden" name="txt_pr_no" id="txt_pr_no" value="{{ $item_pr->pr_no }}">
+                                                          <button type="submit" class="dropdown-item" id="print_pr">Print PR</button>
+                                                        </form>
+                                                        <button type="button" class="btn btn-outline-success" title="Show Data" data-toggle="modal" data-target="#modal_pr_show_manager" id="getPR" data-url="{{ route('show_modal_pr_admin',['id'=>$item_pr->pr_no])}}">
+                                                          Print PO
+                                                        </button>
+                                                    </div>
                                                   </div>
                                               @endif
                                                   <div class="dropdown-menu" role="menu" style="">
@@ -108,6 +133,7 @@
                                                       </button>
                                                   </div>
                                             </div>
+                                            
                                           </td>
                                         </tr>
                                     @endforeach
@@ -169,8 +195,35 @@
       </div>
     </div>
     {{-- End View --}}
+    {{-- Update Modal --}}
+    <div class="modal fade" id="modal_pr_update">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="overlay" id="modal-loader-2">
+            <i class="fas fa-2x fa-sync fa-spin"></i>
+          </div>
+          <div class="modal-header">
+              <h4 class="modal-title">PR Update Form</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="modal-body">
+             <div id="dynamic-content-2"></div>
+          </div>
+          <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    {{-- End Update Modal --}}
 </div>
 @include('admin.includes.footer')
+<!-- SweetAlert2 -->
+<script src="{{ asset('assets/plugins/sweetalert2/sweetalert2.min.js')}}"></script>
+<!-- Toastr -->
+<script src="{{ asset('assets/plugins/toastr/toastr.min.js')}}"></script>
 <script>
     // Datatables
     $(function () {
@@ -184,16 +237,11 @@
 </script>
 <script>
   $(document).ready(function(){
-  
       $(document).on('click', '#getPR', function(e){
-  
           e.preventDefault();
-  
           var url = $(this).data('url');
-  
           $('#dynamic-content').html(''); // leave it blank before ajax call
           $('#modal-loader').show();      // load ajax loader
-  
           $.ajax({
               url: url,
               type: 'GET',
@@ -209,9 +257,46 @@
               $('#dynamic-content').html('<i class="glyphicon glyphicon-info-sign"></i> Something went wrong, Please try again...');
               $('#modal-loader').hide();
           });
-  
       });
-  
   });
-  
-  </script>
+</script>
+<script>
+  $(document).ready(function(){
+      $(document).on('click', '#updatePR', function(e){
+          e.preventDefault();
+          var url = $(this).data('url');
+          $('#dynamic-content-2').html(''); // leave it blank before ajax call
+          $('#modal-loader-2').show();      // load ajax loader
+          $.ajax({
+              url: url,
+              type: 'GET',
+              dataType: 'html'
+          })
+          .done(function(data){
+              console.log(data);  
+              $('#dynamic-content-2').html('');    
+              $('#dynamic-content-2').html(data); // load response 
+              $('#modal-loader-2').hide();        // hide ajax loader   
+          })
+          .fail(function(){
+              $('#dynamic-content-2').html('<i class="glyphicon glyphicon-info-sign"></i> Something went wrong, Please try again...');
+              $('#modal-loader-2').hide();
+          });
+      });
+  });
+</script>
+
+<script>
+  $(function() {
+    var Toast = Swal.mixin({
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 3000
+    });
+
+    $('.toastrDefaultError').click(function() {
+      toastr.error('PR NOT APPROVED by MANAGER or GA.')
+    });
+  });
+</script>

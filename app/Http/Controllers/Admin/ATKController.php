@@ -6,6 +6,8 @@ use App\Models\ATK_Master;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\ATK_Log;
+use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\Validator;
 
@@ -18,6 +20,13 @@ class ATKController extends Controller
     {
         $atk_list = DB::table('atk_master')->orderBy('atk_name', 'ASC')->get();
         return view('admin.atk.index', ['atk_list' => $atk_list]);
+    }
+
+    public function index_atk_in()
+    {
+        $atk_in_list = DB::table('atk_master')->orderBy('atk_name', 'ASC')->get();
+        $atk_item = DB::table('atk_master')->orderBy('atk_name', 'ASC')->get();
+        return view('admin.atk.index_in', compact('atk_in_list', 'atk_item'));
     }
 
     /**
@@ -51,7 +60,7 @@ class ATKController extends Controller
                 ATK_Master::create([
                     'atk_name'          => $request->atk_name,
                     'atk_brand'         => $request->atk_brand,
-                    'atk_stock'         => $request->atk_stock,
+                    'atk_stock'         => 0,
                     'atk_unit'          => $request->atk_unit,
                     'created_at'        => date('Y-m-d h:i:s'),
                     'updated_at'        => date('Y-m-d h:i:s')
@@ -67,6 +76,53 @@ class ATKController extends Controller
 
                 Alert::warning('Warning', 'Failed to add new ATK !!');
                 return redirect()->route('index_atk_master');
+            }
+        }
+    }
+
+    public function store_atk_in(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'txt_atk_qty' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status'    => false,
+                'message'   => 'Validation Error',
+                'errors'    => $validator->errors()
+            ]);
+        } else {
+            $id_atk = $request->txt_atk_id;
+            $qty_atk = $request->txt_qty;
+            try {
+                ATK_Log::create([
+                    'log_type'          => "ATK_in",
+                    'id_atk'            => $id_atk,
+                    'qty_log'           => $qty_atk,
+                    'date_log'          => date('Y-m-d'),
+                    'time_log'          => date('h:i:s'),
+                    'id_employee'       => Auth::user()->id,
+                    'created_at'        => date('Y-m-d h:i:s'),
+                    'updated_at'        => date('Y-m-d h:i:s')
+                ]);
+
+                $atk_data = ATK_Master::where('id_atk', '=', $id_atk)->first();
+                $atk_data->update([
+                    'atk_stok'      => $qty_atk,
+                    'updated_at'    => date('Y-m-d h:i:s')
+                ]);
+                Alert::success('Success', 'ATK Stock Updated');
+                return redirect()->route('index_atk_in');
+            } catch (\Exception $ex) {
+                return response()->json([
+                    'status'    => false,
+                    'message'   => 'Error add data : ',
+                    'errors'    => $ex
+                ], 401);
+
+                Alert::warning('Warning', 'Failed to add new ATK !!');
+                return redirect()->route('index_atk_in');
             }
         }
     }

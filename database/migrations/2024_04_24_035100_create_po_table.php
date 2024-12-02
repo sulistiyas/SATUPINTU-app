@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('po_no');
             $table->string('id_pr');
             $table->foreignId('id_vendor')->references('id_vendor')->on('vendor')->onUpdate('cascade')->onDelete('cascade')->nullable();
+            $table->string('currency')->nullable();
             $table->string('price');
             $table->string('total_price');
             $table->date('po_date');
@@ -23,6 +24,8 @@ return new class extends Migration
             $table->string('po_approve');
             $table->string('po_disc')->nullable();
             $table->string('po_tax')->nullable();
+            $table->string('po_servcie_charge')->nullable();
+            $table->string('po_delivery_fee')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

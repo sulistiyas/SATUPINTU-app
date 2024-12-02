@@ -38,6 +38,7 @@
                                         <th>Nama</th>
                                         <th>Position</th>
                                         <th>Divisi</th>
+                                        <th>Active</th>
                                         <th><i class="fas fa-cog"></i></th>
                                     </tr>
                                 </thead>
@@ -49,7 +50,14 @@
                                             <td>{{ $item_users->emp_position }}</td>
                                             <td>{{ $item_users->emp_division }}</td>
                                             <td>
-                                                <div class="btn-group">
+                                                @if ($item_users->deleted_at == NULL)
+                                                    <p style="color: green">Yes</p>
+                                                @else
+                                                    <p style="color: red">No</p>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                {{-- <div class="btn-group">
                                                     <div class="col-md-4">
                                                         <button type="button" class="btn btn-outline-primary" title="Show Data" data-toggle="modal" data-target="#modal_users_show" id="get_users" data-url="{{ route('show_modal_users',['id'=>$item_users->id])}}"><i class="fas fa-eye"></i></button>
                                                     </div>
@@ -63,6 +71,36 @@
                                                             <button type="submit" class="btn btn-outline-danger" title="Delete Data" id="delete_users"><i class="fas fa-trash"></i></button>
                                                         </form>
                                                     </div>
+                                                </div> --}}
+                                                <div class="btn-group">
+                                                    <button type="button" class="btn btn-info btn-flat">Action</button>
+                                                    <button type="button" class="btn btn-info btn-flat dropdown-toggle dropdown-icon" data-toggle="dropdown">
+                                                        <span class="sr-only">Toggle Dropdown</span>
+                                                    </button>
+                                                    <div class="dropdown-menu" role="menu">
+                                                        <button type="button" class="dropdown-item" title="Show Data" data-toggle="modal" data-target="#modal_users_show" id="get_users" data-url="{{ route('show_modal_users',['id'=>$item_users->id])}}">
+                                                            View Data
+                                                        </button>
+                                                        <button type="button" class="dropdown-item" title="Edit Data" data-toggle="modal" data-target="#modal_users_edit" id="edit_users" data-url="{{ route('edit_users',['id'=>$item_users->id])}}">
+                                                            Update Data
+                                                        </button>
+                                                        @if ($item_users->deleted_at == NULL)
+                                                            <form onsubmit="return confirm('Apakah Anda Yakin ingin Menghapus User ?');" action="{{ route('destroy_users',[$item_users->id]) }}" method="POST">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <button type="submit" class="dropdown-item" title="Delete Data" id="delete_users">Deactivate Account</button>
+                                                            </form>
+                                                        @else
+                                                            <form onsubmit="return confirm('Apakah Anda Yakin ingin Meng-Aktifkan User ?');" action="{{ route('update_status_users',[$item_users->id]) }}" method="POST">
+                                                                @csrf
+                                                                
+                                                                <button type="submit" class="dropdown-item" title="Delete Data" id="delete_users">Activate Account</button>
+                                                            </form>
+                                                        @endif
+                                                        
+                                                    <div class="dropdown-divider"></div>
+                                                        <a class="dropdown-item" href="{{ route('sendEmailUsersInformation',[$item_users->id]) }}">Send Account Information</a>
+                                                    </div>
                                                 </div>
                                             </td>
                                         </tr>
@@ -75,6 +113,26 @@
             </div>
         </div>
     </section>
+    {{-- View Modal --}}
+    <div class="modal fade" id="modal_users_show">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="overlay" id="modal-loader2">
+              <i class="fas fa-2x fa-sync fa-spin"></i>
+            </div>
+            <div class="modal-header">
+                <h4 class="modal-title">Users Profile</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+               <div id="dynamic-content2"></div>
+            </div>
+          </div>
+        </div>
+    </div>
+    {{-- End View Modal --}}
     {{-- Create Modal --}}
     {{-- <form action="{{ route('store_users') }}" method="POST" enctype="multipart/form-data" id="users" name="users"> --}}
         @csrf
@@ -193,6 +251,7 @@
                                                     <option value="1">Director</option>
                                                     <option value="2">Manager</option>
                                                     <option value="3">Staff</option>
+                                                    <option value="4">HR/GA</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -293,8 +352,7 @@
                     </div>
                 </div>
                 <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save changes</button>
+                    <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
                 </div>
               </div>
             </div>
@@ -344,6 +402,40 @@
       }).buttons().container().appendTo('#tbl_users_wrapper .col-md-6:eq(0)');
     });
 </script>
+{{-- View users --}}
+<script>
+    $(document).ready(function(){
+  
+        $(document).on('click', '#get_users', function(e){
+    
+            e.preventDefault();
+    
+            var url = $(this).data('url');
+    
+            $('#dynamic-content2').html(''); // leave it blank before ajax call
+            $('#modal-loader2').show();      // load ajax loader
+    
+            $.ajax({
+                url: url,
+                type: 'GET',
+                dataType: 'html'
+            })
+            .done(function(data){
+                console.log(data);  
+                $('#dynamic-content2').html('');    
+                $('#dynamic-content2').html(data); // load response 
+                $('#modal-loader2').hide();        // hide ajax loader   
+            })
+            .fail(function(){
+                $('#dynamic-content2').html('<i class="glyphicon glyphicon-info-sign"></i> Something went wrong, Please try again...');
+                $('#modal-loader2').hide();
+            });
+    
+        });
+  
+    });
+</script>
+{{-- update users --}}
 <script>
     $(document).ready(function(){
   

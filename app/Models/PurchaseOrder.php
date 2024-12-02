@@ -16,6 +16,7 @@ class PurchaseOrder extends Model
         'po_no',
         'id_pr',
         'id_vendor',
+        'currency',
         'price',
         'total_price',
         'po_date',
@@ -23,6 +24,8 @@ class PurchaseOrder extends Model
         'po_approve',
         'po_disc',
         'po_tax',
+        'po_service_charge',
+        'po_delivery_fee',
 
     ];
     protected $dates = [

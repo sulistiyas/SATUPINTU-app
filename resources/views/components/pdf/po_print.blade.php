@@ -222,12 +222,14 @@
             foreach ($po_table as $data_bal) {
                 $disc   = $data_bal->po_disc;
                 $tax    = $data_bal->po_tax;
+                $service_charge = $data_bal->po_service_charge;
+                $delivery_fee   = $data_bal->po_delivery_fee;
             }
 
             $a_disc = ($disc / 100) * $sub;
             $a_tax = ($tax / 100) * $sub;
 
-            $grand_total = $sub - $a_disc + $a_tax;
+            $grand_total = $sub - $a_disc + $a_tax + $service_charge + $delivery_fee;
         @endphp
         <table border="1" cellpadding="0" cellspacing="0" style="width: 100%;" id="pr">
             <thead>
