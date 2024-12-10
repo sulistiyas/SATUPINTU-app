@@ -66,33 +66,55 @@
                                           <td>
                                             <div class="btn-group">
                                               @if ($item_pr->pr_status  == 5)
-                                                  <div class="col-md-12">
-                                                    <button type="button" class="btn btn-outline-primary" title="Show Data" data-toggle="modal" data-target="#modal_pr_show" id="getPR" data-url="{{ route('show_modal_pr_users',['id'=>$item_pr->pr_no])}}"><i class="fas fa-eye">&nbsp;View Data</i></button>
-                                                  </div>
-                                              @elseif ( $item_pr->pr_status == 4 || $item_pr->pr_status == 3 || $item_pr->pr_status == 2 )
-                                                  <div class="col-md-7">
-                                                    <button type="button" class="btn btn-outline-primary" title="Show Data" data-toggle="modal" data-target="#modal_pr_show" id="getPR" data-url="{{ route('show_modal_pr_users',['id'=>$item_pr->pr_no])}}"><i class="fas fa-eye">&nbsp;View Data</i></button>
-                                                  </div>
-                                                  <div class="col-md-8">
+                                                <div class="col-md-12">
+                                                  <button type="button" class="btn bg-info" title="Show Detail" data-toggle="modal" data-target="#modal_pr_show" id="getPR" data-url="{{ route('show_modal_pr_users',['id'=>$item_pr->pr_no])}}"><i class="far fa-eye"></i></button>&nbsp;
+                                                  <button class="btn bg-secondary toastrDefaultError" title="Print PR"><i class="fas fa-print"></i></i></button>&nbsp;
+                                                </div>
+                                              @elseif ( $item_pr->pr_status == 4 )
+                                                <div class="col-md-5">
+                                                    <button type="button" class="btn bg-info" title="Show Detail" data-toggle="modal" data-target="#modal_pr_show" id="getPR" data-url="{{ route('show_modal_pr_users',['id'=>$item_pr->pr_no])}}"><i class="far fa-eye"></i></button>&nbsp;
+                                                </div>
+                                                <div class="col-md-4">
                                                     <form action="{{ route('print_pr_users') }}" method="POST">
                                                       @csrf
                                                       <input type="hidden" name="txt_pr_no" id="txt_pr_no" value="{{ $item_pr->pr_no }}">
-                                                      <button type="submit" class="btn btn-outline-success" id="print_pr"><i class="fas fa-print">&nbsp;Print PR</i></button>
+                                                      <button type="submit" class="btn bg-secondary" id="print_pr" title="Print PR"><i class="fas fa-print"></i></i></button>&nbsp;
+                                                    </form>
+                                                </div>
+                                              @elseif ( $item_pr->pr_status == 3 )
+                                                  <div class="col-md-6">
+                                                    <button type="button" class="btn bg-info" title="Show Detail" data-toggle="modal" data-target="#modal_po_show_po" id="getPO" data-url="{{ route('show_modal_po_pirce_users',['id'=>$item_pr->po_no])}}"><i class="far fa-eye"></i></button>&nbsp;
+                                                  </div>
+                                                  <div class="col-md-6">
+                                                    <form action="{{ route('print_pr_users') }}" method="POST">
+                                                      @csrf
+                                                      <input type="hidden" name="txt_pr_no" id="txt_pr_no" value="{{ $item_pr->pr_no }}">
+                                                      <button type="submit" class="btn bg-secondary" id="print_pr" title="Print PR"><i class="fas fa-print"></i></i></button>&nbsp;
                                                     </form>
                                                   </div>
+                                              @elseif ( $item_pr->pr_status == 2 )
+                                                  <div class="col-md-12">
+                                                    <button type="button" class="btn bg-info" title="Show Detail" data-toggle="modal" data-target="#modal_po_show_po" id="getPO" data-url="{{ route('show_modal_po_pirce_users',['id'=>$item_pr->po_no])}}"><i class="far fa-eye"></i></button>&nbsp;
+                                                    <button class="btn bg-secondary toastrDefaultError2" title="Print PO"><i class="fas fa-print"></i></i></button>&nbsp;
+                                                  </div>
                                               @elseif ( $item_pr->pr_status == 1)
-                                                  <div class="col-md-7">
-                                                    <button type="button" class="btn btn-outline-primary" title="Show Data" data-toggle="modal" data-target="#modal_pr_show" id="getPR" data-url="{{ route('show_modal_pr_users',['id'=>$item_pr->pr_no])}}"><i class="fas fa-eye">&nbsp;View Data</i></button>
+                                                  <div class="col-md-5">
+                                                    <button type="button" class="btn bg-info" title="Show Detail" data-toggle="modal" data-target="#modal_po_show_po" id="getPO" data-url="{{ route('show_modal_po_pirce_users',['id'=>$item_pr->po_no])}}"><i class="far fa-eye"></i></button>&nbsp;
                                                   </div>
-                                                  <div class="col-md-8">
-                                                    <button type="button" class="btn btn-outline-success" title="Show Data" data-toggle="modal" data-target="#modal_pr_show_manager" id="getPR" data-url="{{ route('show_modal_pr_users',['id'=>$item_pr->pr_no])}}"><i class="fas fa-print">&nbsp;Print PO</i></button>
+                                                  <div class="col-md-4">
+                                                    <form action="{{ route('print_po_users') }}" method="POST">
+                                                      @csrf
+                                                      <input type="hidden" name="txt_po_no" id="txt_po_no" value="{{ $item_pr->po_no }}">
+                                                      <button type="submit" class="btn bg-secondary" title="Print PO"><i class="fas fa-print"></i></i></button>&nbsp;
+                                                    </form>
                                                   </div>
+                                              @else
+                                                <div class="dropdown-menu" role="menu" style="">
+                                                  <button data-toggle="modal" data-target="#modal_pr_show" id="getPR"  type="button" class="dropdown-item" data-url="{{ route('show_modal_pr_users',['id'=>$item_pr->pr_no])}}">
+                                                    <i class="far fa-eye">&nbsp;View</i>
+                                                  </button>
+                                                </div>
                                               @endif
-                                                  <div class="dropdown-menu" role="menu" style="">
-                                                      <button data-toggle="modal" data-target="#modal_pr_show" id="getPR"  type="button" class="dropdown-item" data-url="{{ route('show_modal_pr_users',['id'=>$item_pr->pr_no])}}">
-                                                        <i class="far fa-eye">&nbsp;View</i>
-                                                      </button>
-                                                  </div>
                                             </div>
                                           </td>
                                         </tr>
@@ -107,30 +129,6 @@
     </section>
     <!-- /.content -->
     {{-- End Content --}}
-    {{-- Create Modal --}}
-    <form action="{{ route('store_pr_admin') }}" method="POST" enctype="multipart/form-data" id="pr" name="pr">
-        @csrf
-        <div class="modal fade" id="modal_pr">
-            <div class="modal-dialog modal-lg">
-              <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">New PR Form</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    
-                </div>
-                <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save changes</button>
-                </div>
-              </div>
-            </div>
-        </div>
-    </form>
-    {{-- End Create --}}
     {{-- View Modal --}}
     {{-- @include('components.modals.pr_admin_show',['pr_data' => $item_pr->pr_no]) --}}
     <div class="modal fade" id="modal_pr_show">
@@ -155,8 +153,48 @@
       </div>
     </div>
     {{-- End View --}}
+    {{-- Modal Show PO --}}
+    <div class="modal fade" id="modal_po_show_po">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="overlay" id="modal-loader_4">
+            <i class="fas fa-2x fa-sync fa-spin"></i>
+          </div>
+          <div class="modal-header">
+              <h4 class="modal-title">PO Detail</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="modal-body">
+             <div id="dynamic-content_4"></div>
+             
+          </div>
+          <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
 </div>
 @include('users.includes.footer')
+<script>
+  $(function() {
+    var Toast = Swal.mixin({
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 3000
+    });
+
+    $('.toastrDefaultError').click(function() {
+      toastr.error('PR NOT APPROVED by MANAGER or GA.')
+    });
+    $('.toastrDefaultError2').click(function() {
+      toastr.error('PO NOT APPROVED by MANAGER.')
+    });
+  });
+</script>
 <script>
     // Datatables
     $(function () {
@@ -198,4 +236,36 @@
     
     });
     
+</script>
+<script>
+  $(document).ready(function(){
+
+      $(document).on('click', '#getPO', function(e){
+  
+          e.preventDefault();
+  
+          var url = $(this).data('url');
+  
+          $('#dynamic-content_4').html(''); // leave it blank before ajax call
+          $('#modal-loader_4').show();      // load ajax loader
+  
+          $.ajax({
+              url: url,
+              type: 'GET',
+              dataType: 'html'
+          })
+          .done(function(data){
+              console.log(data);  
+              $('#dynamic-content_4').html('');    
+              $('#dynamic-content_4').html(data); // load response 
+              $('#modal-loader_4').hide();        // hide ajax loader   
+          })
+          .fail(function(){
+              $('#dynamic-content_4').html('<i class="glyphicon glyphicon-info-sign"></i> Something went wrong, Please try again...');
+              $('#modal-loader_4').hide();
+          });
+  
+      });
+
+  });
 </script>

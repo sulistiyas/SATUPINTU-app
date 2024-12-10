@@ -51,6 +51,279 @@
     <!-- Main content -->
     <section class="content">
         <div class="container-fluid">
+          <!-- Small boxes (Stat box) -->
+          {{-- Purchase Request --}}
+          <div class="row">
+            
+            <div class="col-lg-3 col-6">
+              <!-- small box -->
+              <div class="small-box bg-success">
+                <div class="inner">
+                  <h3>
+                    @php
+                        $query_pr = Illuminate\Support\Facades\DB::table('pr')->where('pr_status','=','4')
+                        ->orWhere('pr_status','=','3')
+                        ->orWhere('pr_status','=','2')
+                        ->orWhere('pr_status','=','1')->get();
+                        $pr_count =  $query_pr->count();
+                    @endphp
+                    {{ $pr_count }}
+                  </h3>
+
+                  <p>PR Approved</p>
+                </div>
+                <div class="icon">
+                  <i class="far fa-thumbs-up"></i>
+                </div>
+                <a href="{{ route('index_pr_users') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+              </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+              <!-- small box -->
+              <div class="small-box bg-warning">
+                <div class="inner">
+                  <h3>
+                    @php
+                        $query_pr = Illuminate\Support\Facades\DB::table('pr')->where('pr_status','=','5')
+                        ->orWhere('pr_status','=','4')
+                        ->orWhere('pr_status','=','3')
+                        ->orWhere('pr_status','=','2')->get();
+                        $pr_count =  $query_pr->count();
+                    @endphp
+                    {{ $pr_count }}
+                  </h3>
+
+                  <p>PR On Process</p>
+                </div>
+                <div class="icon">
+                  <i class="fas fa-user-clock"></i>
+                </div>
+                <a href="{{ route('index_pr_users') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+              </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+              <!-- small box -->
+              <div class="small-box bg-danger">
+                <div class="inner">
+                  <h3>
+                    @php
+                        $query_pr = Illuminate\Support\Facades\DB::table('pr')->where('pr_status','=','6')->get();
+                        $pr_count =  $query_pr->count();
+                    @endphp
+                    {{ $pr_count }}
+                  </h3>
+
+                  <p>PR Rejected</p>
+                </div>
+                <div class="icon">
+                  <i class="far fa-thumbs-down"></i>
+                </div>
+                <a href="{{ route('index_pr_users') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+              </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+              <!-- small box -->
+              <div class="small-box bg-info">
+                <div class="inner">
+                  <h3>
+                    @php
+                        $query_letter = Illuminate\Support\Facades\DB::table('letter_number')->where('deleted_at','=',NULL)->get();
+                        $letter_count =  $query_letter->count();
+                    @endphp
+                    {{ $letter_count }}
+                  </h3>
+
+                  <p>Letter Numbers</p>
+                </div>
+                <div class="icon">
+                  <i class="fas fa-box-open"></i>
+                </div>
+                <a href="{{ route('index_letter_number_users') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+              </div>
+            </div>
+            <!-- ./col -->
+          </div>
+          <!-- /.row -->
+          {{-- Purchase Order --}}
+          <!-- Small boxes (Stat box) -->
+          <div class="row">
+            
+            <div class="col-lg-3 col-6">
+              <!-- small box -->
+              <div class="small-box bg-success">
+                <div class="inner">
+                  <h3>
+                    @php
+                        $query_po = Illuminate\Support\Facades\DB::table('po')->where('po_status','=','1')->get();
+                        $po_count =  $query_po->count();
+                    @endphp
+                    {{ $po_count }}
+                  </h3>
+
+                  <p>PO Approved</p>
+                </div>
+                <div class="icon">
+                  <i class="far fa-thumbs-up"></i>
+                </div>
+                <a href="{{ route('index_po_admin') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+              </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+              <!-- small box -->
+              <div class="small-box bg-warning">
+                <div class="inner">
+                  <h3>
+                    @php
+                        $query_po = Illuminate\Support\Facades\DB::table('po')->where('po_status','=','4')
+                        ->orWhere('po_status','=','3')
+                        ->orWhere('po_status','=','2')->get();
+                        $po_count =  $query_po->count();
+                    @endphp
+                    {{ $po_count }}
+                  </h3>
+
+                  <p>PO On Process</p>
+                </div>
+                <div class="icon">
+                  <i class="fas fa-user-clock"></i>
+                </div>
+                <a href="{{ route('index_po_admin') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+              </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+              <!-- small box -->
+              <div class="small-box bg-danger">
+                <div class="inner">
+                  <h3>
+                    @php
+                        $query_po = Illuminate\Support\Facades\DB::table('po')->where('po_status','=','7')->get();
+                        $po_count =  $query_po->count();
+                    @endphp
+                    {{ $po_count }}
+                  </h3>
+
+                  <p>PR Rejected</p>
+                </div>
+                <div class="icon">
+                  <i class="far fa-thumbs-down"></i>
+                </div>
+                <a href="{{ route('index_po_admin') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+              </div>
+            </div>
+            <!-- ./col -->
+            
+          </div>
+          <!-- /.row -->
+          <!-- Main row -->
+          {{-- Left Row --}}
+          <div class="row">
+            <section class="col-lg-6 connectedSortable">
+              <div class="card card-success">
+                <div class="card-header">
+                  <h3 class="card-title">
+                    <i class="fas fa-shopping-cart"></i>
+                    Purchase Request
+                  </h3>
+                </div>
+                <div class="card-body">
+                  <table id="tbl_epurchase" class="table table-hover table-bordered table-striped">
+                    <thead>
+                      <tr>
+                        <th>No.</th>
+                        <th>PR Number</th>
+                        <th>Requester</th>
+                        <th>Desc</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      @foreach(Illuminate\Support\Facades\DB::table('pr')
+                                                            ->join('employee','employee.id_employee','=','pr.id_employee')
+                                                            ->join('users','users.id','=','employee.id_users')
+                                                            ->groupBy('pr_no')
+                                                            ->orderBy('id_pr','DESC')->get() as $item_pr)
+                          <tr>
+                            <td>{{ $loop->iteration }}.</td>
+                            <td>
+                              <a href="{{ route('index_pr_admin') }}">
+                                {{ $item_pr->pr_no }}
+                              </a>
+                            </td>
+                            <td>{{ $item_pr->name }}</td>
+                            <td>{{ $item_pr->pr_desc }}</td>
+                            <td>
+                              @if ($item_pr->pr_status == 5)
+                                  <p style="color: orange; font-weight: 900">Waiting Approval</p>
+                              @else
+                                  <p style="color: orange; font-weight: 900">Approved</p>
+                              @endif
+                            </td>
+                          </tr>
+                      @endforeach
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="card card-primary">
+                <div class="card-header">
+                  <h3 class="card-title">
+                    <i class="fas fa-cart-plus"></i>
+                    Purchase Order
+                  </h3>
+                </div>
+                <div class="card-body">
+                  <table id="tbl_po" class="table table-bordered table-striped">
+                    <thead>
+                      <tr>
+                        <th>No.</th>
+                        <th>PO Number</th>
+                        <th>Requester</th>
+                        <th>Desc</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      @foreach(Illuminate\Support\Facades\DB::table('po')
+                                                            ->join('pr','pr.pr_no','=','po.po_no')
+                                                            ->join('employee','employee.id_employee','=','pr.id_employee')
+                                                            ->join('users','users.id','=','employee.id_users')
+                                                            ->where('po_status','=','3')
+                                                            ->orWhere('po_status','=','2')
+                                                            ->orderBy('id_po','DESC')->get() as $item_po)
+                          <tr>
+                            <td>{{ $loop->iteration }}.</td>
+                            <td>
+                              <a href="{{ route('index_po_admin') }}">
+                                {{ $item_po->po_no }}
+                              </a>
+                            </td>
+                            <td>{{ $item_po->name }}</td>
+                            <td>{{ $item_po->pr_desc }}</td>
+                            <td>
+                              @if ($item_po->po_status == 3 || $item_po->po_status == 2)
+                                  <p style="color: orange; font-weight: 900">Waiting Approval</p>
+                              @else
+                                  <p style="color: orange; font-weight: 900">Approved</p>
+                              @endif
+                            </td>
+                          </tr>
+                      @endforeach
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </section>
+          </div>
+          {{-- End Left Row --}}
+          {{-- Right Row --}}
+
+          {{-- End Right Row --}}
+          <!-- /.row (main row) -->
         </div>
     </section>
 </div>

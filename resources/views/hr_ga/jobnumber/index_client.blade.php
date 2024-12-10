@@ -54,19 +54,26 @@
                                     <td>{{ $item->npwp }}</td>
                                     <td>{{ $item->almt_npwp }}</td>
                                     <td>
-                                        <div class="btn-group">
-                                            <button type="button" class="btn btn-default btn-flat" data-toggle="dropdown" aria-expanded="false">
+                                        
+                                            <form onsubmit="return confirm('Apakah Anda Yakin ingin Menghapus data ?');" action="{{ route('destroy_client_hr_ga',[$item->id_client]) }}" method="POST">
+                                                @csrf
+                                                @method('DELETE')
+                                                <div class="btn-group">
+                                                    <button type="button" id="show-data" data-url="{{ route('edit_client_hr_ga',$item->id_client) }}" class="btn bg-warning" title="Edit Client"><i class="fas fa-pen"></i></button>&nbsp;
+                                                    <button type="submit" class="btn bg-danger" title="Delte Client"><i class="fas fa-trash-alt"></i></button> &nbsp;&nbsp; 
+                                                </div>
+                                            </form>
+                                            {{-- <button type="button" class="btn btn-default btn-flat" data-toggle="dropdown" aria-expanded="false">
                                                 <i class="fas fa-align-justify"></i>
-                                            </button>
-                                            <div class="dropdown-menu" role="menu" style="">
-                                                <form onsubmit="return confirm('Apakah Anda Yakin ingin Menghapus data ?');" action="{{ route('destroy_client_admin',[$item->id_client]) }}" method="POST">
+                                            </button> --}}
+                                            {{-- <div class="dropdown-menu" role="menu" style="">
+                                                <form onsubmit="return confirm('Apakah Anda Yakin ingin Menghapus data ?');" action="{{ route('destroy_client_hr_ga',[$item->id_client]) }}" method="POST">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <a href="javascript:void(0)" id="show-data" data-url="{{ route('edit_client_admin',$item->id_client) }}" class="dropdown-item"><i class="fas fa-pencil-alt"> Update</i></a>
+                                                    <a href="javascript:void(0)" id="show-data" data-url="{{ route('edit_client_hr_ga',$item->id_client) }}" class="dropdown-item"><i class="fas fa-pencil-alt"> Update</i></a>
                                                     <button type="submit" class="dropdown-item"><i class="fas fa-trash-alt"> Delete </i></button>
                                                 </form>
-                                            </div>
-                                        </div>
+                                            </div> --}}
                                         
                                     </td>
                                 </tr>
@@ -94,7 +101,7 @@
     <!-- /.content -->
     {{-- End Content --}}
     {{-- Create Modal --}}
-    <form action="{{ route('store_client_admin') }}" method="POST" enctype="multipart/form-data" id="client" name="client">
+    <form action="{{ route('store_client_hr_ga') }}" method="POST" enctype="multipart/form-data" id="client" name="client">
         @csrf
         <div class="modal fade" id="modal_client">
             <div class="modal-dialog modal-lg">
@@ -181,7 +188,7 @@
     </form>
     {{-- End Create --}}
     {{-- Update Modal --}}
-    <form action="{{ route('update_client_admin',$item->id_client) }}" method="POST" enctype="multipart/form-data" id="update_client_form" name="update_client_form">
+    <form action="{{ route('update_client_hr_ga',$item->id_client) }}" method="POST" enctype="multipart/form-data" id="update_client_form" name="update_client_form">
         @csrf
         <div class="modal fade" id="modal-update-client">
           <div class="modal-dialog modal-lg">

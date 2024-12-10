@@ -92,13 +92,31 @@
         }
     </style>
 </head>
+{{-- Header Data --}}
+@php
+$header_data = DB::table('po')
+            ->join('pr', 'pr.id_pr', '=', 'po.id_pr')
+            ->join('employee', 'employee.id_employee', '=', 'pr.id_employee')
+            ->join('users', 'users.id', '=', 'employee.id_users')
+            ->where('po.po_no', '=', $po_no)->get();
+@endphp
+@foreach ($header_data as $item_header)
 
+@endforeach
 <body style="margin:0px; background: white; ">
     <table border="0" cellpadding="0" cellspacing="0" style="width: 100%; margin-top: -20px; background-color: white">
         <tbody>
             <tr>
                 <td style="padding-left:35px;" align="left">
-                    <img src="{{ asset('assets/dist/img/Inlingua_Logo-removebg-preview.png') }}" width="200" alt="Inlingua" style="border:none">
+                    @if ($item_header->job_number == "i-Link")
+                        <img src="{{ asset('assets/dist/img/ilink.png') }}" width="200" alt="Inlingua" style="border:none">
+                    @elseif (preg_match("/WSCE/",$item_header->job_number))
+                        <img src="{{ asset('assets/dist/img/wsce.png') }}" width="200" alt="Inlingua" style="border:none">
+                    @elseif (preg_match("/WSCC/",$item_header->job_number))
+                        <img src="{{ asset('assets/dist/img/wscc.png') }}" width="200" alt="Inlingua" style="border:none">
+                    @else
+                        <img src="{{ asset('assets/dist/img/Inlingua_Logo-removebg-preview.png') }}" width="200" alt="Inlingua" style="border:none">
+                    @endif
                 </td>
                 <td align="right" id="top-left">
                     Purchase Order
@@ -107,6 +125,14 @@
         </tbody>
     </table>
     <div style="background: #fff;">
+        @php
+            $vendor_data = DB::table('po')
+                        ->join('vendor', 'vendor.id_vendor', '=', 'po.id_vendor')
+                        ->where('po.po_no', '=', $po_no)->get();
+        @endphp
+        @foreach ($vendor_data as $item_vendor)
+            
+        @endforeach
         <table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">
             <tbody>
                 <td>
@@ -124,12 +150,12 @@
                                 <th>(Note : Please only use info below)</th>
                             </tr>
                             <tr id="top-left-4">
-                                <td>PT. Blabla</td>
+                                <td>{{ $item_vendor->vendor }}</td>
                             </tr>
                             <tr id="top-left-4">
                                 <td>Attn</td>
                                 <td>:</td>
-                                <td>Si anu itu lupa</td>
+                                <td>{{ $item_vendor->vendor_cp }}</td>
                             </tr>
                             <tr id="top-left-4">
                                 <td>No. Ref Quo</td>
@@ -139,17 +165,6 @@
                     </table>
                 </td>
                 <td>
-                    {{-- Header Data --}}
-                    @php
-                        $header_data = DB::table('po')
-                                    ->join('pr', 'pr.id_pr', '=', 'po.id_pr')
-                                    ->join('employee', 'employee.id_employee', '=', 'pr.id_employee')
-                                    ->join('users', 'users.id', '=', 'employee.id_users')
-                                    ->where('po.po_no', '=', $po_no)->get();
-                    @endphp
-                    @foreach ($header_data as $item_header)
-                        
-                    @endforeach
                     <table>
                         <tbody>
                             <br>
@@ -173,7 +188,16 @@
                             <tr id="top-right-2">
                                 <td>Company</td>
                                 <td>:</td>
-                                <td id="td1">PT.inlingua</td>
+                                @if ($item_header->job_number == "i-Link")
+                                    <td id="td1">PT. i-Link</td>
+                                @elseif (preg_match("/WSCE/",$item_header->job_number))
+                                    <td id="td1">WSCE</td>
+                                @elseif (preg_match("/WSCC/",$item_header->job_number))
+                                    <td id="td1">WSCC</td>
+                                @else
+                                    <td id="td1">PT. inlingua</td>
+                                @endif
+                                
                             </tr>
                             <tr id="top-right-2">
                                 <td>Address</td>
@@ -198,7 +222,7 @@
                             <tr>
                                 <td>e-Mail</td>
                                 <td>:</td>
-                                <td id="td1">asdasdasd@gmail.com</td>
+                                <td id="td1">{{ $item_header->email }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -220,16 +244,20 @@
                 }
                 
             foreach ($po_table as $data_bal) {
-                $disc   = $data_bal->po_disc;
-                $tax    = $data_bal->po_tax;
-                $service_charge = $data_bal->po_service_charge;
-                $delivery_fee   = $data_bal->po_delivery_fee;
+                $disc               = $data_bal->po_disc;
+                $tax                = $data_bal->po_tax;
+                $service_charge     = $data_bal->po_service_charge;
+                $delivery_fee       = $data_bal->po_delivery_fee;
+                $addtional_charge   = $data_bal->po_additional_charge;
             }
 
+            // $a_disc = ($disc / 100) * $sub;
+            // $a_tax = ($tax / 100) * $sub;
             $a_disc = ($disc / 100) * $sub;
-            $a_tax = ($tax / 100) * $sub;
-
-            $grand_total = $sub - $a_disc + $a_tax + $service_charge + $delivery_fee;
+            $total_disc = $sub - $a_disc ;
+            $a_tax = ($tax / 100) * $total_disc;
+            $grand_total = $total_disc + $a_tax + $service_charge + $delivery_fee + $addtional_charge;
+            // $grand_total = $sub - $a_disc + $a_tax + $service_charge + $delivery_fee;
         @endphp
         <table border="1" cellpadding="0" cellspacing="0" style="width: 100%;" id="pr">
             <thead>
@@ -267,6 +295,35 @@
                     <td align="right" colspan="5"><i>Tax({{ $item_pr->po_tax }}%)</i></td>
                     <td>@currency($a_tax)</td>
                 </tr>
+                @if ($service_charge == Null && $delivery_fee == NULL && $addtional_charge == NULL)
+                @elseif($delivery_fee == NULL && $addtional_charge == NULL)
+                    <tr>
+                        <td align="right" colspan="5"><i>Service Charge</i></td>
+                        <td>@currency($service_charge)</td>
+                    </tr>
+                @elseif($addtional_charge == NULL)
+                    <tr>
+                        <td align="right" colspan="5"><i>Service Charge</i></td>
+                        <td>@currency($service_charge)</td>
+                    </tr>
+                    <tr>
+                        <td align="right" colspan="5"><i>Delivery Charge</i></td>
+                        <td>@currency($delivery_fee)</td>
+                    </tr>
+                @else
+                    <tr>
+                        <td align="right" colspan="5"><i>Service Charge</i></td>
+                        <td>@currency($service_charge)</td>
+                    </tr>
+                    <tr>
+                        <td align="right" colspan="5"><i>Delivery Charge</i></td>
+                        <td>@currency($delivery_fee)</td>
+                    </tr>
+                    <tr>
+                        <td align="right" colspan="5"><i>Additional Charge</i></td>
+                        <td>@currency($addtional_charge)</td>
+                    </tr>
+                @endif
                 <tr>
                     <th id="sub" colspan="5"> Grand Total</th>
                     <th>@currency($grand_total)</th>

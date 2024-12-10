@@ -76,8 +76,8 @@
             </ul>
           </li>
 
-          <li class="{{ Request::routeIs('index_pr_users') || Request::routeIs('create_pr_users') ? 'nav-item menu-open' : 'nav-item menu' }}">
-            <a href="#"  class="{{ Request::routeIs('index_pr_users') || Request::routeIs('create_pr_users') ? 'nav-link active' : 'nav-link' }}">
+          <li class="{{ Request::routeIs('index_pr_users') || Request::routeIs('create_pr_users') || Request::routeIs('index_old_pr_users')? 'nav-item menu-open' : 'nav-item menu' }}">
+            <a href="#"  class="{{ Request::routeIs('index_pr_users') || Request::routeIs('create_pr_users') || Request::routeIs('index_old_pr_users')? 'nav-link active' : 'nav-link' }}">
               <i class="fas fa-shopping-cart"></i>
               <p>
                 e-Purchase
@@ -97,10 +97,16 @@
                   <p>Report</p>
                 </a>
               </li>
+              <li class="nav-item">
+                <a href="{{ route('index_old_pr_users') }}" class="{{ Request::routeIs('index_old_pr_users') ? 'nav-link active' : 'nav-link' }}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Old PR PO</p>
+                </a>
+              </li>
             </ul>
           </li>
-          <li class="{{ Request::routeIs('index_atk_master') || Request::routeIs('index_atk_in')? 'nav-item menu-open' : 'nav-item menu' }}">
-            <a href="#" class="{{ Request::routeIs('index_atk_master')  || Request::routeIs('index_atk_in')? 'nav-link active' : 'nav-link' }}">
+          <li class="{{ Request::routeIs('index_atk_users') ? 'nav-item menu-open' : 'nav-item menu' }}">
+            <a href="#" class="{{ Request::routeIs('index_atk_users')  ? 'nav-link active' : 'nav-link' }}">
               <i class="fas fa-pencil-ruler"></i>
               <p>
                 ATK
@@ -109,18 +115,19 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="{{ route('index_atk_master') }}" class="{{ Request::routeIs('index_atk_master') ? 'nav-link active' : 'nav-link' }}">
+                <a href="{{ route('index_atk_users') }}" class="{{ Request::routeIs('index_atk_users') ? 'nav-link active' : 'nav-link' }}">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Master Data</p>
                 </a>
               </li>
-              <li class="nav-item">
-                <a href="{{ route('index_atk_in') }}" class="{{ Request::routeIs('index_atk_in') ? 'nav-link active' : 'nav-link' }}">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>ATK in</p>
-                </a>
-              </li>
+              
             </ul>
+          </li>
+          <li class="nav-item">
+            <a href="{{ route('index_letter_number_users') }}" class="{{ Request::routeIs('index_letter_number_users') ? 'nav-link active' : 'nav-link' }}">
+              <i class="nav-icon fas fa-envelope-open-text"></i>
+              <p>Letter Number</p>
+            </a>
           </li>
         </ul>
       </nav>

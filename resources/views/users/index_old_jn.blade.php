@@ -53,7 +53,7 @@
                                     <td>{{ $item->program }}</td>
                                     <td>{{ $item->pic }}</td>
                                     <td>
-                                      <a href="javascript:void(0)" id="show-data" data-url="{{ route('show_jn_old_users',$item->id_jn) }}" class="btn btn-default"><i class="far fa-eye"></i></a>                                       
+                                      <a href="javascript:void(0)" id="show-data" data-url="{{ route('show_jn_old_users',$item->id_jn) }}" class="btn btn-primary" title="View Data"><i class="far fa-eye"></i></a>
                                     </td>
                                 </tr>
                             @endforeach

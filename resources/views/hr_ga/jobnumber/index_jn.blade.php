@@ -39,7 +39,7 @@
                             <tr>
                                 <th>No.</th>
                                 <th>Job Number</th>
-                                <th>Contract</th>
+                                {{-- <th>Contract</th> --}}
                                 <th>Company</th>
                                 <th>Program</th>
                                 <th>PIC</th>
@@ -51,7 +51,7 @@
                                 <tr>
                                     <td style="width: 1px;">{{ $loop->iteration }}</td>
                                     <td>{{ $item->job_number }}</td>
-                                    <td>{{ $item->contract_no }}</td>
+                                    {{-- <td>{{ $item->contract_no }}</td> --}}
                                     <td>{{ $item->nama_perusahaan }}</td>
                                     <td>{{ $item->program }}</td>
                                     <td>{{ $item->pic }}</td>
@@ -61,10 +61,10 @@
                                             <i class="fas fa-align-justify"></i>
                                         </button>
                                         <div class="dropdown-menu" role="menu" style="">
-                                          <form onsubmit="return confirm('Apakah Anda Yakin ingin Menghapus data ?');" action="{{ route('destroy_client_admin',[$item->id_jn]) }}" method="POST">
+                                          <form onsubmit="return confirm('Apakah Anda Yakin ingin Menghapus data ?');" action="{{ route('destroy_client_hr_ga',[$item->id_jn]) }}" method="POST">
                                             @csrf
                                             @method('DELETE')
-                                            <a href="javascript:void(0)" id="show-data" data-url="{{ route('edit_client_admin',$item->id_jn) }}" class="dropdown-item"><i class="fas fa-pencil-alt"> Edit</i></a>
+                                            <a href="javascript:void(0)" id="show-data" data-url="{{ route('edit_client_hr_ga',$item->id_jn) }}" class="dropdown-item"><i class="fas fa-pencil-alt"> Edit</i></a>
                                             <button type="submit" class="dropdown-item"><i class="fas fa-trash-alt"> Delete</i>  </button>
                                           </form>
                                         </div>
@@ -78,7 +78,7 @@
                             <tr>
                                 <th>No.</th>
                                 <th>Job Number</th>
-                                <th>Contract</th>
+                                {{-- <th>Contract</th> --}}
                                 <th>Company</th>
                                 <th>Program</th>
                                 <th>PIC</th>
@@ -97,7 +97,7 @@
     <!-- /.content -->
     {{-- End Content --}}
     {{-- Create Modal --}}
-    <form action="{{ route('store_jn_admin') }}" method="POST" enctype="multipart/form-data" id="jobnumber" name="jobnumber">
+    <form action="{{ route('store_jn_hr_ga') }}" method="POST" enctype="multipart/form-data" id="jobnumber" name="jobnumber">
         @csrf
         <div class="modal fade" id="modal_jn">
             <div class="modal-dialog modal-xl">
@@ -263,7 +263,7 @@
     </form>
     {{-- End Create --}}
     {{-- Update Modal --}}
-    <form action="{{ route('update_jn_admin',1) }}" method="POST" enctype="multipart/form-data" id="update_jn_form" name="update_jn_form">
+    <form action="{{ route('update_jn_hr_ga',1) }}" method="POST" enctype="multipart/form-data" id="update_jn_form" name="update_jn_form">
         @csrf
         <div class="modal fade" id="modal-update-jn">
           <div class="modal-dialog modal-lg">

@@ -120,10 +120,41 @@
                                         <td align="right" colspan="5"><i>Tax&nbsp;({{ $po_datas->po_tax }}%)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</i></td>
                                         <td align="center">@currency($tax)</td>
                                     </tr>
+                                    @if ($service_charge == Null && $delivery_fee == NULL && $addtional_charge == NULL)
+                                        
+                                    @elseif($delivery_fee == NULL && $addtional_charge == NULL)
+                                        <tr>
+                                            <td align="right" colspan="5"><i>Service Charge&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</i></td>
+                                            <td align="center">@currency($service_charge)</td>
+                                        </tr>
+                                    @elseif($addtional_charge == NULL)
+                                        <tr>
+                                            <td align="right" colspan="5"><i>Service Charge&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</i></td>
+                                            <td align="center">@currency($service_charge)</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right" colspan="5"><i>Delivery Charge&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</i></td>
+                                            <td align="center">@currency($delivery_fee)</td>
+                                        </tr>
+                                    @else
+                                        <tr>
+                                            <td align="right" colspan="5"><i>Service Charge&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</i></td>
+                                            <td align="center">@currency($service_charge)</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right" colspan="5"><i>Delivery Charge&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</i></td>
+                                            <td align="center">@currency($delivery_fee)</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right" colspan="5"><i>Additional Charge&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</i></td>
+                                            <td align="center">@currency($addtional_charge)</td>
+                                        </tr>
+                                    @endif
                                     <tr>
                                         <th id="sub" colspan="5">Grand Total&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
                                         <th id="sub2">@currency($grand_total)</th>
                                     </tr>
+                                    
                                 </tfoot>
                             </table>
                             <p>Please proceed to <a href="#"><b>SATUPINTU - APP</b>.</a></p>

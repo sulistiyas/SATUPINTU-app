@@ -26,6 +26,7 @@ class PurchaseOrder extends Model
         'po_tax',
         'po_service_charge',
         'po_delivery_fee',
+        'po_additional_charge',
 
     ];
     protected $dates = [

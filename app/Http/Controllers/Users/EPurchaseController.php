@@ -125,7 +125,35 @@ class EPurchaseController extends Controller
             ->join('users', 'users.id', '=', 'employee.id_users')
             ->where('pr.pr_no', '=', $id)->get();
         // $pr_data = DB::table('pr')->where('pr_no', '=', $id)->get();
-        return view('components.modals.pr_admin_show', ['data_pr' => $pr_data]);
+        return view('components.modals.admin_modals.e_purchase.pr.pr_admin_show', ['data_pr' => $pr_data]);
+    }
+
+    public function show_modal_po_pirce_users($id)
+    {
+        $data_po = DB::table('po')
+            ->join('pr', 'pr.id_pr', '=', 'po.id_pr')
+            ->join('employee', 'employee.id_employee', '=', 'pr.id_employee')
+            ->join('users', 'users.id', '=', 'employee.id_users')
+            ->leftJoin('vendor', 'vendor.id_vendor', '=', 'po.id_vendor')
+            ->where('po.po_no', '=', $id)->get();
+        // $pr_data = DB::table('pr')->where('pr_no', '=', $id)->get();
+        $total_prices = DB::table('po')->selectRaw('SUM(total_price) as grand_total')->where('po_no', '=', $id)->get();
+        $vendor_data = DB::table('vendor')->where('deleted_at', '=', NULL)->orderBy('vendor', 'asc')->get();
+        return view('components.modals.admin_modals.e_purchase.po.po_admin', compact('data_po', 'total_prices', 'vendor_data'));
+    }
+
+    public function show_modal_po_un_users($id)
+    {
+        $data_po = DB::table('po')
+            ->join('pr', 'pr.id_pr', '=', 'po.id_pr')
+            ->join('employee', 'employee.id_employee', '=', 'pr.id_employee')
+            ->join('users', 'users.id', '=', 'employee.id_users')
+            ->leftJoin('vendor', 'vendor.id_vendor', '=', 'po.id_vendor')
+            ->where('po.po_no', '=', $id)->get();
+        // $pr_data = DB::table('pr')->where('pr_no', '=', $id)->get();
+        $total_prices = DB::table('po')->selectRaw('SUM(total_price) as grand_total')->where('po_no', '=', $id)->get();
+        $vendor_data = DB::table('vendor')->where('deleted_at', '=', NULL)->orderBy('vendor', 'asc')->get();
+        return view('components.modals.admin_modals.e_purchase.po.po_admin', compact('data_po', 'total_prices', 'vendor_data'));
     }
 
     /**
@@ -234,5 +262,21 @@ class EPurchaseController extends Controller
             Alert::error('error', 'Failed to Create Data!!');
             return redirect()->route('create_pr_users');
         }
+    }
+
+    public function print_po_users(Request $request)
+    {
+        $po_no = $request->txt_po_no;
+        $data = ['po_no' => $po_no];
+        // return view('components.pdf.po_print',$data);
+        $pdf = Pdf::loadView('components.pdf.po_print', $data);
+        // $pdf->loadHTML($po_no);
+        return $pdf->stream("$po_no.pdf");
+    }
+
+    // ATK
+    public function index_atk()
+    {
+        return view('users.atk.index');
     }
 }
