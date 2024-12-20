@@ -482,7 +482,7 @@ class UsersController extends Controller
 
     public function get_old_pr_users()
     {
-        return DataTables::of(OldPR::query()->orderBy('id_pr', 'desc'))->toJson();
+        return DataTables::of(OldPR::query()->orderBy('id_pr', 'DESC'))->toJson();
     }
     public function index_old_pr_users()
     {

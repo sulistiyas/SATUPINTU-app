@@ -203,10 +203,10 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
             Route::post('/Users/EPurchase/PO/Print/', [UsersEPurchaseController::class, 'print_po_users'])->name('print_po_users');
             // Etc
             // ATK
-            Route::get('/Admin/ATK/Master/List', [UsersEPurchaseController::class, 'index_atk'])->name('index_atk_users');
-            Route::post('/Admin/ATK/Master/Store', [UsersEPurchaseController::class, 'store_atk'])->name('store_atk_users');
-            Route::get('/Admin/ATK/Master/Update', [UsersEPurchaseController::class, 'update_atk'])->name('update_atk_users');
-            Route::get('/Admin/ATK/Master/Create', [UsersEPurchaseController::class, 'create_atk'])->name('show_modal_create_atk');
+            Route::get('/Users/ATK/Master/List', [UsersEPurchaseController::class, 'index_atk'])->name('index_atk_users');
+            Route::post('/Users/ATK/Master/Store', [UsersEPurchaseController::class, 'store_atk'])->name('store_atk_users');
+            Route::get('/Users/ATK/Master/Update', [UsersEPurchaseController::class, 'update_atk'])->name('update_atk_users');
+            Route::get('/Users/ATK/Master/Create', [UsersEPurchaseController::class, 'create_atk'])->name('show_modal_create_atk');
 
             // Letter Number
             Route::get('/Users/LetterNumber', [UsersUsersController::class, 'index_letter_users'])->name('index_letter_number_users');
@@ -242,8 +242,8 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
             Route::get('/HRGA/EPurchase/PR/Edit/{id}', [HREpurchaseController::class, 'edit_pr'])->name('edit_pr_hr_ga');
             Route::POST('/HRGA/EPurchase/PR/Update/{id}', [HREpurchaseController::class, 'update_pr'])->name('update_pr_hr_ga');
             Route::delete('/HRGA/EPurchase/PR/Destroy/{id}', [HREpurchaseController::class, 'destroy_pr'])->name('destroy_pr_hr_ga');
-            Route::get('/refresh/pr', [HREpurchaseController::class, 'refresh_pr'])->name('refresh_pr');
-            Route::get('/HRGA/Epurchase/PR/OLD', [HREpurchaseController::class, 'index_old_pr'])->name('index_old_pr');
+            Route::get('/HRGA/refresh/pr', [HREpurchaseController::class, 'refresh_pr_hr_ga'])->name('refresh_pr_hr_ga');
+            Route::get('/HRGA/Epurchase/PR/OLD', [HREpurchaseController::class, 'index_old_pr_hr_ga'])->name('index_old_pr_hr_ga');
             // Purchase Order
             Route::get('/HRGA/EPurchase/PO/List', [HREpurchaseController::class, 'index_po'])->name('index_po_hr_ga');
             Route::get('/HRGA/EPurchase/PO/Create', [HREpurchaseController::class, 'create_po'])->name('create_po_hr_ga');
@@ -291,7 +291,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
             // Route::get('/refresh/number', [LetterNumberController::class, 'refresh_last_number'])->name('refresh_last_number');
 
             // Adds on
-            Route::get('/data/json', [EPurchaseController::class, 'get_old_pr'])->name('get_old_pr');
+            Route::get('/HRGA/data/json', [HREpurchaseController::class, 'get_old_pr_hr_ga'])->name('get_old_pr_hr_ga');
         });
     });
 });

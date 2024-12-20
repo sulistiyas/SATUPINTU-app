@@ -78,6 +78,10 @@ class EPurchaseController extends Controller
             $pr_no      = $request->txt_pr_number;
             $jn         = $request->txt_jn;
             $idusers    = Auth::user()->id;
+            $jn_code = DB::table('jobnumber')->where('id_jn', '=', $jn)->get();
+            foreach ($jn_code as $jn_codes) {
+                $jn_name = $jn_codes->job_number;
+            }
             $division   = DB::table('employee')
                 ->join('users', 'users.id', '=', 'employee.id_users')
                 ->where('id_users', '=', $idusers)->get();
@@ -118,7 +122,7 @@ class EPurchaseController extends Controller
             // ]);
 
             PurchaseRequest::insert($array_data);
-            return $this->SendMailPR($idusers, $manager_id, $array_data, $pr_no, $jn);
+            return $this->SendMailPR($idusers, $manager_id, $array_data, $pr_no, $jn_name);
             Alert::success('Success', 'PR Submitted Successfully');
             return redirect()->route('index_pr_admin');
         } catch (\Exception $th) {
@@ -145,9 +149,10 @@ class EPurchaseController extends Controller
     public function show_modal_pr_admin($id)
     {
         // 
-        $pr_data = DB::table('pr')
+        $pr_data = DB::table('pr')->select('*','pr.job_number as id_jn_pr', 'jobnumber.job_number as jn')
             ->join('employee', 'employee.id_employee', '=', 'pr.id_employee')
             ->join('users', 'users.id', '=', 'employee.id_users')
+            ->join('jobnumber', 'jobnumber.id_jn', '=', 'pr.job_number')
             ->where('pr.pr_no', '=', $id)->get();
         // $pr_data = DB::table('pr')->where('pr_no', '=', $id)->get();
         return view('components.modals.admin_modals.e_purchase.pr.pr_admin_show', ['data_pr' => $pr_data]);
@@ -282,6 +287,7 @@ class EPurchaseController extends Controller
                     'po_service_charge'     => $service_charge,
                     'po_delivery_fee'       => $delivery_fee,
                     'po_status'             => '2',
+                    'po_rev'                => NULL,
                     'updated_at'            => date('Y-m-d h:i:s')
                 ]);
                 $pr_data = PurchaseRequest::where('pr_no', '=', $pr_no)->update([
@@ -403,11 +409,6 @@ class EPurchaseController extends Controller
         return $pdf->stream("$po_no.pdf");
     }
     public function edit_po(string $id)
-    {
-        //
-    }
-
-    public function update_po(Request $request, string $id)
     {
         //
     }
@@ -537,7 +538,7 @@ class EPurchaseController extends Controller
     }
     // Vendor Section End
 
-    public function SendMailPR($idusers, $manager_id, $array_data, $pr_no, $jn)
+    public function SendMailPR($idusers, $manager_id, $array_data, $pr_no, $jn_name)
     {
         try {
             $emp_data   = DB::table('employee')
@@ -567,7 +568,7 @@ class EPurchaseController extends Controller
                 'hr_ga'         => $GA_name,
                 'data'          => $array_data,
                 'pr_no'         => $pr_no,
-                'job_number'    => $jn,
+                'job_number'    => $jn_name,
             ], function ($mail) {
                 $id_users = Auth::user()->id;
                 $emp_data   = DB::table('employee')
@@ -722,12 +723,19 @@ class EPurchaseController extends Controller
 
     public function get_old_pr()
     {
-        return DataTables::of(OldPR::query())->toJson();
+        return DataTables::of(OldPR::query()->orderBy('id_pr', 'DESC'))->toJson();
     }
     public function index_old_pr()
     {
         return view('admin.ePurchase.old_pr');
         // $get_data = DB::table('tbl_pr')->orderBy('id_pr', 'desc')->get();
         // return view('admin.ePurchase.old_pr', ['old_pr' => $get_data]);
+    }
+
+    public function update_po(string $po_number)
+    {
+        $get_data = DB::table('po')
+            ->leftJoin('pr', 'pr.id_pr', '=', 'po.id_pr')
+            ->where('po.po_number', '=', $po_number);
     }
 }

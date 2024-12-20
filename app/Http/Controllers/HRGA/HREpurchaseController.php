@@ -646,13 +646,13 @@ class HREpurchaseController extends Controller
         return $pdf->stream("$po_no.pdf");
     }
 
-    public function get_old_pr()
+    public function get_old_pr_hr_ga()
     {
-        return DataTables::of(OldPR::query())->toJson();
+        return DataTables::of(OldPR::query()->orderBy('id_pr', 'DESC'))->toJson();
     }
-    public function index_old_pr()
+    public function index_old_pr_hr_ga()
     {
-        return view('admin.ePurchase.old_pr');
+        return view('hr_ga.epurchase.old_pr');
         // $get_data = DB::table('tbl_pr')->orderBy('id_pr', 'desc')->get();
         // return view('admin.ePurchase.old_pr', ['old_pr' => $get_data]);
     }

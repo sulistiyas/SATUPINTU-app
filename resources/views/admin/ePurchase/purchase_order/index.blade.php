@@ -72,7 +72,9 @@
                                             <div class="btn-group">
                                                 
                                                 @if ( $item_pr->pr_status  == 5)
-                                                  <div class="col-12">
+                                                  <button type="button" class="btn bg-info" title="Show Data" data-toggle="modal" data-target="#modal_pr_show_admin" id="getPR" data-url="{{ route('show_modal_pr_admin',['id'=>$item_pr->pr_no_1])}}"><i class="far fa-eye"></i></button>&nbsp;
+                                                  <button class="btn bg-secondary toastrDefaultError" title="Print PR"><i class="fas fa-print"></i></i></button>&nbsp;
+                                                  {{-- <div class="col-12">
                                                     <div class="btn-group">
                                                       <button type="button" class="btn btn-flat" data-toggle="dropdown">
                                                           <span class="sr-only">Toggle Dropdown</span>
@@ -83,11 +85,10 @@
                                                               View Data
                                                           </button>
                                                       <div class="dropdown-divider"></div>
-                                                        {{-- <a class="dropdown-item" href=""></a> --}}
                                                         <button class="dropdown-item toastrDefaultError" >Print</button>
                                                       </div>
                                                     </div>
-                                                  </div>    
+                                                  </div>     --}}
                                                 @elseif ($item_pr->pr_status  == 4)
                                                   <div class="btn-group">
                                                     <button type="button" class="btn btn-flat" data-toggle="dropdown">

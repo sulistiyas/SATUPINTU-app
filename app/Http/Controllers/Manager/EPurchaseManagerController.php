@@ -24,6 +24,7 @@ class EPurchaseManagerController extends Controller
         $get_div = DB::table('employee')->where('id_users', '=', $id_users)->where('deleted_at', '=', NULL)->get();
         foreach ($get_div as $item) {
             $division = $item->emp_division;
+            
         }
         $get_pr_data = DB::table('pr')
             ->join('employee', 'employee.id_employee', '=', 'pr.id_employee')
@@ -33,6 +34,7 @@ class EPurchaseManagerController extends Controller
             ->orderBy('pr.created_at', 'desc')
             ->groupBy('pr.pr_no')->get();
         return view('manager.includes.ePurchase.index_pr', ['data' => $get_pr_data]);
+        // dd($id_users);
     }
     public function approve_pr_manager(Request $request)
     {
