@@ -46,8 +46,8 @@
               <p>Dashboard</p>
             </a>
           </li>
-          <li class="{{ Request::routeIs('index_jn_hr_ga') || Request::routeIs('index_client_hr_ga') || Request::routeIs('index_jn_old_hr_ga') ? 'nav-item menu-open' : 'nav-item menu' }}">
-            <a href="#"  class="{{ Request::routeIs('index_jn_hr_ga') || Request::routeIs('index_client_hr_ga') || Request::routeIs('index_jn_old_hr_ga') ? 'nav-link active' : 'nav-link' }}">
+          <li class="{{ Request::routeIs('index_jn_hr_ga') || Request::routeIs('index_client_hr_ga') || Request::routeIs('index_jn_old_hr_ga') || Request::routeIs('index_jn_2018') || Request::routeIs('index_jn_2019') || Request::routeIs('index_jn_2020') || Request::routeIs('index_jn_2021') || Request::routeIs('index_jn_2022') || Request::routeIs('index_jn_2023') || Request::routeIs('index_jn_2024') ? 'nav-item menu-open' : 'nav-item menu' }}">
+            <a href="#"  class="{{ Request::routeIs('index_jn_hr_ga') || Request::routeIs('index_client_hr_ga') || Request::routeIs('index_jn_old_hr_ga') || Request::routeIs('index_jn_2018') || Request::routeIs('index_jn_2019') || Request::routeIs('index_jn_2020') || Request::routeIs('index_jn_2021') || Request::routeIs('index_jn_2022') || Request::routeIs('index_jn_2023') || Request::routeIs('index_jn_2024') ? 'nav-link active' : 'nav-link' }}">
               <i class="nav-icon fas fa-briefcase"></i>
               <p>
                 Job Number
@@ -67,11 +67,58 @@
                   <p>Job Number List</p>
                 </a>
               </li>
-              <li class="nav-item">
-                <a href="{{ route('index_jn_old_hr_ga') }}" class="{{ Request::routeIs('index_jn_old_hr_ga') ? 'nav-link active' : 'nav-link' }}">
+              <li class="{{ Request::routeIs('index_jn_2018') || Request::routeIs('index_jn_2019') || Request::routeIs('index_jn_2020') || Request::routeIs('index_jn_2021') || Request::routeIs('index_jn_2022') || Request::routeIs('index_jn_2023') || Request::routeIs('index_jn_2024') ? 'nav-item menu-open' : 'nav-item menu' }}">
+                <a href="#" class="{{ Request::routeIs('index_jn_2018') || Request::routeIs('index_jn_2019') || Request::routeIs('index_jn_2020') || Request::routeIs('index_jn_2021') || Request::routeIs('index_jn_2022') || Request::routeIs('index_jn_2023') || Request::routeIs('index_jn_2024') ? 'nav-link active' : 'nav-link' }}">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Old Job Number</p>
+                  <p>
+                    Old Job Number
+                    <i class="right fas fa-angle-left"></i>
+                  </p>
                 </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="{{ route('index_jn_2018') }}" class="{{ Request::routeIs('index_jn_2018') ? 'nav-link active' : 'nav-link' }}">
+                      <i class="far fa-dot-circle nav-icon"></i>
+                      <p>JN 2018</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="{{ route('index_jn_2019') }}" class="{{ Request::routeIs('index_jn_2019') ? 'nav-link active' : 'nav-link' }}">
+                      <i class="far fa-dot-circle nav-icon"></i>
+                      <p>JN 2019</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="{{ route('index_jn_2020') }}" class="{{ Request::routeIs('index_jn_2020') ? 'nav-link active' : 'nav-link' }}">
+                      <i class="far fa-dot-circle nav-icon"></i>
+                      <p>JN 2020</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="{{ route('index_jn_2021') }}" class="{{ Request::routeIs('index_jn_2021') ? 'nav-link active' : 'nav-link' }}">
+                      <i class="far fa-dot-circle nav-icon"></i>
+                      <p>JN 2021</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="{{ route('index_jn_2022') }}" class="{{ Request::routeIs('index_jn_2022') ? 'nav-link active' : 'nav-link' }}">
+                      <i class="far fa-dot-circle nav-icon"></i>
+                      <p>JN 2022</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="{{ route('index_jn_2023') }}" class="{{ Request::routeIs('index_jn_2023') ? 'nav-link active' : 'nav-link' }}">
+                      <i class="far fa-dot-circle nav-icon"></i>
+                      <p>JN 2023</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="{{ route('index_jn_2024') }}" class="{{ Request::routeIs('index_jn_2024') ? 'nav-link active' : 'nav-link' }}">
+                      <i class="far fa-dot-circle nav-icon"></i>
+                      <p>JN 2024</p>
+                    </a>
+                  </li>
+                </ul>
               </li>
             </ul>
           </li>

@@ -1,0 +1,63 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('tbl_jn2024', function (Blueprint $table) {
+            $table->id('id_jn');
+            // $table->foreignId('id_client')->references('id_client')->on('client')->onUpdate('cascade')->onDelete('cascade');
+            $table->string('id_client');
+            $table->string('bulan');
+            $table->string('job_number');
+            $table->string('contract_no')->nullable();
+            $table->string('amount')->nullable();
+            $table->string('actual_payment')->nullable();
+            $table->string('out_standing')->nullable();
+            $table->string('paid_date')->nullable();
+            $table->string('pph_duatiga')->nullable();
+            $table->string('program')->nullable();
+            $table->string('c_p')->nullable();
+            $table->string('hours')->nullable();
+            $table->string('pic')->nullable();
+            $table->string('instructor')->nullable();
+            $table->string('teacher_comp')->nullable();
+            $table->string('day_training')->nullable();
+            $table->string('day_training2')->nullable();
+            $table->string('time_in')->nullable();
+            $table->string('time_out')->nullable();
+            $table->string('starting_date')->nullable();
+            $table->string('ending_date')->nullable();
+            $table->string('nod')->nullable();
+            $table->string('total_manday')->nullable();
+            $table->string('remarks')->nullable();
+            $table->string('liat_jn')->nullable();
+            $table->string('log_date')->nullable();
+            $table->string('username')->nullable();
+            $table->string('divisi')->nullable();
+            $table->string('total_amount')->nullable();
+            $table->string('nama_peserta')->nullable();
+            $table->string('bulan_prediction')->nullable();
+            $table->string('tgl_test')->nullable();
+            $table->string('jenis_test')->nullable();
+            $table->string('harga_test')->nullable();
+            $table->string('prediction')->nullable();
+            $table->string('status')->nullable();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('tbl_jn2024');
+    }
+};

@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\LetterNumberController;
 use App\Http\Controllers\HRGA\HREpurchaseController;
 use App\Http\Controllers\HRGA\HRJobNumberController;
 use App\Http\Controllers\Manager\EPurchaseManagerController;
+use App\Http\Controllers\OldData\OldJNController;
 use App\Http\Controllers\Users\EPurchaseController as UsersEPurchaseController;
 use App\Http\Controllers\Users\UsersController as UsersUsersController;
 
@@ -26,6 +27,15 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
     // Route::get('/dashboard', function () {
     //     return view('dashboard');
     // })->name('dashboard');
+    
+    Route::get('/OldData/JobNumber/2018', [OldJNController::class, 'index_jn_2018'])->name('index_jn_2018');
+    Route::get('/OldData/JobNumber/2019', [OldJNController::class, 'index_jn_2019'])->name('index_jn_2019');
+    Route::get('/OldData/JobNumber/2020', [OldJNController::class, 'index_jn_2020'])->name('index_jn_2020');
+    Route::get('/OldData/JobNumber/2021', [OldJNController::class, 'index_jn_2021'])->name('index_jn_2021');
+    Route::get('/OldData/JobNumber/2022', [OldJNController::class, 'index_jn_2022'])->name('index_jn_2022');
+    Route::get('/OldData/JobNumber/2023', [OldJNController::class, 'index_jn_2023'])->name('index_jn_2023');
+    Route::get('/OldData/JobNumber/2024', [OldJNController::class, 'index_jn_2024'])->name('index_jn_2024');
+
     Route::controller(LoginController::class)->group(function () {
         Route::get('/dashboard', 'index')->name('dashboard');
         // 
