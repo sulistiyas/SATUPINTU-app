@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
+use Haruncpi\LaravelIdGenerator\IdGenerator;
 
 class UsersController extends Controller
 {
@@ -462,11 +463,8 @@ class UsersController extends Controller
      */
     public function show_letter_users()
     {
-        $latest_id = LetterNumber::whereRaw('id_letter = (select max(`id_letter`) from letter_number)')->get();
-        foreach ($latest_id as $id) {
-            $last_id = $id->id_letter;
-        }
-        $latest_number = DB::table('letter_number')->where('id_letter', '=', $last_id)->get();
+        $prefix = "0";
+        $latest_number = IdGenerator::generate(['table' => 'letter_number', 'field' => 'nomor_urut', 'length' => 4, 'prefix' => $prefix, 'reset_on_prefix_change' => true]);
         return view('components.modals.letter_number_form', ['latest_number' => $latest_number]);
     }
 

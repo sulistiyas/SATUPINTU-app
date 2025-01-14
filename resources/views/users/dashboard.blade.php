@@ -141,7 +141,7 @@
                 <div class="icon">
                   <i class="fas fa-box-open"></i>
                 </div>
-                <a href="{{ route('index_letter_number_users') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                <a href="{{ route('index_letter_number') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
               </div>
             </div>
             <!-- ./col -->

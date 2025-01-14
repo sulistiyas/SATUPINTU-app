@@ -1,17 +1,15 @@
-@foreach ($latest_number as $item_id)
-    
-@endforeach
+
 <div class="row">
     <div class="col-5">
         <div class="form-group" id="letter">
             <label for="txt_nomor_urut">Number</label>
-            <input type="number" name="txt_nomor_urut" id="txt_nomor_urut" class="form-control" value="{{ old('latest_number',$item_id->nomor_urut + 1)}}" readonly required>
+            <input type="number" name="txt_nomor_urut" id="txt_nomor_urut" class="form-control" value="{{ old('latest_number',$latest_number)}}" readonly required>
         </div>
     </div>
     <div class="col-1">
         <div class="form-group">
             <label for="refresh_number" style="color: transparent">T</label><br>
-            <button type="button" class="btn btn-outline-primary" title="Refresh Data" id="refresh_number" data-url="{{ route('refresh_last_number_letter_users')}}">
+            <button type="button" class="btn btn-outline-primary" title="Refresh Data" id="refresh_number" data-url="{{ route('refresh_last_number')}}">
                 <i class="fas fa-sync"></i>
             </button>
         </div>

@@ -1,5 +1,25 @@
-@include('users.includes.header')
-@include('users.includes.sidebar')
+@if (Auth::user()->user_level == '0')
+    @include('admin.includes.header')
+    @include('admin.includes.sidebar')
+    
+@elseif (Auth::user()->user_level == '1' )
+    {{-- @include('dire.includes.header')
+    @include('dire.includes.sidebar')
+     --}}
+@elseif (Auth::user()->user_level == '2' )    
+    @include('manager.includes.header')
+    @include('manager.includes.sidebar')
+    
+@elseif (Auth::user()->user_level == '3' )    
+    @include('users.includes.header')
+    @include('users.includes.sidebar')
+
+@elseif (Auth::user()->user_level == '4' )
+    @include('hr_ga.includes.header')
+    @include('hr_ga.includes.sidebar')
+@endif
+
+{{-- Content --}}
 <div class="content-wrapper">
     <div class="content-header">
         <div class="container-fluid">
@@ -23,7 +43,7 @@
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">Letter Number Data</h3>
-                            <button type="button" id="create_letter_number" class="float-sm-right btn btn-primary" data-toggle="modal" data-target="#modal_letter_number" data-url="{{ route('show_modal_create_letter_number')}}">
+                            <button type="button" id="create_letter_number" class="float-sm-right btn btn-primary" data-toggle="modal" data-target="#modal_letter_number" data-url="{{ route('show_modal_create_letter_number_users')}}">
                                 <i class="fas fa-plus">&nbsp;Add Data</i>
                             </button>
                         </div>
@@ -57,8 +77,9 @@
         </div>
     </section>
 </div>
+{{-- End Content --}}
 {{-- Create Modal --}}
-<form action="{{ route('store_letter_number') }}" method="POST" enctype="multipart/form-data" id="legalitas_office" name="legalitas_office">
+<form action="{{ route('store_letter_number_users') }}" method="POST" enctype="multipart/form-data" id="legalitas_office" name="legalitas_office">
     @csrf
     <div class="modal fade" id="modal_letter_number">
         <div class="modal-dialog modal-lg">
@@ -84,7 +105,18 @@
     </div>
 </form>
 {{-- End Create Modal --}}
-@include('users.includes.footer')
+@if (Auth::user()->user_level == '0')
+    @include('admin.includes.footer')
+@elseif (Auth::user()->user_level == '1' )
+    {{-- @include('dire.includes.footer')  --}}
+@elseif (Auth::user()->user_level == '2' )    
+    @include('manager.includes.footer')
+@elseif (Auth::user()->user_level == '3' )
+    @include('users.includes.footer')
+@elseif (Auth::user()->user_level == '4' )
+    @include('hr_ga.includes.footer')
+@endif
+
 <script>
     // Datatables
     $(function () {

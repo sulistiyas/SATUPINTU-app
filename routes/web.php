@@ -14,8 +14,10 @@ use App\Http\Controllers\Manager\ManagerController;
 use App\Http\Controllers\Admin\LetterNumberController;
 use App\Http\Controllers\HRGA\HREpurchaseController;
 use App\Http\Controllers\HRGA\HRJobNumberController;
+use App\Http\Controllers\LetterNumberController as ControllersLetterNumberController;
 use App\Http\Controllers\Manager\EPurchaseManagerController;
 use App\Http\Controllers\OldData\OldJNController;
+use App\Http\Controllers\OldData\OldLetterNumberController;
 use App\Http\Controllers\Users\EPurchaseController as UsersEPurchaseController;
 use App\Http\Controllers\Users\UsersController as UsersUsersController;
 
@@ -27,7 +29,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
     // Route::get('/dashboard', function () {
     //     return view('dashboard');
     // })->name('dashboard');
-    
+
     Route::get('/OldData/JobNumber/2018', [OldJNController::class, 'index_jn_2018'])->name('index_jn_2018');
     Route::get('/OldData/JobNumber/2019', [OldJNController::class, 'index_jn_2019'])->name('index_jn_2019');
     Route::get('/OldData/JobNumber/2020', [OldJNController::class, 'index_jn_2020'])->name('index_jn_2020');
@@ -35,6 +37,20 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
     Route::get('/OldData/JobNumber/2022', [OldJNController::class, 'index_jn_2022'])->name('index_jn_2022');
     Route::get('/OldData/JobNumber/2023', [OldJNController::class, 'index_jn_2023'])->name('index_jn_2023');
     Route::get('/OldData/JobNumber/2024', [OldJNController::class, 'index_jn_2024'])->name('index_jn_2024');
+
+    Route::get('OldData/LetterNumber/2018', [OldLetterNumberController::class, 'index_letter_2018'])->name('index_letter_2018');
+    Route::get('OldData/LetterNumber/2019', [OldLetterNumberController::class, 'index_letter_2019'])->name('index_letter_2019');
+    Route::get('OldData/LetterNumber/2020', [OldLetterNumberController::class, 'index_letter_2020'])->name('index_letter_2020');
+    Route::get('OldData/LetterNumber/2021', [OldLetterNumberController::class, 'index_letter_2021'])->name('index_letter_2021');
+    Route::get('OldData/LetterNumber/2022', [OldLetterNumberController::class, 'index_letter_2022'])->name('index_letter_2022');
+    Route::get('OldData/LetterNumber/2023', [OldLetterNumberController::class, 'index_letter_2023'])->name('index_letter_2023');
+    Route::get('OldData/LetterNumber/2024', [OldLetterNumberController::class, 'index_letter_2024'])->name('index_letter_2024');
+
+
+    Route::get('LetterNumber/Index', [ControllersLetterNumberController::class, 'index_letter_number'])->name('index_letter_number');
+    Route::post('LetterNumber/Store', [ControllersLetterNumberController::class, 'store_letter_number'])->name('store_letter_number');
+    Route::get('LetterNumber/Store/Create', [ControllersLetterNumberController::class, 'show_modal_create_letter_number'])->name('show_modal_create_letter_number');
+    Route::get('/refresh/number', [ControllersLetterNumberController::class, 'refresh_last_number'])->name('refresh_last_number');
 
     Route::controller(LoginController::class)->group(function () {
         Route::get('/dashboard', 'index')->name('dashboard');
@@ -121,10 +137,10 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
             Route::get('/Admin/Legalitas/Office/Edit/{id}', [LegalitasController::class, 'edit'])->name('edit_office_legalitas');
 
             // Letter Number
-            Route::get('/Admin/LetterNumber', [LetterNumberController::class, 'index'])->name('index_letter_number');
-            Route::post('/Admin/LetterNumber/Store', [LetterNumberController::class, 'store'])->name('store_letter_number');
-            Route::get('/Admin/LetterNumber/Store/Create', [LetterNumberController::class, 'show'])->name('show_modal_create_letter_number');
-            Route::get('/refresh/number', [LetterNumberController::class, 'refresh_last_number'])->name('refresh_last_number');
+            // Route::get('/Admin/LetterNumber', [LetterNumberController::class, 'index'])->name('index_letter_number');
+            // Route::post('/Admin/LetterNumber/Store', [LetterNumberController::class, 'store'])->name('store_letter_number');
+            // Route::get('/Admin/LetterNumber/Store/Create', [LetterNumberController::class, 'show'])->name('show_modal_create_letter_number');
+            // Route::get('/refresh/number', [LetterNumberController::class, 'refresh_last_number'])->name('refresh_last_number');
 
             // User Management
             Route::get('/Admin/Users', [UsersController::class, 'index'])->name('index_users');
@@ -219,10 +235,10 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
             Route::get('/Users/ATK/Master/Create', [UsersEPurchaseController::class, 'create_atk'])->name('show_modal_create_atk');
 
             // Letter Number
-            Route::get('/Users/LetterNumber', [UsersUsersController::class, 'index_letter_users'])->name('index_letter_number_users');
-            Route::post('/Users/LetterNumber/Store', [UsersUsersController::class, 'store_letter_users'])->name('store_letter_number_users');
-            Route::get('/Users/LetterNumber/Store/Create', [UsersUsersController::class, 'show_letter_users'])->name('show_modal_create_letter_number_users');
-            Route::get('/refresh/number/users', [UsersUsersController::class, 'refresh_last_number_letter_users'])->name('refresh_last_number_letter_users');
+            // Route::get('/Users/LetterNumber', [UsersUsersController::class, 'index_letter_users'])->name('index_letter_number_users');
+            // Route::post('/Users/LetterNumber/Store', [UsersUsersController::class, 'store_letter_users'])->name('store_letter_number_users');
+            // Route::get('/Users/LetterNumber/Store/Create', [UsersUsersController::class, 'show_letter_users'])->name('show_modal_create_letter_number_users');
+            // Route::get('/refresh/number/users', [UsersUsersController::class, 'refresh_last_number_letter_users'])->name('refresh_last_number_letter_users');
             // Adds on
             Route::get('/users/data/json', [UsersUsersController::class, 'get_old_pr_users'])->name('get_old_pr_users');
         });
@@ -264,7 +280,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
             Route::POST('/HRGA/EPurchase/PO/Update/{id}', [HREpurchaseController::class, 'update_po'])->name('update_po_hr_ga');
             Route::delete('/HRGA/EPurchase/PO/Destroy/{id}', [HREpurchaseController::class, 'destroy_po'])->name('destroy_po_hr_ga');
             // Vendor
-            Route::get('/HRGA/EPurchase/Vendor/List', [HREpurchaseController::class, 'index_vendor'])->name('index_vendor_hr_ga');
+            Route::get('/HRGA/EPurchase/Vendor/List', [HREpurchaseController::class, 'index_vendor_hr_ga'])->name('index_vendor_hr_ga');
             Route::get('/HRGA/EPurchase/Vendor/Create', [HREpurchaseController::class, 'create_vendor'])->name('create_vendor_hr_ga');
             Route::post('/HRGA/EPurchase/Vendor/Store', [HREpurchaseController::class, 'store_vendor'])->name('store_vendor_hr_ga');
             Route::get('/HRGA/EPurchase/Vendor/Edit/{id}', [HREpurchaseController::class, 'edit_vendor'])->name('edit_vendor_hr_ga');
@@ -295,9 +311,9 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
             Route::get('/HRGA/Legalitas/Office/Edit/{id}', [LegalitasController::class, 'edit'])->name('edit_office_legalitas');
 
             // Letter Number
-            Route::get('/HRGA/LetterNumber', [LetterNumberController::class, 'index'])->name('index_letter_number');
-            Route::post('/HRGA/LetterNumber/Store', [LetterNumberController::class, 'store'])->name('store_letter_number');
-            Route::get('/HRGA/LetterNumber/Store/Create', [LetterNumberController::class, 'show'])->name('show_modal_create_letter_number');
+            // Route::get('/HRGA/LetterNumber', [LetterNumberController::class, 'index'])->name('index_letter_number');
+            // Route::post('/HRGA/LetterNumber/Store', [LetterNumberController::class, 'store'])->name('store_letter_number');
+            // Route::get('/HRGA/LetterNumber/Store/Create', [LetterNumberController::class, 'show'])->name('show_modal_create_letter_number');
             // Route::get('/refresh/number', [LetterNumberController::class, 'refresh_last_number'])->name('refresh_last_number');
 
             // Adds on

@@ -656,4 +656,10 @@ class HREpurchaseController extends Controller
         // $get_data = DB::table('tbl_pr')->orderBy('id_pr', 'desc')->get();
         // return view('admin.ePurchase.old_pr', ['old_pr' => $get_data]);
     }
+
+    public function index_vendor_hr_ga()
+    {
+        $vendor_data = DB::table('vendor')->where('deleted_at', '=', NULL)->orderBy('id_vendor', 'ASC')->get();
+        return view('hr_ga.epurchase.index_vendor', ['vendor_data' => $vendor_data]);
+    }
 }

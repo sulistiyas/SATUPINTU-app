@@ -1,45 +1,27 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers;
 
 use App\Models\LetterNumber;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use function PHPUnit\Framework\isNull;
-use function PHPUnit\Framework\isEmpty;
-
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\Validator;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 
 class LetterNumberController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index_letter_number()
     {
         $letter_number = DB::table('letter_number')
             ->join('employee', 'employee.id_employee', '=', 'letter_number.username')
             ->join('users', 'users.id', '=', 'employee.id_users')
             ->orderBy('id_letter', 'DESC')->get();
-        return view('admin.administration.letter_number.index', ['letter_number' => $letter_number]);
+        return view('users.index_letter_users', ['letter_number' => $letter_number]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store_letter_number(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'txt_nomor_urut' => 'required',
@@ -141,69 +123,17 @@ class LetterNumberController extends Controller
             }
         }
     }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show()
+    public function show_modal_create_letter_number()
     {
-        // $latest_id = LetterNumber::whereRaw('id_letter = (select max(id_letter) from letter_number)')->get();
-
-        // foreach ($latest_id as $id) {
-        //     $last_id = $id->id_letter;
-        // }
-        
-
         $prefix = "0";
-        $last_id = IdGenerator::generate(['table' => 'letter_number', 'field' => 'id_letter', 'length' => 3, 'prefix' => $prefix]);
-        
-
-        $count_data = DB::table('letter_number')->where('id_letter', '=', $last_id)->count();
-        $latest_number = DB::table('letter_number')->where('id_letter', '=', $last_id)->get();
-        // foreach ($latest_number as $item) {
-        //     $id = $item->id_letter;
-        // }
-
-        if ($count_data == 0) {
-            dd("asbdasbdasbdba");
-        } else {
-            # code...
-        }
-        
-        // return view('components.modals.admin_area.letter_number_form', ['latest_number' => $latest_number]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        $latest_number = IdGenerator::generate(['table' => 'letter_number', 'field' => 'nomor_urut', 'length' => 4, 'prefix' => $prefix, 'reset_on_prefix_change' => true]);
+        return view('components.modals.letter_number_form', ['latest_number' => $latest_number]);
     }
 
     public function refresh_last_number()
     {
-        $latest_id = LetterNumber::whereRaw('id_letter = (select max(`id_letter`) from letter_number)')->get();
-        foreach ($latest_id as $id) {
-            $last_id = $id->id_letter;
-        }
-        $latest_number = DB::table('letter_number')->where('id_letter', '=', $last_id)->get();
+        $prefix = "0";
+        $latest_number = IdGenerator::generate(['table' => 'letter_number', 'field' => 'nomor_urut', 'length' => 4, 'prefix' => $prefix, 'reset_on_prefix_change' => true]);
         return view('components.modals.admin_area.test', ['latest_number' => $latest_number]);
     }
 }

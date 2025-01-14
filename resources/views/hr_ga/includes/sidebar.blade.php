@@ -208,11 +208,71 @@
                   <p>Legalitas</p>
                 </a>
               </li>
-              <li class="nav-item">
-                <a href="{{ route('index_letter_number') }}" class="{{ Request::routeIs('index_letter_number') ? 'nav-link active' : 'nav-link' }}">
-                  <i class="far fa-circle nav-icon"></i>
+              <li class="{{ Request::routeIs('index_letter_number') || Request::routeIs('index_letter_2018') || Request::routeIs('index_letter_2019') || Request::routeIs('index_letter_2020') || Request::routeIs('index_letter_2021') || Request::routeIs('index_letter_2022') || Request::routeIs('index_letter_2023') || Request::routeIs('index_letter_2024') ? 'nav-item menu-open' : 'nav-item menu' }}">
+                <a href="#"  class="{{ Request::routeIs('index_letter_number') || Request::routeIs('index_letter_2018') || Request::routeIs('index_letter_2019') || Request::routeIs('index_letter_2020') || Request::routeIs('index_letter_2021') || Request::routeIs('index_letter_2022') || Request::routeIs('index_letter_2023') || Request::routeIs('index_letter_2024') ? 'nav-link active' : 'nav-link' }}">
+                  <i class="nav-icon fas fa-envelope-open-text"></i>
                   <p>Letter Number</p>
+                  <i class="fas fa-angle-left right"></i>
                 </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="{{ route('index_letter_number') }}" class="{{ Request::routeIs('index_letter_number') ? 'nav-link active' : 'nav-link' }}">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Letter Number List</p>
+                    </a>
+                  </li>
+                  <li class="{{ Request::routeIs('index_letter_2018') || Request::routeIs('index_letter_2019') || Request::routeIs('index_letter_2020') || Request::routeIs('index_letter_2021') || Request::routeIs('index_letter_2022') || Request::routeIs('index_letter_2023') || Request::routeIs('index_letter_2024') ? 'nav-item menu-open' : 'nav-item menu' }}">
+                    <a href="#"  class="{{ Request::routeIs('index_letter_2018') || Request::routeIs('index_letter_2019') || Request::routeIs('index_letter_2020') || Request::routeIs('index_letter_2021') || Request::routeIs('index_letter_2022') || Request::routeIs('index_letter_2023') || Request::routeIs('index_letter_2024') ? 'nav-link active' : 'nav-link' }}">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Old Letter Number</p>
+                      <i class="right fas fa-angle-left"></i>
+                    </a>
+                    <ul class="nav nav-treeview">
+                      <li class="nav-item">
+                        <a href="{{ route('index_letter_2018') }}" class="{{ Request::routeIs('index_letter_2018') ? 'nav-link active' : 'nav-link' }}">
+                          <i class="far fa-dot-circle nav-icon"></i>
+                          <p>Letter Number 2018</p>
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a href="{{ route('index_letter_2019') }}" class="{{ Request::routeIs('index_letter_2019') ? 'nav-link active' : 'nav-link' }}">
+                          <i class="far fa-dot-circle nav-icon"></i>
+                          <p>Letter Number 2019</p>
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a href="{{ route('index_letter_2020') }}" class="{{ Request::routeIs('index_letter_2020') ? 'nav-link active' : 'nav-link' }}">
+                          <i class="far fa-dot-circle nav-icon"></i>
+                          <p>Letter Number 2020</p>
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a href="{{ route('index_letter_2021') }}" class="{{ Request::routeIs('index_letter_2021') ? 'nav-link active' : 'nav-link' }}">
+                          <i class="far fa-dot-circle nav-icon"></i>
+                          <p>Letter Number 2021</p>
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a href="{{ route('index_letter_2022') }}" class="{{ Request::routeIs('index_letter_2022') ? 'nav-link active' : 'nav-link' }}">
+                          <i class="far fa-dot-circle nav-icon"></i>
+                          <p>Letter Number 2022</p>
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a href="{{ route('index_letter_2023') }}" class="{{ Request::routeIs('index_letter_2023') ? 'nav-link active' : 'nav-link' }}">
+                          <i class="far fa-dot-circle nav-icon"></i>
+                          <p>Letter Number 2023</p>
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a href="{{ route('index_letter_2024') }}" class="{{ Request::routeIs('index_letter_2024') ? 'nav-link active' : 'nav-link' }}">
+                          <i class="far fa-dot-circle nav-icon"></i>
+                          <p>Letter Number 2024</p>
+                        </a>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
               </li>
             </ul>
           </li>
