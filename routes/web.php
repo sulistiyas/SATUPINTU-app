@@ -224,6 +224,11 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
             Route::get('show_modal_po_pirce_users/{id}', [UsersEPurchaseController::class, 'show_modal_po_pirce_users'])->name('show_modal_po_pirce_users');
             Route::get('show_modal_po_un_users/{id}', [UsersEPurchaseController::class, 'show_modal_po_un_users'])->name('show_modal_po_un_users');
             Route::get('/Users/Epurchase/PR/OLD', [UsersUsersController::class, 'index_old_pr_users'])->name('index_old_pr_users');
+            // Edit PR
+            Route::get('show_modal_pr_users_edit/{id}', [UsersEPurchaseController::class, 'show_modal_pr_users_edit'])->name('show_modal_pr_users_edit');
+            Route::get('show_modal_pr_users_add/{id}', [UsersEPurchaseController::class, 'show_modal_pr_users_add'])->name('show_modal_pr_users_add');
+            Route::POST('update_pr_users', [UsersEPurchaseController::class, 'update_pr_users'])->name('update_pr_users');
+            Route::POST('update_item_pr_users', [UsersEPurchaseController::class, 'update_item_pr_users'])->name('update_item_pr_users');
             // Print e-Purchase
             Route::post('/Users/EPurchase/PR/Print/', [UsersEPurchaseController::class, 'print_pr_users'])->name('print_pr_users');
             Route::post('/Users/EPurchase/PO/Print/', [UsersEPurchaseController::class, 'print_po_users'])->name('print_po_users');

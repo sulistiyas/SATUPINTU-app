@@ -68,7 +68,9 @@
                                               @if ($item_pr->pr_status  == 5)
                                                 <div class="col-md-12">
                                                   <button type="button" class="btn bg-info" title="Show Detail" data-toggle="modal" data-target="#modal_pr_show" id="getPR" data-url="{{ route('show_modal_pr_users',['id'=>$item_pr->pr_no])}}"><i class="far fa-eye"></i></button>&nbsp;
-                                                  <button class="btn bg-secondary toastrDefaultError" title="Print PR"><i class="fas fa-print"></i></i></button>&nbsp;
+                                                  <button type="button" class="btn bg-warning" title="Edit Data" data-toggle="modal" data-target="#modal_pr_edit" id="editPR" data-url="{{ route('show_modal_pr_users_edit',['id'=>$item_pr->pr_no])}}"><i class="fas fa-pen"></i></button>&nbsp;
+                                                  <button type="button" class="btn bg-primary" title="Add Data" data-toggle="modal" data-target="#modal_pr_add" id="addPR" data-url="{{ route('show_modal_pr_users_add',['id'=>$item_pr->pr_no])}}"><i class="fas fa-plus"></i></button>&nbsp;
+                                                  {{-- <button class="btn bg-secondary toastrDefaultError" title="Print PR"><i class="fas fa-print"></i></i></button>&nbsp; --}}
                                                 </div>
                                               @elseif ( $item_pr->pr_status == 4 )
                                                 <div class="col-md-5">
@@ -153,6 +155,61 @@
       </div>
     </div>
     {{-- End View --}}
+    {{-- Modal PR Edit --}}
+    <div class="modal fade" id="modal_pr_edit">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <form action="{{ route('update_pr_users') }}" method="POST" enctype="multipart/form-data" >
+            @csrf
+            <div class="overlay" id="modal-loader-2">
+              <i class="fas fa-2x fa-sync fa-spin"></i>
+            </div>
+            <div class="modal-header">
+                <h4 class="modal-title">PR Update Forms</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+              <div id="dynamic-content-2"></div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <input type="submit" value="Submit" name="submit_update_pr" class="btn btn-primary">
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    {{-- Modal PR Edit End --}}
+    {{-- Modal PR Edit --}}
+    <div class="modal fade" id="modal_pr_add">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <form action="{{ route('update_item_pr_users') }}" method="POST">
+            @csrf
+            <div class="overlay" id="modal-loader-3">
+              <i class="fas fa-2x fa-sync fa-spin"></i>
+            </div>
+            <div class="modal-header">
+                <h4 class="modal-title">PR Update Form</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+              <div id="dynamic-content-3">
+              </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <input type="submit" value="Submit" name="submit_update_add_pr" class="btn btn-primary">
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    {{-- Modal PR Edit End --}}
     {{-- Modal Show PO --}}
     <div class="modal fade" id="modal_po_show_po">
       <div class="modal-dialog modal-lg">
@@ -236,6 +293,72 @@
     
     });
     
+</script>
+<script>
+  $(document).ready(function(){
+  
+      $(document).on('click', '#editPR', function(e){
+  
+          e.preventDefault();
+  
+          var url = $(this).data('url');
+  
+          $('#dynamic-content-2').html(''); // leave it blank before ajax call
+          $('#modal-loader-2').show();      // load ajax loader
+  
+          $.ajax({
+              url: url,
+              type: 'GET',
+              dataType: 'html'
+          })
+          .done(function(data){
+              console.log(data);  
+              $('#dynamic-content-2').html('');    
+              $('#dynamic-content-2').html(data); // load response 
+              $('#modal-loader-2').hide();        // hide ajax loader   
+          })
+          .fail(function(){
+              $('#dynamic-content-2').html('<i class="glyphicon glyphicon-info-sign"></i> Something went wrong, Please try again...');
+              $('#modal-loader-2').hide();
+          });
+  
+      });
+  
+  });
+  
+</script>
+<script>
+  $(document).ready(function(){
+  
+      $(document).on('click', '#addPR', function(e){
+  
+          e.preventDefault();
+  
+          var url = $(this).data('url');
+  
+          $('#dynamic-content-3').html(''); // leave it blank before ajax call
+          $('#modal-loader-3').show();      // load ajax loader
+  
+          $.ajax({
+              url: url,
+              type: 'GET',
+              dataType: 'html'
+          })
+          .done(function(data){
+              console.log(data);  
+              $('#dynamic-content-3').html('');    
+              $('#dynamic-content-3').html(data); // load response 
+              $('#modal-loader-3').hide();        // hide ajax loader   
+          })
+          .fail(function(){
+              $('#dynamic-content-3').html('<i class="glyphicon glyphicon-info-sign"></i> Something went wrong, Please try again...');
+              $('#modal-loader-3').hide();
+          });
+  
+      });
+  
+  });
+  
 </script>
 <script>
   $(document).ready(function(){

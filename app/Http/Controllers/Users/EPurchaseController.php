@@ -128,6 +128,92 @@ class EPurchaseController extends Controller
         return view('components.modals.admin_modals.e_purchase.pr.pr_admin_show', ['data_pr' => $pr_data]);
     }
 
+    public function show_modal_pr_users_edit($id)
+    {
+        // 
+        $pr_data = DB::table('pr')
+            ->join('employee', 'employee.id_employee', '=', 'pr.id_employee')
+            ->join('users', 'users.id', '=', 'employee.id_users')
+            ->where('pr.pr_no', '=', $id)->get();
+        // $pr_data = DB::table('pr')->where('pr_no', '=', $id)->get();
+        return view('components.modals.admin_modals.e_purchase.pr.pr_admin_show_edit', ['data_pr' => $pr_data]);
+    }
+
+    public function update_pr_users(Request $request)
+    {
+        $pr_title   = $request->txt_pr_title;
+        $id_pr      = $request->txt_id_pr;
+        $desc       = $request->txt_desc;
+        $qty        = $request->txt_pr_qty;
+        $unit       = $request->unit;
+        $pr_no      = $request->txt_pr_number;
+        $jn         = $request->txt_jn;
+        $idusers    = Auth::user()->id;
+        $division   = DB::table('employee')
+            ->join('users', 'users.id', '=', 'employee.id_users')
+            ->where('id_users', '=', $idusers)->get();
+        foreach ($division as $item_div) {
+            $emp_div = $item_div->emp_division;
+            $emp_name = $item_div->name;
+        }
+
+        $id_manager = DB::table('employee')
+            ->join('users', 'users.id', '=', 'employee.id_users')
+            ->where('emp_division', '=', $emp_div)
+            ->where('emp_position', '=', "Manager")->get();
+        foreach ($id_manager as $manager) {
+            $manager_id = $manager->id;
+            $manager_name = $manager->name;
+        }
+
+        $count_data = DB::table('pr')->where('pr_no', '=', $pr_no)->count();
+        $pr_data = PurchaseRequest::where('pr_no', '=', $pr_no)->first();
+        $rows[]       = $count_data;
+        foreach ($rows as $key => $value) {
+            $array_data[] = array(
+                'pr_no'                 => $pr_no,
+                'job_number'            => $jn,
+                'id_employee'           => $idusers,
+                'pr_title'              => $pr_title,
+                'pr_desc'               => $desc[$key],
+                'pr_qty'                => $qty[$key],
+                'pr_unit'               => $unit[$key],
+                'pr_status'             => 5,
+                'pr_date'               => date('Y-m-d'),
+                'id_manager'            => $manager_id,
+            );
+            // dd($array_data);
+            // $pr_data->update($array_data);
+            for ($i = 0; $i < $count_data; $i++) {
+                $values = PurchaseRequest::where('id_pr', '=', $id_pr[$i])->update(
+                    [
+                        'pr_desc'       => $desc[$i],
+                        'pr_qty'        => $qty[$i],
+                        'pr_unit'       => $unit[$i],
+                        'updated_at'    => date('Y-m-d H:i:s'),
+                    ]
+                );
+            }
+        }
+        // return $this->SendMailPR($idusers, $manager_id, $array_data, $pr_no, $jn);
+    }
+
+    public function show_modal_pr_users_add($id)
+    {
+        // 
+        $pr_data = DB::table('pr')
+            ->join('employee', 'employee.id_employee', '=', 'pr.id_employee')
+            ->join('users', 'users.id', '=', 'employee.id_users')
+            ->where('pr.pr_no', '=', $id)->get();
+        // $pr_data = DB::table('pr')->where('pr_no', '=', $id)->get();
+        return view('components.modals.admin_modals.e_purchase.pr.pr_admin_show_add', ['data_pr' => $pr_data]);
+    }
+
+    public function update_item_pr_users(Request $request, string $id)
+    {
+        // 
+    }
+
     public function show_modal_po_pirce_users($id)
     {
         $data_po = DB::table('po')
@@ -164,13 +250,6 @@ class EPurchaseController extends Controller
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update_pr_users(Request $request, string $id)
-    {
-        //
-    }
 
     /**
      * Remove the specified resource from storage.
@@ -245,9 +324,9 @@ class EPurchaseController extends Controller
                 foreach ($manager_data as $manager) {
                     $manager_email = $manager->email;
                 }
-                $mail->to($GA_email);
+                $mail->to($manager_email);
                 $mail->cc('sulis.nugroho@inlingua.co.id');
-                $mail->cc($manager_email);
+                $mail->cc($GA_email);
                 $mail->from(config('mail.from.name'));
                 $mail->subject('SATUPINTU - APP | Purchase Request Order');
             });

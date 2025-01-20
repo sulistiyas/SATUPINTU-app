@@ -70,7 +70,7 @@
                 <tbody>
                     <tr>
                         <td>
-                            <b>Dear {{ $hr_ga }},</b>
+                            <b>Dear {{ $manager }},</b>
                             <p>You get a message from {{ $fullname }}, waiting for PR ( Purchase Request ) approval.</p>
                             @foreach ($data as $pr_title)
                                 
