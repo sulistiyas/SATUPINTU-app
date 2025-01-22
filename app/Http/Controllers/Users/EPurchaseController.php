@@ -51,31 +51,34 @@ class EPurchaseController extends Controller
      */
     public function store_pr_users(Request $request)
     {
-        try {
-            $rows       = $request->rows;
-            $pr_title   = $request->txt_pr_title;
-            $desc       = $request->description;
-            $qty        = $request->quantity;
-            $unit       = $request->unit;
-            $pr_no      = $request->txt_pr_number;
-            $jn         = $request->txt_jn;
-            $idusers    = Auth::user()->id;
-            $division   = DB::table('employee')
-                ->join('users', 'users.id', '=', 'employee.id_users')
-                ->where('id_users', '=', $idusers)->get();
-            foreach ($division as $item_div) {
-                $emp_div = $item_div->emp_division;
-                $emp_name = $item_div->name;
-            }
+        $rows       = $request->rows;
+        $pr_title   = $request->txt_pr_title;
+        $desc       = $request->description;
+        $qty        = $request->quantity;
+        $unit       = $request->unit;
+        $pr_no      = $request->txt_pr_number;
+        $jn         = $request->txt_jn;
+        $idusers    = Auth::user()->id;
+        $division   = DB::table('employee')
+            ->join('users', 'users.id', '=', 'employee.id_users')
+            ->where('id_users', '=', $idusers)->get();
+        foreach ($division as $item_div) {
+            $emp_div = $item_div->emp_division;
+            $emp_name = $item_div->name;
+        }
 
-            $id_manager = DB::table('employee')
-                ->join('users', 'users.id', '=', 'employee.id_users')
-                ->where('emp_division', '=', $emp_div)
-                ->where('emp_position', '=', "Manager")->get();
-            foreach ($id_manager as $manager) {
-                $manager_id = $manager->id;
-                $manager_name = $manager->name;
-            }
+        $id_manager = DB::table('employee')
+            ->join('users', 'users.id', '=', 'employee.id_users')
+            ->where('emp_division', '=', $emp_div)
+            ->where('emp_position', '=', "Manager")->get();
+        foreach ($id_manager as $manager) {
+            $manager_id = $manager->id;
+            $manager_name = $manager->name;
+        }
+        if ($rows == null) {
+            Alert::error('Error', 'PR Item Empty!!');
+            return redirect()->route('create_pr_users');
+        } else {
             foreach ($rows as $key => $value) {
                 $array_data[] = array(
                     'pr_no'                 => $pr_no,
@@ -100,17 +103,9 @@ class EPurchaseController extends Controller
             // ]);
 
             PurchaseRequest::insert($array_data);
-            return $this->SendMailPR($idusers, $manager_id, $array_data, $pr_no, $jn);
+            // return $this->SendMailPR($idusers, $manager_id, $array_data, $pr_no, $jn);
             Alert::success('Success', 'PR Submitted Successfully');
             return redirect()->route('index_pr_users');
-        } catch (\Exception $th) {
-            return response()->json([
-                'status'    => false,
-                'message'   => 'Error Send mail : ',
-                'errors'    => $th
-            ], 401);
-            Alert::error('error', 'Failed to Create Data!!');
-            return redirect()->route('create_pr_users');
         }
     }
 
@@ -209,9 +204,59 @@ class EPurchaseController extends Controller
         return view('components.modals.admin_modals.e_purchase.pr.pr_admin_show_add', ['data_pr' => $pr_data]);
     }
 
-    public function update_item_pr_users(Request $request, string $id)
+    public function update_item_pr_users(Request $request)
     {
-        // 
+        $rows       = $request->rows;
+        $pr_title   = $request->txt_pr_title;
+        $desc       = $request->description;
+        $qty        = $request->quantity;
+        $unit       = $request->unit;
+        $pr_no      = $request->txt_pr_number;
+        $jn         = $request->txt_jn;
+        $idusers    = Auth::user()->id;
+        $division   = DB::table('employee')
+            ->join('users', 'users.id', '=', 'employee.id_users')
+            ->where('id_users', '=', $idusers)->get();
+        foreach ($division as $item_div) {
+            $emp_div = $item_div->emp_division;
+            $emp_name = $item_div->name;
+        }
+
+        $id_manager = DB::table('employee')
+            ->join('users', 'users.id', '=', 'employee.id_users')
+            ->where('emp_division', '=', $emp_div)
+            ->where('emp_position', '=', "Manager")->get();
+        foreach ($id_manager as $manager) {
+            $manager_id = $manager->id;
+            $manager_name = $manager->name;
+        }
+        foreach ($rows as $key => $value) {
+            $array_data[] = array(
+                'pr_no'                 => $pr_no,
+                'job_number'            => $jn,
+                'id_employee'           => $idusers,
+                'pr_title'              => $pr_title,
+                'pr_desc'               => $desc[$key],
+                'pr_qty'                => $qty[$key],
+                'pr_unit'               => $unit[$key],
+                'pr_status'             => 5,
+                'pr_date'               => date('Y-m-d'),
+                'id_manager'            => $manager_id,
+                'created_at'            => date('Y-m-d H:i:s'),
+                'updated_at'            => date('Y-m-d H:i:s'),
+            );
+        }
+        // return view('emails.pr_send', [
+        //     'fullname'      => $emp_name,
+        //     'manager'       => $manager_name,
+        //     'data'          => $array_data,
+        //     'pr_no'         => $request->txt_pr_number,
+        //     'job_number'    => $request->txt_jn,
+        // ]);
+
+        PurchaseRequest::insert($array_data);
+        Alert::success('Success', 'PR ReSubmitted Successfully');
+        return redirect()->route('index_pr_users');
     }
 
     public function show_modal_po_pirce_users($id)

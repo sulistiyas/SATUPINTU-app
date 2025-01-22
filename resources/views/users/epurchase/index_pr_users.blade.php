@@ -182,7 +182,7 @@
       </div>
     </div>
     {{-- Modal PR Edit End --}}
-    {{-- Modal PR Edit --}}
+    {{-- Modal PR Edit ADD --}}
     <div class="modal fade" id="modal_pr_add">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">

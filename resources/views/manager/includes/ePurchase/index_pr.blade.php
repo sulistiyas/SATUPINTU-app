@@ -32,17 +32,55 @@
                             <table id="tbl_pr" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
-                                        <th>#</th>
+                                        <th>
+                                          # 
+                                        </th>
                                         <th>PR Number</th>
                                         <th>Title</th>
                                         <th>Status</th>
                                         <th><i class="fas fa-cog"></i></th>
                                     </tr>
+                                    <tr>
+                                      @foreach ($data as $item_pr_top)
+                                      @endforeach
+                                      <th colspan="3">
+                                        <div class="icheck-primary d-inline">
+                                          <input type="checkbox" id="checkAll" name="checkAll" onclick="toggleCheckboxes()">
+                                          <label for="checkAll"> 
+                                            <div id="data_count"></div>
+                                          </label>
+                                          
+                                        </div>
+                                      </th>
+                                      <th>
+                                        <form onsubmit="return confirm('Are you sure you want to APPROVE this request ?');" action="{{ route('approve_pr_manager') }}" method="POST">
+                                          @csrf
+                                          <input type="hidden" name="txt_pr_no[]" id="txt_pr_no[]" value="{{ $item_pr_top->pr_no }}" readonly>
+                                          <input type="hidden" name="data_count" id="txt_pr_no" value="{{ $item_pr_top->pr_no }}" readonly>
+                                          <div id="app_col"></div>
+                                        </form>
+                                      </th>
+                                      <th>
+                                        <form onsubmit="return confirm('Are you sure you want to REJECT this request ?');" action="{{ route('approve_pr_manager') }}" method="POST">
+                                          @csrf
+                                          <input type="hidden" name="txt_pr_no[]" id="txt_pr_no[]" value="{{ $item_pr_top->pr_no }}" readonly>
+                                          <div id="rej_col"></div>
+                                        </form>
+                                      </th>
+                                    </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($data as $item_pr)
                                         <tr>
-                                          <td>{{ $loop->iteration }}</td>
+                                          <td>
+                                            <input type="hidden" name="total_data" id="total_data" value="{{ $count_data }}">
+                                            {{ $loop->iteration }}.
+                                            <div class="icheck-primary d-inline">
+                                              <input type="checkbox" id="ck_pr_no_{{ $loop->iteration }}" name="ck_pr_no[{{ $item_pr->pr_no }}]" value="{{ $item_pr->pr_no }}" class="item-checkbox" onclick="toogleSingleCheckbox()">
+                                              <label for="ck_pr_no_{{ $loop->iteration }}">
+                                              </label>
+                                            </div>
+                                          </td>
                                           <td><b>{{ $item_pr->pr_no }}</b></td>
                                           <td>{{ $item_pr->pr_title }}</td>
                                           <td>
@@ -65,21 +103,21 @@
                                           <td>
                                             <div class="btn-group">
                                               @if ( $item_pr->pr_status  == 5)
-                                              <div class="col-5">
-                                                <button type="button" class="btn btn-outline-primary" title="Show Data" data-toggle="modal" data-target="#modal_pr_show_manager" id="getPR" data-url="{{ route('show_modal_pr_manager',['id'=>$item_pr->pr_no])}}"><i class="fas fa-eye">&nbsp;View Data</i></button>
+                                              <div class="col-4">
+                                                <button type="button" class="btn bg-info" title="Show Detail" data-toggle="modal" data-target="#modal_pr_show_manager" id="getPR" data-url="{{ route('show_modal_pr_manager',['id'=>$item_pr->pr_no])}}"><i class="far fa-eye"></i></button>
                                               </div>
-                                              <div class="col-5">
+                                              <div class="col-4">
                                                 <form onsubmit="return confirm('Are you sure you want to APPROVE this request ?');" action="{{ route('approve_pr_manager') }}" method="POST">
                                                   @csrf
                                                   <input type="hidden" name="txt_pr_no" id="txt_pr_no" value="{{ $item_pr->pr_no }}" readonly>
-                                                  <button type="submit" name="btn_approval" id="btn_approval" value="approve_pr" class="btn btn-outline-success" title="Approve PR"><i class="fas fa-check">&nbsp; Approve</i></button>
+                                                  <button type="submit" name="btn_approval" id="btn_approval" value="approve_pr" class="btn bg-success" title="Approve PR"><i class="fas fa-check"></i></button>
                                                 </form>
                                               </div>
                                               <div class="col-4">
                                                 <form onsubmit="return confirm('Are you sure you want to REJECT this request ?');" action="{{ route('approve_pr_manager') }}" method="POST">
                                                   @csrf
                                                   <input type="hidden" name="txt_pr_no" id="txt_pr_no" value="{{ $item_pr->pr_no }}" readonly>
-                                                  <button type="submit" name="btn_approval" id="btn_approval" value="reject_pr" class="btn btn-outline-danger" title="Reject PR"><i class="fas fa-times">&nbsp; Reject</i></button>
+                                                  <button type="submit" name="btn_approval" id="btn_approval" value="reject_pr" class="btn bg-danger" title="Reject PR"><i class="fas fa-times"></i></button>
                                                 </form>
                                               </div>
                                               @elseif ( $item_pr->pr_status  == 4 || $item_pr->pr_status  == 3 || $item_pr->pr_status  == 2 || $item_pr->pr_status  == 1)
@@ -208,5 +246,64 @@
       });
   
   });
-  
   </script>
+<script>
+  function toggleCheckboxes() {
+    var checkboxes = document.querySelectorAll(".item-checkbox");
+    var total_datas = document.querySelectorAll(".item-checkbox").length;
+    
+    for (var checkbox of checkboxes) {
+      if (document.getElementById("checkAll").checked == true) {
+        checkbox.checked = true;
+      } else if(document.getElementById("checkAll").checked == false){
+        checkbox.checked = false;
+      }
+      
+    }
+      if (document.getElementById("checkAll").checked == true) {
+        $('#data_count').append(
+          '<p id="rows_text">'
+          +'<b>'+total_datas+' items selected</b>'
+          +'</p>');
+        $('#app_col').append(
+          '<div id="rows_app">'
+          + '<button type="submit" name="btn_approval" id="btn_approvals" value="approve_pr" class="btn bg-success" title="Approve PR"><i class="fas fa-check"></i>&nbsp Approve Checked</button>&nbsp&nbsp&nbsp&nbsp'
+          +'</div>');
+        $('#rej_col').append(
+          '<div id="rows_rej">'
+          + '<button type="submit" name="btn_approval" id="btn_approvalss" value="reject_pr" class="btn bg-danger" title="Reject PR"><i class="fas fa-times"></i>&nbsp Reject Checked</button>'
+          +'</div>');
+      } else if(document.getElementById("checkAll").checked == false){
+        const elements_app = document.getElementById("rows_app");
+        const elements_rej = document.getElementById("rows_rej");
+        const elements_text = document.getElementById("rows_text");
+        elements_app.remove();
+        elements_rej.remove();
+        elements_text.remove();
+      }
+  } 
+</script>
+<script>
+function toogleSingleCheckbox() {
+  var total_datas = document.getElementById("total_data").value;
+  
+  let i = 1;
+  while (i <= total_datas) {
+    var ck_pr_nos = document.getElementById('ck_pr_no_'+i).value;
+      if (document.getElementById('ck_pr_no_'+i).checked == true) {
+        $('#container').append(
+          '<div id="rowss">'
+          + '<button type="submit" name="btn_approval" id="btn_approvals" value="approve_pr" class="btn bg-success" title="Approve PR"><i class="fas fa-check"></i>&nbsp Approve Checked</button>&nbsp&nbsp&nbsp&nbsp'
+          + '<button type="submit" name="btn_approval" id="btn_approvalss" value="reject_pr" class="btn bg-danger" title="Reject PR"><i class="fas fa-times"></i>&nbsp Reject Checked</button>'
+          +'</div>');
+      } else {
+        var row = document.getElementById("rowss");
+        row.remove();
+      }
+    i++;
+  }
+      
+  
+      
+}
+</script>
