@@ -52,26 +52,30 @@
                                           
                                         </div>
                                       </th>
-                                      <th>
+                                      {{-- <th>
                                         <form onsubmit="return confirm('Are you sure you want to APPROVE this request ?');" action="{{ route('approve_pr_manager') }}" method="POST">
                                           @csrf
                                           <input type="hidden" name="txt_pr_no[]" id="txt_pr_no[]" value="{{ $item_pr_top->pr_no }}" readonly>
                                           <input type="hidden" name="data_count" id="txt_pr_no" value="{{ $item_pr_top->pr_no }}" readonly>
                                           <div id="app_col"></div>
                                         </form>
-                                      </th>
-                                      <th>
+                                      </th> --}}
+                                      {{-- <th>
                                         <form onsubmit="return confirm('Are you sure you want to REJECT this request ?');" action="{{ route('approve_pr_manager') }}" method="POST">
                                           @csrf
                                           <input type="hidden" name="txt_pr_no[]" id="txt_pr_no[]" value="{{ $item_pr_top->pr_no }}" readonly>
                                           <div id="rej_col"></div>
                                         </form>
-                                      </th>
+                                      </th> --}}
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($data as $item_pr)
                                         <tr>
+                                          <form onsubmit="return confirm('Are you sure you want to APPROVE this request ?');" action="{{ route('approve_pr_manager') }}" method="POST">
+                                            @csrf
+                                            <input type="hidden" name="txt_pr_no[]" id="txt_pr_no[]" value="{{ $item_pr->pr_no }}" readonly>
+                                            <input type="hidden" name="data_count" id="txt_pr_no" value="{{ $item_pr->pr_no }}" readonly>
                                           <td>
                                             <input type="hidden" name="total_data" id="total_data" value="{{ $count_data }}">
                                             {{ $loop->iteration }}.
@@ -100,7 +104,7 @@
                                               PO Rejected
                                             @endif
                                           </td>
-                                          <td>
+                                          {{-- <td>
                                             <div class="btn-group">
                                               @if ( $item_pr->pr_status  == 5)
                                               <div class="col-4">
@@ -131,20 +135,11 @@
                                                   <button type="submit" class="btn btn-outline-success" id="print_pr"><i class="fas fa-print">&nbsp;Print PR</i></button>
                                                 </form>
                                               </div>
-                                              {{-- @elseif ($item_pr->pr_status  == 2)
-                                              <div class="col-7">
-                                                <button type="button" class="btn btn-outline-primary" title="Show Data" data-toggle="modal" data-target="#modal_pr_show_manager" id="getPR" data-url="{{ route('show_modal_pr_manager',['id'=>$item_pr->pr_no])}}"><i class="fas fa-eye">&nbsp;View Data</i></button>
-                                              </div>
-                                              <div class="col-6">
-                                                <form action="{{ route('print_pr_manager') }}" method="POST">
-                                                  @csrf
-                                                  <input type="hidden" name="txt_pr_no" id="txt_pr_no" value="{{ $item_pr->pr_no }}">
-                                                  <button type="submit" class="btn btn-outline-success" id="print_pr"><i class="fas fa-print">&nbsp;Print PR</i></button>
-                                                </form>
-                                              </div> --}}
                                               @endif
                                             </div>
-                                          </td>
+                                          </td> --}}
+                                          <button type="submit" name="btn_approval" id="btn_approval" value="approve_pr" class="btn bg-success" title="Approve PR"><i class="fas fa-check"></i></button>
+                                          </form>
                                         </tr>
                                     @endforeach
                                 </tbody>
