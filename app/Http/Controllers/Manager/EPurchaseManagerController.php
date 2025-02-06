@@ -38,12 +38,13 @@ class EPurchaseManagerController extends Controller
         return view('manager.includes.ePurchase.index_pr', compact('data', 'count_data'));
         // dd($id_users);
     }
-    public function approve_pr_manager(Request $request)
-    {   
+
+    public function approve_pr_manager_checkbox(Request $request){
         if ($request->ck_pr_no == null) {
             Alert::warning('Warning', 'Please Select Data');
             return redirect()->route('index_pr_manager');
         } else {
+            $total_datas = count($request->ck_pr_no);
             $row_data[] = $request->total_data;
             for ($i = 0; $i < count($request->ck_pr_no); $i++){
                 $array_data[] = array(
@@ -55,57 +56,137 @@ class EPurchaseManagerController extends Controller
         
         
         
-        // $pr_approval    = $request->btn_approval;
-        // $pr_no          = $request->txt_pr_no;
+        $pr_approval    = $request->btn_approval;
+        $pr_no          = $request->txt_pr_no;
         // $count_data     = $request->total_data;
         // $rows[]         = $count_data;
 
-        // if ($pr_approval == "approve_pr") {
-        //     foreach ($rows as $key => $value) {
+        if ($pr_approval == "approve_pr") {
+            
+            try {
+                $status = "Approved";
+                for ($j=0; $j < $total_datas; $j++) { 
+                    $flag = DB::table('pr')->where('pr_no', '=', $request->ck_pr_no[$j])->get();
+                    foreach ($flag as $item) {
+                        $flag_data = $item->pr_status;
+                    }
+                    if ($flag_data == 4) {
+                        Alert::warning('Warning', 'PR Already Approved');
+                        return redirect()->route('index_pr_manager');
+                    } else {
+                        $pr_data = PurchaseRequest::where('pr_no', '=', $request->ck_pr_no[$j])->update([
+                            'pr_status'     => '4',
+                            'updated_at'    => date('Y-m-d h:i:s')
+                        ]);
+                    }
+                    // return $this->SendMailPRAction($pr_no, $status);
+                }
+                Alert::success('Success', 'Successfully Approve PR');
+                return redirect()->route('index_pr_manager');
+            } catch (\Exception $ex) {
+                return response()->json([
+                    'status'    => false,
+                    'message'   => 'Error : ',
+                    'errors'    => $ex
+                ], 401);
+                Alert::success('Danger', 'Failed Approve Request');
+                return redirect()->route('index_pr_manager');
+            }
+        } else if ($pr_approval == "reject_pr") {
+            try {
+                $status = "Rejected";
+                for ($j=0; $j < $total_datas; $j++) { 
+                    $flag = DB::table('pr')->where('pr_no', '=', $request->ck_pr_no[$j])->get();
+                    foreach ($flag as $item) {
+                        $flag_data = $item->pr_status;
+                    }
+                    if ($flag_data == 6) {
+                        Alert::warning('Warning', 'PR Already Rejected');
+                        return redirect()->route('index_pr_manager');
+                    } else {
+                    $pr_data = PurchaseRequest::where('pr_no', '=', $request->ck_pr_no[$j])->update([
+                        'pr_status'     => '6',
+                        'updated_at'    => date('Y-m-d h:i:s')
+                    ]);
+                    // return $this->SendMailPRAction($pr_no, $status);
+                    }
+                }
+                Alert::success('Danger', 'PR Rejected !!!');
+                return redirect()->route('index_pr_manager');
+            } catch (\Exception $ex) {
+                return response()->json([
+                    'status'    => false,
+                    'message'   => 'Error : ',
+                    'errors'    => $ex
+                ], 401);
+                Alert::success('Danger', 'Failed Approve Request');
+                return redirect()->route('index_pr_manager');
+            }
+        }
+    }
+    public function approve_pr_manager(Request $request)
+    {   
+        // if ($request->ck_pr_no == null) {
+        //     Alert::warning('Warning', 'Please Select Data');
+        //     return redirect()->route('index_pr_manager');
+        // } else {
+        //     $total_datas = count($request->ck_pr_no);
+        //     $row_data[] = $request->total_data;
+        //     for ($i = 0; $i < count($request->ck_pr_no); $i++){
         //         $array_data[] = array(
-        //             'pr_no' => $pr_no[$key],
-        //         );
-        //         dd($array_data);
+        //             'pr_no' => $request->ck_pr_no[$i],
+        //         );        
         //     }
-        //     // try {
-        //     //     $status = "Approved";
-        //     //     $pr_data = PurchaseRequest::where('pr_no', '=', $pr_no)->update([
-        //     //         'pr_status'     => '4',
-        //     //         'updated_at'    => date('Y-m-d h:i:s')
-        //     //     ]);
-        //     //     return $this->SendMailPRAction($pr_no, $status);
-
-        //     //     Alert::success('Success', 'Successfully Approve PR');
-        //     //     return redirect()->route('index_pr_manager');
-        //     // } catch (\Exception $ex) {
-        //     //     return response()->json([
-        //     //         'status'    => false,
-        //     //         'message'   => 'Error : ',
-        //     //         'errors'    => $ex
-        //     //     ], 401);
-        //     //     Alert::success('Danger', 'Failed Approve Request');
-        //     //     return redirect()->route('index_pr_manager');
-        //     // }
-        // } else if ($pr_approval == "reject_pr") {
-        //     // try {
-        //     //     $status = "Rejected";
-        //     //     $pr_data = PurchaseRequest::where('pr_no', '=', $pr_no)->update([
-        //     //         'pr_status'     => '6',
-        //     //         'updated_at'    => date('Y-m-d h:i:s')
-        //     //     ]);
-        //     //     return $this->SendMailPRAction($pr_no, $status);
-        //     //     Alert::success('Danger', 'PR Rejected !!!');
-        //     //     return redirect()->route('index_pr_manager');
-        //     // } catch (\Exception $ex) {
-        //     //     return response()->json([
-        //     //         'status'    => false,
-        //     //         'message'   => 'Error : ',
-        //     //         'errors'    => $ex
-        //     //     ], 401);
-        //     //     Alert::success('Danger', 'Failed Approve Request');
-        //     //     return redirect()->route('index_pr_manager');
-        //     // }
+        //     print_r($array_data);
         // }
+        
+        
+        // $total_datas = count($request->ck_pr_no);
+        $pr_approval    = $request->btn_approval;
+        $pr_no          = $request->txt_pr_no;
+        // $count_data     = $request->total_data;
+        // $rows[]         = $count_data;
+
+        if ($pr_approval == "approve_pr") {
+            
+            try {
+                $status = "Approved";
+                $pr_data = PurchaseRequest::where('pr_no', '=', $request->txt_pr_no)->update([
+                    'pr_status'     => '4',
+                    'updated_at'    => date('Y-m-d h:i:s')
+                ]);
+                // return $this->SendMailPRAction($pr_no, $status);
+                // Alert::success('Success', 'Successfully Approve PR');
+                // return redirect()->route('index_pr_manager');
+            } catch (\Exception $ex) {
+                return response()->json([
+                    'status'    => false,
+                    'message'   => 'Error : ',
+                    'errors'    => $ex
+                ], 401);
+                Alert::success('Danger', 'Failed Approve Request');
+                return redirect()->route('index_pr_manager');
+            }
+        } else if ($pr_approval == "reject_pr") {
+            try {
+                $status = "Rejected";
+                $pr_data = PurchaseRequest::where('pr_no', '=', $request->txt_pr_no)->update([
+                    'pr_status'     => '6',
+                    'updated_at'    => date('Y-m-d h:i:s')
+                ]);
+                // return $this->SendMailPRAction($pr_no, $status);
+                // Alert::success('Danger', 'PR Rejected !!!');
+                // return redirect()->route('index_pr_manager');
+            } catch (\Exception $ex) {
+                return response()->json([
+                    'status'    => false,
+                    'message'   => 'Error : ',
+                    'errors'    => $ex
+                ], 401);
+                Alert::success('Danger', 'Failed Approve Request');
+                return redirect()->route('index_pr_manager');
+            }
+        }
     }
 
     public function print_pr_manager(Request $request)

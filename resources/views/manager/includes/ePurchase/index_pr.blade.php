@@ -29,7 +29,7 @@
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
-                          <form onsubmit="return confirm('Are you sure you want to APPROVE this request ?');" action="{{ route('approve_pr_manager') }}" method="POST">
+                          <form onsubmit="return confirm('Are you sure you want to APPROVE this request ?');" action="{{ route('approve_pr_manager_checkbox') }}" method="POST">
                             @csrf
                             <input type="hidden" name="total_data" id="total_data" value="{{ $count_data }}">
                             <table id="tbl_pr" class="table table-bordered table-striped">
@@ -46,13 +46,17 @@
                                     <tr>
                                       @foreach ($data as $item_pr_top)
                                       @endforeach
-                                      <th colspan="3">
+                                      <th colspan="4">
                                         <div class="icheck-primary d-inline">
                                           <input type="checkbox" id="checkAll" name="checkAll" class="item-checkbox" onclick="toogleAllCheckbox()">
                                           <label for="checkAll">
                                             Select All
                                           </label>
                                         </div>
+                                      </th>
+                                      <th>
+                                        <button type="submit" name="btn_approval" id="btn_approval" value="approve_pr" class="btn bg-success" title="Approve PR"><i class="fas fa-check"></i>&nbsp; Approve Checked</button>&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <button type="submit" name="btn_approval" id="btn_approval" value="reject_pr" class="btn bg-danger" title="Reject PR"><i class="fas fa-times"></i>&nbsp; Reject Checked</button>&nbsp;&nbsp;&nbsp;&nbsp;      
                                       </th>
                                       {{-- <th>
                                         <form onsubmit="return confirm('Are you sure you want to APPROVE this request ?');" action="{{ route('approve_pr_manager') }}" method="POST">
@@ -147,7 +151,7 @@
                                     @endforeach
                                     
                                 </tbody>
-                                <input type="submit" value="Approve Selected" class="btn btn-success">      
+                                
                             </table>
                             
                             </form>
@@ -211,7 +215,7 @@
     $(function () {
       $("#tbl_pr").DataTable({
         "responsive": true, "lengthChange": false, "autoWidth": false,
-        "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+        
       }).buttons().container().appendTo('#tbl_pr_wrapper .col-md-6:eq(0)');
     });
     

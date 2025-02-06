@@ -173,6 +173,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
             Route::post('/Manager_List_JN/Client/Store', [ManagerController::class, 'store_client'])->name('store_client_manager');
             // Purchase Request
             Route::get('/Manager/EPurchase/PR/List', [EPurchaseManagerController::class, 'index'])->name('index_pr_manager');
+            Route::POST('/Manager/EPurchase/PR/Approve_CheckBox', [EPurchaseManagerController::class, 'approve_pr_manager_checkbox'])->name('approve_pr_manager_checkbox');
             Route::POST('/Manager/EPurchase/PR/Approve', [EPurchaseManagerController::class, 'approve_pr_manager'])->name('approve_pr_manager');
             Route::POST('/Manager/EPurchase/PR/Reject', [EPurchaseManagerController::class, 'reject_pr_manager'])->name('reject_pr_manager');
             // Purchase Order
