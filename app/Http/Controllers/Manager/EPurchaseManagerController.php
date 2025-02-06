@@ -39,8 +39,22 @@ class EPurchaseManagerController extends Controller
         // dd($id_users);
     }
     public function approve_pr_manager(Request $request)
-    {
-        print_r($request->ck_pr_no);
+    {   
+        if ($request->ck_pr_no == null) {
+            Alert::warning('Warning', 'Please Select Data');
+            return redirect()->route('index_pr_manager');
+        } else {
+            $row_data[] = $request->total_data;
+            for ($i = 0; $i < count($request->ck_pr_no); $i++){
+                $array_data[] = array(
+                    'pr_no' => $request->ck_pr_no[$i],
+                );        
+            }
+            print_r($array_data);
+        }
+        
+        
+        
         // $pr_approval    = $request->btn_approval;
         // $pr_no          = $request->txt_pr_no;
         // $count_data     = $request->total_data;
