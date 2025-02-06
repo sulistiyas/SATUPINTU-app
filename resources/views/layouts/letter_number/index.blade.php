@@ -20,6 +20,7 @@
 @endif
 
 {{-- Content --}}
+
 <div class="content-wrapper">
     <div class="content-header">
         <div class="container-fluid">
@@ -30,7 +31,7 @@
             <div class="col-sm-6">
               <ol class="breadcrumb float-sm-right">
                 <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
-                <li class="breadcrumb-item active">Letter Number</li>
+                <li class="breadcrumb-item active">Letter Number </li>
               </ol>
             </div><!-- /.col -->
           </div><!-- /.row -->
@@ -42,8 +43,8 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Letter Number Data</h3>
-                            <button type="button" id="create_letter_number" class="float-sm-right btn btn-primary" data-toggle="modal" data-target="#modal_letter_number" data-url="{{ route('show_modal_create_letter_number_users')}}">
+                            <h3 class="card-title">Letter Number Data </h3>
+                            <button type="button" id="create_letter_number" class="float-sm-right btn btn-primary" data-toggle="modal" data-target="#modal_letter_number" data-url="{{ route('show_modal_create_letter_number')}}">
                                 <i class="fas fa-plus">&nbsp;Add Data</i>
                             </button>
                         </div>
@@ -79,7 +80,7 @@
 </div>
 {{-- End Content --}}
 {{-- Create Modal --}}
-<form action="{{ route('store_letter_number_users') }}" method="POST" enctype="multipart/form-data" id="legalitas_office" name="legalitas_office">
+<form action="{{ route('store_letter_number') }}" method="POST" enctype="multipart/form-data" id="legalitas_office" name="legalitas_office">
     @csrf
     <div class="modal fade" id="modal_letter_number">
         <div class="modal-dialog modal-lg">

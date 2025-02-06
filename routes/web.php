@@ -316,6 +316,8 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
             Route::post('/HRGA/Legalitas/Office/Update', [LegalitasController::class, 'update'])->name('update_office_legalitas');
             Route::get('/HRGA/Legalitas/Office/Edit/{id}', [LegalitasController::class, 'edit'])->name('edit_office_legalitas');
 
+            // Inventory
+            
             // Letter Number
             // Route::get('/HRGA/LetterNumber', [LetterNumberController::class, 'index'])->name('index_letter_number');
             // Route::post('/HRGA/LetterNumber/Store', [LetterNumberController::class, 'store'])->name('store_letter_number');

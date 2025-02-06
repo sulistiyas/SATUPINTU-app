@@ -18,7 +18,7 @@ class LetterNumberController extends Controller
             ->join('employee', 'employee.id_employee', '=', 'letter_number.username')
             ->join('users', 'users.id', '=', 'employee.id_users')
             ->orderBy('id_letter', 'DESC')->get();
-        return view('users.index_letter_users', ['letter_number' => $letter_number]);
+        return view('layouts.letter_number.index', ['letter_number' => $letter_number]);
     }
 
     public function store_letter_number(Request $request)

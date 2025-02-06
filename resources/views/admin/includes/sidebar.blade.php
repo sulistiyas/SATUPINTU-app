@@ -140,8 +140,8 @@
               </li>
             </ul>
           </li>
-          <li class="{{ Request::routeIs('index_device_master') || Request::routeIs('index_office_asset') || Request::routeIs('index_office_legalitas') || Request::routeIs('index_letter_number') || Request::routeIs('index_users') ? 'nav-item menu-open' : 'nav-item menu' }}">
-            <a href="#"  class="{{ Request::routeIs('index_device_master') || Request::routeIs('index_office_asset') || Request::routeIs('index_office_legalitas') || Request::routeIs('index_letter_number') || Request::routeIs('index_users') ? 'nav-link active' : 'nav-link' }}">
+          <li class="{{ Request::routeIs('index_device_master') || Request::routeIs('index_office_legalitas') || Request::routeIs('index_letter_number') || Request::routeIs('index_users') ? 'nav-item menu-open' : 'nav-item menu' }}">
+            <a href="#"  class="{{ Request::routeIs('index_device_master') || Request::routeIs('index_office_legalitas') || Request::routeIs('index_letter_number') || Request::routeIs('index_users') ? 'nav-link active' : 'nav-link' }}">
               <i class="fas fa-users-cog"></i>
               <p>
                 Administration Area
@@ -150,10 +150,19 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="{{ route('index_office_asset') }}" class="{{ Request::routeIs('index_device_master') || Request::routeIs('index_office_asset') ? 'nav-link active' : 'nav-link' }}">
+                <a href="#" class="{{ Request::routeIs('index_device_master') ? 'nav-link active' : 'nav-link' }}">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Office Asset</p>
+                  <i class="right fas fa-angle-left"></i>
                 </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="{{ route('index_device_master') }}" class="{{ Request::routeIs('index_device_master') ? 'nav-link active' : 'nav-link' }}">
+                      <i class="far fa-dot-circle nav-icon"></i>
+                      <p>Device Master</p>
+                    </a>
+                  </li>
+                </ul>
               </li>
               <li class="nav-item">
                 <a href="{{ route('index_office_legalitas') }}" class="{{ Request::routeIs('index_office_legalitas') ? 'nav-link active' : 'nav-link' }}">

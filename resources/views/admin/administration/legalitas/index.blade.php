@@ -131,13 +131,13 @@
                         <div class="col-6">
                             <label for="txt_issued">Issued</label>
                             <div class="input-group input-group-lg">
-                                <input type="text" class="form-control datetimepicker-input" id="txt_issued" name="txt_issued" data-toggle="datetimepicker" data-target="#txt_issued" placeholder="YYYY/MM/DD" required/>
+                                <input type="date" class="form-control datetimepicker-input" id="txt_issued" name="txt_issued" data-toggle="datetimepicker" data-target="#txt_issued" placeholder="YYYY/MM/DD" required/>
                             </div>
                         </div>
                         <div class="col-6">
                             <label for="txt_expiry">Expiry</label>
                             <div class="input-group input-group-lg">
-                                <input type="text" class="form-control datetimepicker-input" id="txt_expiry" name="txt_expiry" data-toggle="datetimepicker" data-target="#txt_expiry" placeholder="YYYY/MM/DD" required/>
+                                <input type="date" class="form-control datetimepicker-input" id="txt_expiry" name="txt_expiry" data-toggle="datetimepicker" data-target="#txt_expiry" placeholder="YYYY/MM/DD" required/>
                             </div>
                         </div>
                     </div>

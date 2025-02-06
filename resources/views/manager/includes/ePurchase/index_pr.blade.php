@@ -87,11 +87,15 @@
                                           <td>
                                             
                                             {{ $loop->iteration }}.
-                                            <div class="icheck-primary d-inline">
-                                              <input type="checkbox" id="ck_pr_no_{{ $loop->iteration }}" name="ck_pr_no[]" value="{{ $item_pr->pr_no }}" class="item-checkbox" onclick="toogleSingleCheckbox()">
-                                              <label for="ck_pr_no_{{ $loop->iteration }}">
-                                              </label>
-                                            </div>
+                                            @if ( $item_pr->pr_status  == 5)
+                                              <div class="icheck-primary d-inline">
+                                                <input type="checkbox" id="ck_pr_no_{{ $loop->iteration }}" name="ck_pr_no[]" value="{{ $item_pr->pr_no }}" class="item-checkbox" onclick="toogleSingleCheckbox()">
+                                                <label for="ck_pr_no_{{ $loop->iteration }}">
+                                                </label>
+                                              </div>
+                                            @else
+                                            @endif
+                                            
                                           </td>
                                           <td><b>{{ $item_pr->pr_no }}</b></td>
                                           <td>{{ $item_pr->pr_title }}</td>

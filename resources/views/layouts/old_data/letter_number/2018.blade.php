@@ -31,7 +31,7 @@
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
-              <li class="breadcrumb-item active">Letter Number 2018</li>
+              <li class="breadcrumb-item active">Letter Number 2018 </li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
