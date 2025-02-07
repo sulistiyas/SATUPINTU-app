@@ -3,23 +3,24 @@
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
-use App\Http\Controllers\Admin\AssetController;
 use App\Http\Controllers\Admin\ATKController;
+use App\Http\Controllers\Admin\AssetController;
 use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\Admin\ClientController;
+use App\Http\Controllers\OldData\OldJNController;
+use App\Http\Controllers\HRGA\InventoryController;
 use App\Http\Controllers\Admin\EPurchaseController;
 use App\Http\Controllers\Admin\JobNumberController;
 use App\Http\Controllers\Admin\LegalitasController;
 use App\Http\Controllers\Manager\ManagerController;
-use App\Http\Controllers\Admin\LetterNumberController;
 use App\Http\Controllers\HRGA\HREpurchaseController;
 use App\Http\Controllers\HRGA\HRJobNumberController;
-use App\Http\Controllers\LetterNumberController as ControllersLetterNumberController;
-use App\Http\Controllers\Manager\EPurchaseManagerController;
-use App\Http\Controllers\OldData\OldJNController;
+use App\Http\Controllers\Admin\LetterNumberController;
 use App\Http\Controllers\OldData\OldLetterNumberController;
-use App\Http\Controllers\Users\EPurchaseController as UsersEPurchaseController;
+use App\Http\Controllers\Manager\EPurchaseManagerController;
 use App\Http\Controllers\Users\UsersController as UsersUsersController;
+use App\Http\Controllers\Users\EPurchaseController as UsersEPurchaseController;
+use App\Http\Controllers\LetterNumberController as ControllersLetterNumberController;
 
 Route::get('/', function () {
     return view('auth.login');
@@ -317,7 +318,10 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
             Route::get('/HRGA/Legalitas/Office/Edit/{id}', [LegalitasController::class, 'edit'])->name('edit_office_legalitas');
 
             // Inventory
-            
+            Route::get('/HRGA/Inventory/List', [InventoryController::class, 'index_furniture'])->name('index_furniture');
+            Route::post('/HRGA/Inventory/Store', [InventoryController::class, 'store_furniture'])->name('store_furniture');
+            Route::get('/HRGA/Inventory/Update', [InventoryController::class, 'update_furniture'])->name('update_furniture');
+            Route::delete('/HRGA/Inventory/Destroy/{id}', [InventoryController::class, 'destroy_furniture'])->name('destroy_furniture');
             // Letter Number
             // Route::get('/HRGA/LetterNumber', [LetterNumberController::class, 'index'])->name('index_letter_number');
             // Route::post('/HRGA/LetterNumber/Store', [LetterNumberController::class, 'store'])->name('store_letter_number');

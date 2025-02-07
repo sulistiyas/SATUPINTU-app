@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\HRGA;
 
 use App\Http\Controllers\Controller;
+use App\Models\Furniture;
 use Illuminate\Http\Request;
+use RealRashid\SweetAlert\Facades\Alert;
+use Illuminate\Support\Facades\Validator;
 
 class InventoryController extends Controller
 {
@@ -12,54 +15,54 @@ class InventoryController extends Controller
      */
     public function index_furniture()
     {
-        return view('hr_ga.inventory.furniture.index');
+        $furnitures = \App\Models\Furniture::all();
+        return view('hr_ga.inventory.furniture.index', compact('furnitures'));
+    }
+    public function store_furniture(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'item_name' => 'required',
+            'quantity' => 'required',
+            'condition' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            Alert::error('Error', 'Please fill all the required fields');
+            return redirect()->back();
+        } else {
+            Furniture::create([
+                'item_name' => $request->item_name,
+                'quantity' => $request->quantity,
+                'condition' => $request->condition
+            ]);
+            Alert::success('Success', 'Furniture added successfully');
+            return redirect()->route('index_furniture');
+        }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function edit_furniture($id)
     {
-        //
+        $furniture = \App\Models\Furniture::find($id);
+        return view('hr_ga.inventory.furniture.edit', compact('furniture'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function update_furniture(Request $request, $id)
     {
-        //
-    }
+        $request->validate([
+            'name' => 'required',
+            'qty' => 'required',
+            'condition' => 'required'
+        ]);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+        $furniture = \App\Models\Furniture::find($id);
+        $furniture->update($request->all());
+        return redirect()->route('hr_ga.inventory.furniture.index')->with('success', 'Furniture updated successfully');
+    }   
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function destroy_furniture($id)
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        $furniture = \App\Models\Furniture::find($id);
+        $furniture->delete();
+        return redirect()->route('hr_ga.inventory.furniture.index')->with('success', 'Furniture deleted successfully');
     }
 }
