@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('item_name');
             $table->integer('quantity');
             $table->string('condition');
+            $table->string('furniture_image')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

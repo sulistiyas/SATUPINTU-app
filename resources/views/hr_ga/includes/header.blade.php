@@ -36,6 +36,8 @@
     <link rel="stylesheet" href="{{ asset('assets/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css')}}">
     <!-- Toastr -->
   <link rel="stylesheet" href="{{ asset('assets/plugins/toastr/toastr.min.css')}}">
+<!-- dropzonejs -->
+<link rel="stylesheet" href="{{ asset('assets/plugins/dropzone/min/dropzone.min.css') }}">
 </head>
 <body class="hold-transition sidebar-mini layout-fixed layout-footer-fixed">
     <div class="wrapper">

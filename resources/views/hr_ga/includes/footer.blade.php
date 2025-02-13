@@ -56,6 +56,7 @@
 <script src="{{ asset('assets/plugins/select2/js/select2.full.min.js') }}"></script>
 <!-- BS-Stepper -->
 <script src="{{ asset('assets/plugins/bs-stepper/js/bs-stepper.min.js') }}"></script>
+<script src="{{ asset('assets/plugins/dropzone/min/dropzone.min.js') }}"></script>
 <script>
   // BS-Stepper Init
   document.addEventListener('DOMContentLoaded', function () {
