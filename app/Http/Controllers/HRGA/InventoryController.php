@@ -96,18 +96,30 @@ class InventoryController extends Controller
         // return QrCode::generate(
         //     'Hello, World!',
         // );
+        $file = Storage::disk('public')->path('logo/inl.png');
+        // $img = ; 
+        $data = QrCode::size(512)
+            ->format('png')
+            ->mergeString(@imagecreatefrompng($file))
+            ->errorCorrection('M')
+            ->generate(
+                'https://twitter.com/HarryKir',
+            );
 
-        return response()->streamDownload(
-            function () {
-                echo QrCode::format('png')
-                ->size(200)
-                ->generate('Hello, World!');
-            }
-            ,  
-            'qr-code.png',
-            [
-                'Content-Type' => 'image/png',
-            ]
-        );
+        return response($data)
+            ->header('Content-type', 'image/png');
+
+        // return response()->streamDownload(
+        //     function () {
+        //         echo QrCode::format('png')
+        //         ->size(200)
+        //         ->generate('Hello, World!');
+        //     }
+        //     ,  
+        //     'qr-code.png',
+        //     [
+        //         'Content-Type' => 'image/png',
+        //     ]
+        // );
     }
 }
