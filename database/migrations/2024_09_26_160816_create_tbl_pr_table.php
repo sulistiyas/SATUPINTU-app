@@ -27,13 +27,13 @@ return new class extends Migration
             $table->integer('total_price');
             $table->integer('status');
             $table->string('nama_manager');
-            $table->string('qr_code');
+            $table->string('qrcode');
             $table->string('remarks');
             $table->string('reason');
-            $table->date('date');
+            $table->string('date');
             $table->string('po_number');
             $table->string('ref_quotation');
-            $table->date('date_po');
+            $table->string('date_po');
             $table->integer('status_po');
             $table->string('approve_po');
             $table->integer('discount');

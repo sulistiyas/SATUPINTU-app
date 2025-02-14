@@ -16,6 +16,7 @@ use App\Http\Controllers\Manager\ManagerController;
 use App\Http\Controllers\HRGA\HREpurchaseController;
 use App\Http\Controllers\HRGA\HRJobNumberController;
 use App\Http\Controllers\Admin\LetterNumberController;
+use App\Http\Controllers\HRGA\HRGAController;
 use App\Http\Controllers\OldData\OldLetterNumberController;
 use App\Http\Controllers\Manager\EPurchaseManagerController;
 use App\Http\Controllers\Users\UsersController as UsersUsersController;
@@ -312,10 +313,10 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
             Route::get('/HRGA/EPurchase/Search/Print/PO/{id}', [HREpurchaseController::class, 'print_po_epurchase_admin'])->name('print_po_epurchase_admin');
 
             // Legalitas
-            Route::get('/HRGA/Legalitas/Office', [LegalitasController::class, 'index'])->name('index_office_legalitas');
-            Route::post('/HRGA/Legalitas/Office/Store', [LegalitasController::class, 'store'])->name('store_office_legalitas');
-            Route::post('/HRGA/Legalitas/Office/Update', [LegalitasController::class, 'update'])->name('update_office_legalitas');
-            Route::get('/HRGA/Legalitas/Office/Edit/{id}', [LegalitasController::class, 'edit'])->name('edit_office_legalitas');
+            Route::get('/HRGA/Legalitas/Office', [HRGAController::class, 'index_legalitas'])->name('index_office_legalitas_hr_ga');
+            Route::post('/HRGA/Legalitas/Office/Store', [HRGAController::class, 'store_legalitas'])->name('store_office_legalitas_hr_ga');
+            Route::post('/HRGA/Legalitas/Office/Update', [HRGAController::class, 'update_legalitas'])->name('update_office_legalitas_hr_ga');
+            Route::get('/HRGA/Legalitas/Office/Edit/{id}', [HRGAController::class, 'edit_legalitas'])->name('edit_office_legalitas_hr_ga');
 
             // Inventory
             Route::get('/HRGA/Inventory/List', [InventoryController::class, 'index_furniture'])->name('index_furniture');
