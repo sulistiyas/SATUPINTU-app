@@ -71,8 +71,8 @@
             </ul>
           </li>
 
-          <li class="{{ Request::routeIs('index_pr_manager') || Request::routeIs('index_po_manager') || Request::routeIs('index_vendor_manager') || Request::routeIs('create_pr_manager') ? 'nav-item menu-open' : 'nav-item menu' }}">
-            <a href="#"  class="{{ Request::routeIs('index_pr_manager') || Request::routeIs('index_po_manager') || Request::routeIs('index_vendor_manager') || Request::routeIs('create_pr_manager') ? 'nav-link active' : 'nav-link' }}">
+          <li class="{{ Request::routeIs('index_pr_manager') || Request::routeIs('index_po_manager') || Request::routeIs('index_vendor_manager') || Request::routeIs('create_pr_manager') || Request::routeIs('index_old_prpo') ? 'nav-item menu-open' : 'nav-item menu' }}">
+            <a href="#"  class="{{ Request::routeIs('index_pr_manager') || Request::routeIs('index_po_manager') || Request::routeIs('index_vendor_manager') || Request::routeIs('create_pr_manager') || Request::routeIs('index_old_prpo') ? 'nav-link active' : 'nav-link' }}">
               <i class="fas fa-shopping-cart"></i>
               <p>
                 e-Purchase
@@ -96,6 +96,12 @@
                 <a href="#" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Report</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ route('index_old_prpo') }}" class="{{ Request::routeIs('index_old_prpo') ? 'nav-link active' : 'nav-link' }}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Old PR PO</p>
                 </a>
               </li>
               {{-- <li class="nav-item">

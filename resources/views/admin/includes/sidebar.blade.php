@@ -76,8 +76,8 @@
             </ul>
           </li>
 
-          <li class="{{ Request::routeIs('index_pr_admin') || Request::routeIs('index_po_admin') || Request::routeIs('index_vendor_admin') || Request::routeIs('create_pr_admin') || Request::routeIs('search_epurchase_admin') || Request::routeIs('index_old_pr')? 'nav-item menu-open' : 'nav-item menu' }}">
-            <a href="#"  class="{{ Request::routeIs('index_pr_admin') || Request::routeIs('index_po_admin') || Request::routeIs('index_vendor_admin') || Request::routeIs('create_pr_admin') || Request::routeIs('search_epurchase_admin') || Request::routeIs('index_old_pr')? 'nav-link active' : 'nav-link' }}">
+          <li class="{{ Request::routeIs('index_pr_admin') || Request::routeIs('index_po_admin') || Request::routeIs('index_vendor_admin') || Request::routeIs('create_pr_admin') || Request::routeIs('search_epurchase_admin') || Request::routeIs('index_old_prpo')? 'nav-item menu-open' : 'nav-item menu' }}">
+            <a href="#"  class="{{ Request::routeIs('index_pr_admin') || Request::routeIs('index_po_admin') || Request::routeIs('index_vendor_admin') || Request::routeIs('create_pr_admin') || Request::routeIs('search_epurchase_admin') || Request::routeIs('index_old_prpo')? 'nav-link active' : 'nav-link' }}">
               <i class="fas fa-shopping-cart"></i>
               <p>
                 e-Purchase
@@ -110,7 +110,7 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{{ route('index_old_pr') }}" class="{{ Request::routeIs('index_old_pr') ? 'nav-link active' : 'nav-link' }}">
+                <a href="{{ route('index_old_prpo') }}" class="{{ Request::routeIs('index_old_prpo') ? 'nav-link active' : 'nav-link' }}">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Old PR PO</p>
                 </a>

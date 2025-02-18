@@ -267,7 +267,6 @@
               $('#show_txt_teacher_comp').val(data.teacher_comp);
               $('#show_txt_total_day').val(data.total_manday);
               $('#show_txt_remarks').val(data.remarks);
-              
           })
       });
       

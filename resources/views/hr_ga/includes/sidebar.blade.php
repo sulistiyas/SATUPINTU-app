@@ -123,8 +123,8 @@
             </ul>
           </li>
 
-          <li class="{{ Request::routeIs('index_pr_hr_ga') || Request::routeIs('index_po_hr_ga') || Request::routeIs('index_vendor_hr_ga') || Request::routeIs('create_pr_hr_ga') || Request::routeIs('search_epurchase_hr_ga') || Request::routeIs('index_old_pr_hr_ga')? 'nav-item menu-open' : 'nav-item menu' }}">
-            <a href="#"  class="{{ Request::routeIs('index_pr_hr_ga') || Request::routeIs('index_po_hr_ga') || Request::routeIs('index_vendor_hr_ga') || Request::routeIs('create_pr_hr_ga') || Request::routeIs('search_epurchase_hr_ga') || Request::routeIs('index_old_pr_hr_ga')? 'nav-link active' : 'nav-link' }}">
+          <li class="{{ Request::routeIs('index_pr_hr_ga') || Request::routeIs('index_po_hr_ga') || Request::routeIs('index_vendor_hr_ga') || Request::routeIs('create_pr_hr_ga') || Request::routeIs('search_epurchase_hr_ga') || Request::routeIs('index_old_prpo')? 'nav-item menu-open' : 'nav-item menu' }}">
+            <a href="#"  class="{{ Request::routeIs('index_pr_hr_ga') || Request::routeIs('index_po_hr_ga') || Request::routeIs('index_vendor_hr_ga') || Request::routeIs('create_pr_hr_ga') || Request::routeIs('search_epurchase_hr_ga') || Request::routeIs('index_old_prpo')? 'nav-link active' : 'nav-link' }}">
               <i class="fas fa-shopping-cart"></i>
               <p>
                 e-Purchase
@@ -157,7 +157,7 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{{ route('index_old_pr_hr_ga') }}" class="{{ Request::routeIs('index_old_pr_hr_ga') ? 'nav-link active' : 'nav-link' }}">
+                <a href="{{ route('index_old_prpo') }}" class="{{ Request::routeIs('index_old_prpo') ? 'nav-link active' : 'nav-link' }}">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Old PR PO</p>
                 </a>
