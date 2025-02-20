@@ -18,6 +18,7 @@ use App\Http\Controllers\OldData\OldPRPOController;
 use App\Http\Controllers\HRGA\HREpurchaseController;
 use App\Http\Controllers\HRGA\HRJobNumberController;
 use App\Http\Controllers\Admin\LetterNumberController;
+use App\Http\Controllers\EpurchaseReportController;
 use App\Http\Controllers\OldData\OldLetterNumberController;
 use App\Http\Controllers\Manager\EPurchaseManagerController;
 use App\Http\Controllers\Users\UsersController as UsersUsersController;
@@ -57,6 +58,12 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
     Route::post('LetterNumber/Store', [ControllersLetterNumberController::class, 'store_letter_number'])->name('store_letter_number');
     Route::get('LetterNumber/Store/Create', [ControllersLetterNumberController::class, 'show_modal_create_letter_number'])->name('show_modal_create_letter_number');
     Route::get('/refresh/number', [ControllersLetterNumberController::class, 'refresh_last_number'])->name('refresh_last_number');
+
+    // Report 
+    Route::get('EPurchase/Search',[EpurchaseReportController::class, 'index'])->name('epurchase_report_index');
+    Route::post('/EPurchase/Search/Submit', [EpurchaseReportController::class, 'epurchase_search_result'])->name('epurchase_report_search_result');
+    Route::get('EPurchase/Search/Print/PR/{id}', [EpurchaseReportController::class, 'print_pr_epurchase'])->name('print_pr_epurchase');
+    Route::get('EPurchase/Search/Print/PO/{id}', [EpurchaseReportController::class, 'print_po_epurchase'])->name('print_po_epurchase');
 
     Route::controller(LoginController::class)->group(function () {
         Route::get('/dashboard', 'index')->name('dashboard');
@@ -121,11 +128,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
             Route::get('show_modal_price_admin/{id}', [EPurchaseController::class, 'show_modal_price_admin'])->name('show_modal_price_admin');
             Route::get('show_modal_po_admin/{id}', [EPurchaseController::class, 'show_modal_po_admin'])->name('show_modal_po_admin');
             Route::get('show_modal_create_po_admin/{id}', [EPurchaseController::class, 'show_modal_create_po_admin'])->name('show_modal_create_po_admin');
-            // Report 
-            Route::get('/Admin/EPurchase/Search', [EPurchaseController::class, 'search_epurchase_admin'])->name('search_epurchase_admin');
-            Route::post('/Admin/EPurchase/Search/Submit', [EPurchaseController::class, 'search_epurchase_admin_result'])->name('search_epurchase_admin_result');
-            Route::get('/Admin/EPurchase/Search/Print/PR/{id}', [EPurchaseController::class, 'print_pr_epurchase_admin'])->name('print_pr_epurchase_admin');
-            Route::get('/Admin/EPurchase/Search/Print/PO/{id}', [EPurchaseController::class, 'print_po_epurchase_admin'])->name('print_po_epurchase_admin');
+            
 
             // Office Asset
             Route::get('/Admin/Asset/Office/Asset', [AssetController::class, 'index_office_asset'])->name('index_office_asset');
@@ -307,11 +310,6 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
             Route::get('show_modal_price_hr_ga/{id}', [HREpurchaseController::class, 'show_modal_price_hr_ga'])->name('show_modal_price_hr_ga');
             Route::get('show_modal_po_hr_ga/{id}', [HREpurchaseController::class, 'show_modal_po_hr_ga'])->name('show_modal_po_hr_ga');
             Route::get('show_modal_create_po_hr_ga/{id}', [HREpurchaseController::class, 'show_modal_create_po_hr_ga'])->name('show_modal_create_po_hr_ga');
-            // Report 
-            Route::get('/HRGA/EPurchase/Search', [HREpurchaseController::class, 'search_epurchase_admin'])->name('search_epurchase_admin');
-            Route::post('/HRGA/EPurchase/Search/Submit', [HREpurchaseController::class, 'search_epurchase_admin_result'])->name('search_epurchase_hr_ga');
-            Route::get('/HRGA/EPurchase/Search/Print/PR/{id}', [HREpurchaseController::class, 'print_pr_epurchase_admin'])->name('print_pr_epurchase_admin');
-            Route::get('/HRGA/EPurchase/Search/Print/PO/{id}', [HREpurchaseController::class, 'print_po_epurchase_admin'])->name('print_po_epurchase_admin');
 
             // Legalitas
             Route::get('/HRGA/Legalitas/Office', [HRGAController::class, 'index_legalitas'])->name('index_office_legalitas_hr_ga');
