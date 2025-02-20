@@ -67,6 +67,13 @@ class EPurchaseController extends Controller
             $emp_name = $item_div->name;
         }
 
+        $id_employee = DB::table('employee')
+            ->join('users', 'users.id', '=', 'employee.id_users')
+            ->where('users.id', '=', $idusers)->get();
+        foreach ($id_employee as $item_emp) {
+            $emp_id = $item_emp->id_employee;
+        }
+
         $id_manager = DB::table('employee')
             ->join('users', 'users.id', '=', 'employee.id_users')
             ->where('emp_division', '=', $emp_div)
@@ -83,7 +90,7 @@ class EPurchaseController extends Controller
                 $array_data[] = array(
                     'pr_no'                 => $pr_no,
                     'job_number'            => $jn,
-                    'id_employee'           => $idusers,
+                    'id_employee'           => $emp_id,
                     'pr_title'              => $pr_title,
                     'pr_desc'               => $desc[$key],
                     'pr_qty'                => $qty[$key],
@@ -103,9 +110,9 @@ class EPurchaseController extends Controller
             // ]);
 
             PurchaseRequest::insert($array_data);
-            // return $this->SendMailPR($idusers, $manager_id, $array_data, $pr_no, $jn);
+            return $this->SendMailPR($idusers, $manager_id, $array_data, $pr_no, $jn);
             Alert::success('Success', 'PR Submitted Successfully');
-            return redirect()->route('index_pr_users');
+            // return redirect()->route('index_pr_users');
         }
     }
 

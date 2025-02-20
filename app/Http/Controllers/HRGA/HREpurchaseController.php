@@ -35,7 +35,7 @@ class HREpurchaseController extends Controller
         return view('hr_ga.epurchase.pr.index', ['data' => $get_data]);
     }
 
-    public function refresh_pr()
+    public function refresh_pr_hr_ga()
     {
         $id_pr = IdGenerator::generate(['table' => 'pr', 'field' => 'pr_no', 'length' => 13, 'prefix' => 'PR' . +date('Ymd')]);
         return view('components.modals.e-purchase.refresh_pr', ['id_pr' => $id_pr]);
@@ -44,11 +44,11 @@ class HREpurchaseController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create_pr()
+    public function create_pr_hr_ga()
     {
         $id = IdGenerator::generate(['table' => 'pr', 'field' => 'pr_no', 'length' => 13, 'prefix' => 'PR' . +date('Ymd')]);
         $data = DB::table('jobnumber')->where('deleted_at', '=', NULL)->orderBy('id_jn', 'DESC')->get();
-        return view('admin.ePurchase.purchase_request.create', compact('id', 'data'));
+        return view('hr_ga.epurchase.pr.create', compact('id', 'data'));
     }
 
     public function store_pr(Request $request)
@@ -67,37 +67,44 @@ class HREpurchaseController extends Controller
         //     $manager_id = $manager->name;
         // }
 
+        $rows       = $request->rows;
+        $pr_title   = $request->txt_pr_title;
+        $desc       = $request->description;
+        $qty        = $request->quantity;
+        $unit       = $request->unit;
+        $pr_no      = $request->txt_pr_number;
+        $jn         = $request->txt_jn;
+        $idusers    = Auth::user()->id;
+        $division   = DB::table('employee')
+            ->join('users', 'users.id', '=', 'employee.id_users')
+            ->where('users.id', '=', $idusers)->get();
+        foreach ($division as $item_div) {
+            $emp_div = $item_div->emp_division;
+            $emp_name = $item_div->name;
+        }
+        $id_employee = DB::table('employee')
+            ->join('users', 'users.id', '=', 'employee.id_users')
+            ->where('users.id', '=', $idusers)->get();
+        foreach ($id_employee as $item_emp) {
+            $emp_id = $item_emp->id_employee;
+        }
 
-        try {
-            $rows       = $request->rows;
-            $pr_title   = $request->txt_pr_title;
-            $desc       = $request->description;
-            $qty        = $request->quantity;
-            $unit       = $request->unit;
-            $pr_no      = $request->txt_pr_number;
-            $jn         = $request->txt_jn;
-            $idusers    = Auth::user()->id;
-            $division   = DB::table('employee')
-                ->join('users', 'users.id', '=', 'employee.id_users')
-                ->where('id_users', '=', $idusers)->get();
-            foreach ($division as $item_div) {
-                $emp_div = $item_div->emp_division;
-                $emp_name = $item_div->name;
-            }
-
-            $id_manager = DB::table('employee')
-                ->join('users', 'users.id', '=', 'employee.id_users')
-                ->where('emp_division', '=', $emp_div)
-                ->where('emp_position', '=', "Manager")->get();
-            foreach ($id_manager as $manager) {
-                $manager_id = $manager->id;
-                $manager_name = $manager->name;
-            }
+        $id_manager = DB::table('employee')
+            ->join('users', 'users.id', '=', 'employee.id_users')
+            ->where('emp_division', '=', $emp_div)
+            ->where('emp_position', '=', "Manager")->get();
+        foreach ($id_manager as $manager) {
+            $manager_id = $manager->id;
+            $manager_name = $manager->name;
+        }if ($rows == null) {
+            Alert::error('Error', 'PR Item Empty!!');
+            return redirect()->route('create_pr_users');
+        } else {
             foreach ($rows as $key => $value) {
                 $array_data[] = array(
                     'pr_no'                 => $pr_no,
                     'job_number'            => $jn,
-                    'id_employee'           => $idusers,
+                    'id_employee'           => $emp_id,
                     'pr_title'              => $pr_title,
                     'pr_desc'               => $desc[$key],
                     'pr_qty'                => $qty[$key],
@@ -115,20 +122,13 @@ class HREpurchaseController extends Controller
             //     'pr_no'         => $request->txt_pr_number,
             //     'job_number'    => $request->txt_jn,
             // ]);
-
+            // dd($array_data);
             PurchaseRequest::insert($array_data);
             return $this->SendMailPR($idusers, $manager_id, $array_data, $pr_no, $jn);
             Alert::success('Success', 'PR Submitted Successfully');
-            return redirect()->route('index_pr_admin');
-        } catch (\Exception $th) {
-            return response()->json([
-                'status'    => false,
-                'message'   => 'Error Send mail : ',
-                'errors'    => $th
-            ], 401);
-            Alert::error('error', 'Failed to Create Data!!');
-            return redirect()->route('create_pr_admin');
+            // return redirect()->route('index_pr_hr_ga');
         }
+        
     }
     public function print_pr_hr_ga(Request $request)
     {
@@ -462,8 +462,7 @@ class HREpurchaseController extends Controller
 
     public function SendMailPR($idusers, $manager_id, $array_data, $pr_no, $jn)
     {
-        try {
-            $emp_data   = DB::table('employee')
+        $emp_data   = DB::table('employee')
                 ->join('users', 'users.id', '=', 'employee.id_users')
                 ->where('id_users', '=', $idusers)->get();
             foreach ($emp_data as $item_emp) {
@@ -521,16 +520,18 @@ class HREpurchaseController extends Controller
                 $mail->subject('SATUPINTU - APP | Purchase Request Order');
             });
             Alert::success('Success', 'PR Submitted Successfully');
-            return redirect()->route('index_pr_admin');
-        } catch (\Exception $th) {
-            return response()->json([
-                'status'    => false,
-                'message'   => 'Error Send mail : ',
-                'errors'    => $th
-            ], 401);
-            Alert::error('error', 'Failed to Create Data!!');
-            return redirect()->route('create_pr_admin');
-        }
+            return redirect()->route('index_pr_hr_ga');
+        // try {
+            
+        // } catch (\Exception $th) {
+        //     return response()->json([
+        //         'status'    => false,
+        //         'message'   => 'Error Send mail : ',
+        //         'errors'    => $th
+        //     ], 401);
+        //     Alert::error('error', 'Failed to Create Data!!');
+        //     return redirect()->route('create_pr_hr_ga');
+        // }
     }
 
     public function SendMailPO($emp_name, $mng_name, $po_data, $a_disc, $a_tax, $sub, $grand_total, $service_charge, $delivery_fee, $addtional_charge)

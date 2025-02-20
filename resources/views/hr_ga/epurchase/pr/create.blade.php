@@ -1,5 +1,5 @@
-@include('admin.includes.header')
-@include('admin.includes.sidebar')
+@include('hr_ga.includes.header')
+@include('hr_ga.includes.sidebar')
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <div class="content-header">
@@ -11,7 +11,7 @@
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
-              <li class="breadcrumb-item"><a href="{{ route('index_pr_admin') }}">PR Table</a></li>
+              <li class="breadcrumb-item"><a href="{{ route('index_pr_hr_ga') }}">PR Table</a></li>
               <li class="breadcrumb-item active">Purchase Request Form</li>
             </ol>
           </div><!-- /.col -->
@@ -21,7 +21,7 @@
     <!-- /.content-header -->
     <!-- Main content -->
     <section class="content">
-        <form action="{{ route('store_pr_admin') }}" method="POST" enctype="multipart/form-data" id="create_pr" name="create_pr">
+        <form action="{{ route('store_pr_hr_ga') }}" method="POST" enctype="multipart/form-data" id="create_pr" name="create_pr">
             @csrf
             <div class="container-fluid">
                 <div class="row">
@@ -41,7 +41,7 @@
                                     <div class="col-6">
                                         <div class="form-group">
                                             <label for="refresh_number" style="color: transparent">T</label><br>
-                                            <button type="button" class="btn btn-outline-primary" title="Refresh Data" id="refresh_number" data-url="{{ route('refresh_pr')}}">
+                                            <button type="button" class="btn btn-outline-primary" title="Refresh Data" id="refresh_number" data-url="{{ route('refresh_pr_hr_ga')}}">
                                                 <i class="fas fa-sync"></i>
                                             </button>
                                         </div>
@@ -133,7 +133,7 @@
     </section>
     <!-- /.content -->
 </div>
-@include('admin.includes.footer')
+@include('hr_ga.includes.footer')
 <script type="text/javascript">
     // Datatables
     // $(function () {
