@@ -58,7 +58,7 @@
                 @foreach ($data_po as $item_list)
                 <tr>
                     <td>
-                        {{ $loop->iteration }}
+                        {{ $loop->iteration }}.
                         <input type="hidden" name="txt_id_po" id="txt_id_po" value="{{ $item_list->id_po }}">
                     </td>
                     <td>{{ $item_list->pr_desc }}</td>
@@ -80,14 +80,52 @@
             </tbody>
             <tfoot>
                 <tr>
+                    <th colspan="5">Sub Total</th>
+                    <th>@currency($sub)</th>
+                </tr>
+                <tr>
+                    <td align="right" colspan="5"><i>Disc ({{ $item_single->po_disc }}%)</i></td>
+                    <td align="center">@currency($a_disc)</td>
+                </tr>
+                <tr>
+                    <td align="right" colspan="5"><i>Tax ({{ $item_single->po_tax }}%)</i></td>
+                    <td align="center">@currency($a_tax)</td>
+                </tr>
+                @if ($service_charge == Null && $delivery_fee == NULL && $addtional_charge == NULL)
+                @elseif($delivery_fee == NULL && $addtional_charge == NULL)
+                    <tr>
+                        <td align="right" colspan="5"><i>Service Charge&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</i></td>
+                        <td align="center">@currency($service_charge)</td>
+                    </tr>
+                @elseif($addtional_charge == NULL)
+                    <tr>
+                        <td align="right" colspan="5"><i>Service Charge&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</i></td>
+                        <td align="center">@currency($service_charge)</td>
+                    </tr>
+                    <tr>
+                        <td align="right" colspan="5"><i>Delivery Charge&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</i></td>
+                        <td align="center">@currency($delivery_fee)</td>
+                    </tr>
+                @else
+                    <tr>
+                        <td align="right" colspan="5"><i>Service Charge&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</i></td>
+                        <td align="center">@currency($service_charge)</td>
+                    </tr>
+                    <tr>
+                        <td align="right" colspan="5"><i>Delivery Charge&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</i></td>
+                        <td align="center">@currency($delivery_fee)</td>
+                    </tr>
+                    <tr>
+                        <td align="right" colspan="5"><i>Additional Charge&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</i></td>
+                        <td align="center">@currency($addtional_charge)</td>
+                    </tr>
+                @endif
+                <tr>
                     <th colspan="5">Grand Total</th>
-                    <th>
-                        @foreach ($total_prices as $grand)
-                            @currency($grand->grand_total)
-                        @endforeach
-                    </th>
+                    <th>@currency($grand_total)</th>
                 </tr>
             </tfoot>
+            
         </table>
     </div>
 </div>

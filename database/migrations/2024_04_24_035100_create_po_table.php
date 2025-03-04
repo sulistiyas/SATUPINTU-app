@@ -24,9 +24,9 @@ return new class extends Migration
             $table->string('po_approve');
             $table->float('po_disc')->nullable();
             $table->float('po_tax')->nullable();
-            $table->float('po_servcie_charge')->nullable();
+            $table->float('po_service_charge')->nullable();
             $table->float('po_delivery_fee')->nullable();
-            $table->float('po_additonal_charge')->nullable();
+            $table->float('po_additional_charge')->nullable();
             $table->string('po_rev')->nullable();
             $table->timestamps();
             $table->softDeletes();

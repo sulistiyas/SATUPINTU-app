@@ -42,7 +42,7 @@
                                 <tbody>
                                     @foreach ($data as $item_pr)
                                         <tr>
-                                          <td>{{ $loop->iteration }}</td>
+                                          <td>{{ $loop->iteration }}.</td>
                                           <td>{{ $item_pr->pr_no_1 }}</td>
                                           <td>
                                             @if ($item_pr->po_no == "")

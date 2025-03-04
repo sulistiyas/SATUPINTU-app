@@ -173,9 +173,24 @@ class HREpurchaseController extends Controller
             ->leftJoin('vendor', 'vendor.id_vendor', '=', 'po.id_vendor')
             ->where('po.po_no', '=', $id)->get();
         // $pr_data = DB::table('pr')->where('pr_no', '=', $id)->get();
+        $sub_total = DB::table('po')->selectRaw('SUM(total_price) as sub_total')->where('po_no', '=', $id)->get();
+        foreach ($sub_total as $subs) {
+            $sub = $subs->sub_total;
+        }
+        foreach ($data_po as $item) {
+            $disc = $item->po_disc;
+            $tax = $item->po_tax;
+            $service_charge = $item->po_service_charge;
+            $delivery_fee = $item->po_delivery_fee;
+            $addtional_charge = $item->po_additional_charge;
+        }
+        $a_disc = ($disc / 100) * $sub;
+        $total_disc = $sub - $a_disc ;
+        $a_tax = ($tax / 100) * $total_disc;
+        $grand_total = $total_disc + $a_tax + $service_charge + $delivery_fee + $addtional_charge;
         $total_prices = DB::table('po')->selectRaw('SUM(total_price) as grand_total')->where('po_no', '=', $id)->get();
         $vendor_data = DB::table('vendor')->where('deleted_at', '=', NULL)->orderBy('vendor', 'asc')->get();
-        return view('components.modals.admin_modals.e_purchase.po.po_admin', compact('data_po', 'total_prices', 'vendor_data'));
+        return view('components.modals.admin_modals.e_purchase.po.po_admin', compact('data_po', 'total_prices', 'vendor_data','sub','a_disc','a_tax','grand_total','service_charge','delivery_fee','addtional_charge'));
     }
 
     public function show_modal_create_po_hr_ga($id)
@@ -330,7 +345,8 @@ class HREpurchaseController extends Controller
             $emp_data = DB::table('po')
                 ->join('pr', 'pr.id_pr', '=', 'po.id_pr')
                 ->join('vendor', 'vendor.id_vendor', '=', 'po.id_vendor')
-                ->join('users', 'users.id', '=', 'pr.id_employee')->get();
+                ->join('employee', 'employee.id_employee', '=', 'pr.id_employee')
+                ->join('users','users.id','=','employee.id_users')->get();
             foreach ($emp_data as $emp) {
                 $emp_name = $emp->name;
             }
@@ -389,7 +405,6 @@ class HREpurchaseController extends Controller
                 'errors'    => $validator->errors()
             ], 401);
         } else {
-            try {
                 $txt_pr_no = $request->txt_pr_no;
                 $txt_po_no = $request->txt_po_no;
                 $txt_id_pr = $request->txt_id_pr;
@@ -398,21 +413,22 @@ class HREpurchaseController extends Controller
                 $txt_qty = $request->txt_qty_pr;
                 $txt_count = $request->txt_count;
 
-                // dd($count);
+                // dd($txt_count);
                 foreach ($txt_count as $key => $value) {
                     $price_total_unit = $price[$key] * $txt_qty[$key];
                     $array_data[] = array(
                         'po_no'         => $txt_po_no[$key],
                         'id_pr'         => $txt_id_pr[$key],
-                        'currency'      => $currency[$key],
+                        'currency'      => $currency,
                         'price'         => $price[$key],
                         'total_price'   => $price_total_unit,
                         'po_date'       => date('Y-m-d'),
-                        'po_status'     => '3   ',
+                        'po_status'     => '3',
                         'created_at'    => date('Y-m-d h:i:s'),
                         'updated_at'    => date('Y-m-d h:i:s'),
                     );
                 }
+                // dd($array_data);
                 PurchaseOrder::insert($array_data);
                 $pr_data = PurchaseRequest::where('pr_no', '=', $txt_pr_no)->update([
                     'pr_status'     => '3',
@@ -420,6 +436,8 @@ class HREpurchaseController extends Controller
                 ]);
                 Alert::success('Success', 'Successfully Insert Price');
                 return redirect()->route('index_po_hr_ga');
+            try {
+                
             } catch (\Exception $ex) {
                 return response()->json([
                     'status'    => false,
