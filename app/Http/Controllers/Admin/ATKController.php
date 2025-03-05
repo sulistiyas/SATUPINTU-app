@@ -60,13 +60,18 @@ class ATKController extends Controller
                 ATK_Master::create([
                     'atk_name'          => $request->atk_name,
                     'atk_brand'         => $request->atk_brand,
-                    'atk_stock'         => 0,
+                    'atk_stock'         => $request->atk_stock,
                     'atk_unit'          => $request->atk_unit,
                     'created_at'        => date('Y-m-d h:i:s'),
                     'updated_at'        => date('Y-m-d h:i:s')
                 ]);
                 Alert::success('Success', 'New ATK Added');
-                return redirect()->route('index_atk_master');
+                if (Auth::user()->user_level == '0') {
+                    return redirect()->route('index_atk_master');
+                } elseif (Auth::user()->user_level == '4') {
+                    return redirect()->route('index_atk_master_hr_ga');
+                }
+                
             } catch (\Exception $ex) {
                 return response()->json([
                     'status'    => false,
@@ -75,7 +80,12 @@ class ATKController extends Controller
                 ], 401);
 
                 Alert::warning('Warning', 'Failed to add new ATK !!');
-                return redirect()->route('index_atk_master');
+                if (Auth::user()->user_level == '0') {
+                    return redirect()->route('index_atk_master');
+                } elseif (Auth::user()->user_level == '4') {
+                    return redirect()->route('index_atk_master_hr_ga');
+                }
+                
             }
         }
     }
@@ -113,7 +123,12 @@ class ATKController extends Controller
                     'updated_at'    => date('Y-m-d h:i:s')
                 ]);
                 Alert::success('Success', 'ATK Stock Updated');
-                return redirect()->route('index_atk_in');
+                if (Auth::user()->user_level == '0') {
+                    return redirect()->route('index_atk_in');
+                } elseif (Auth::user()->user_level == '4') {
+                    return redirect()->route('index_atk_in_hr_ga');
+                }
+                
             } catch (\Exception $ex) {
                 return response()->json([
                     'status'    => false,
@@ -122,7 +137,12 @@ class ATKController extends Controller
                 ], 401);
 
                 Alert::warning('Warning', 'Failed to add new ATK !!');
-                return redirect()->route('index_atk_in');
+                if (Auth::user()->user_level == '0') {
+                    return redirect()->route('index_atk_in');
+                } elseif (Auth::user()->user_level == '4') {
+                    return redirect()->route('index_atk_in_hr_ga');
+                }
+                
             }
         }
     }
@@ -132,7 +152,8 @@ class ATKController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $atk_data = ATK_Master::find($id);
+        return response()->json($atk_data);
     }
 
     /**

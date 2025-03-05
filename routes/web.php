@@ -330,6 +330,16 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
             // Route::get('/HRGA/LetterNumber/Store/Create', [LetterNumberController::class, 'show'])->name('show_modal_create_letter_number');
             // Route::get('/refresh/number', [LetterNumberController::class, 'refresh_last_number'])->name('refresh_last_number');
 
+            // ATK
+            Route::get('/HRGA/ATK/Master/List', [ATKController::class, 'index'])->name('index_atk_master_hr_ga');
+            Route::post('/HRGA/ATK/Master/Store', [ATKController::class, 'store'])->name('store_atk_master_hr_ga');
+            Route::get('/HRGA/ATK/Master/Update', [ATKController::class, 'update'])->name('update_atk_master_hr_ga');
+            Route::get('/HRGA/ATK/Master/Create', [ATKController::class, 'create'])->name('show_modal_create_atk_hr_ga');
+            Route::get('/HRGA/ATK/Master/Show/{id}', [ATKController::class, 'show'])->name('show_atk_master_hr_ga');
+
+            Route::get('/HRGA/ATK/In', [ATKController::class, 'index_atk_in'])->name('index_atk_in_hr_ga');
+            Route::post('/HRGA/ATK/In/Store', [ATKController::class, 'store_atk_in'])->name('store_atk_in_hr_ga');
+
             // Adds on
             Route::get('/HRGA/data/json', [HREpurchaseController::class, 'get_old_pr_hr_ga'])->name('get_old_pr_hr_ga');
         });

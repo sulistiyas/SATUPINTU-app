@@ -12,7 +12,7 @@ class ATK_Master extends Model
     use SoftDeletes;
 
     public $table = 'atk_master';
-    protected $primaryKey = 'id_atk_master';
+    protected $primaryKey = 'id_atk';
     protected $fillable = [
         'atk_name',
         'atk_brand',
