@@ -57,7 +57,7 @@
                                                 <option value="I-Link">I-Link</option>
                                                 <option value="WSCC">WSCC</option>
                                                 <option value="WSCE">WSCE</option>
-                                                <option value="PT. Conexus">PT. Conexus</option>
+                                                {{-- <option value="PT. Conexus">PT. Conexus</option> --}}
                                                 @foreach ($data as $list_jn)
                                                     <option value="{{ $list_jn->id_jn }}">{{ $list_jn->job_number }}</option>
                                                 @endforeach

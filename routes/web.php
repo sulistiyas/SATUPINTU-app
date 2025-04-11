@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\Admin\ATKController;
+use App\Http\Controllers\ATKGlobalController;
 use App\Http\Controllers\HRGA\HRGAController;
 use App\Http\Controllers\Admin\AssetController;
 use App\Http\Controllers\Admin\UsersController;
@@ -13,12 +14,12 @@ use App\Http\Controllers\HRGA\InventoryController;
 use App\Http\Controllers\Admin\EPurchaseController;
 use App\Http\Controllers\Admin\JobNumberController;
 use App\Http\Controllers\Admin\LegalitasController;
+use App\Http\Controllers\EpurchaseReportController;
 use App\Http\Controllers\Manager\ManagerController;
 use App\Http\Controllers\OldData\OldPRPOController;
 use App\Http\Controllers\HRGA\HREpurchaseController;
 use App\Http\Controllers\HRGA\HRJobNumberController;
 use App\Http\Controllers\Admin\LetterNumberController;
-use App\Http\Controllers\EpurchaseReportController;
 use App\Http\Controllers\OldData\OldLetterNumberController;
 use App\Http\Controllers\Manager\EPurchaseManagerController;
 use App\Http\Controllers\Users\UsersController as UsersUsersController;
@@ -65,6 +66,10 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
     Route::get('EPurchase/Search/Print/PR/{id}', [EpurchaseReportController::class, 'print_pr_epurchase'])->name('print_pr_epurchase');
     Route::get('EPurchase/Search/Print/PO/{id}', [EpurchaseReportController::class, 'print_po_epurchase'])->name('print_po_epurchase');
 
+    // ATK Global Route
+    Route::get('ATK/Master/List',[ATKGlobalController::class, 'index'])->name('index_atk_global');
+    Route::get('ATK/Master/Show/{id}', [ATKGlobalController::class, 'show'])->name('show_atk_global');
+    
     Route::controller(LoginController::class)->group(function () {
         Route::get('/dashboard', 'index')->name('dashboard');
         // 
@@ -333,9 +338,10 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
             // ATK
             Route::get('/HRGA/ATK/Master/List', [ATKController::class, 'index'])->name('index_atk_master_hr_ga');
             Route::post('/HRGA/ATK/Master/Store', [ATKController::class, 'store'])->name('store_atk_master_hr_ga');
-            Route::get('/HRGA/ATK/Master/Update', [ATKController::class, 'update'])->name('update_atk_master_hr_ga');
+            Route::post('/HRGA/ATK/Master/Update', [ATKController::class, 'update'])->name('update_atk_master_hr_ga');
             Route::get('/HRGA/ATK/Master/Create', [ATKController::class, 'create'])->name('show_modal_create_atk_hr_ga');
             Route::get('/HRGA/ATK/Master/Show/{id}', [ATKController::class, 'show'])->name('show_atk_master_hr_ga');
+            Route::get('/HRGA/ATK/Master/Edit/{id}', [ATKController::class, 'edit'])->name('edit_atk_master_hr_ga');
 
             Route::get('/HRGA/ATK/In', [ATKController::class, 'index_atk_in'])->name('index_atk_in_hr_ga');
             Route::post('/HRGA/ATK/In/Store', [ATKController::class, 'store_atk_in'])->name('store_atk_in_hr_ga');

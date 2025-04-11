@@ -594,8 +594,8 @@ class HREpurchaseController extends Controller
                 foreach ($manager_data as $manager) {
                     $manager_email = $manager->email;
                 }
-                // $mail->to($manager_email);
-                $mail->to('sulis.nugroho@inlingua.co.id');
+                $mail->to($manager_email);
+                $mail->cc('sulis.nugroho@inlingua.co.id');
                 $mail->from(config('mail.from.name'));
                 $mail->subject('SATUPINTU - APP | Purchase Order Approval');
             });

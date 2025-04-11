@@ -79,7 +79,7 @@ class EPurchaseManagerController extends Controller
                             'updated_at'    => date('Y-m-d h:i:s')
                         ]);
                     }
-                    // return $this->SendMailPRAction($pr_no, $status);
+                    return $this->SendMailPRAction($pr_no, $status);
                 }
                 Alert::success('Success', 'Successfully Approve PR');
                 return redirect()->route('index_pr_manager');
@@ -108,7 +108,7 @@ class EPurchaseManagerController extends Controller
                         'pr_status'     => '6',
                         'updated_at'    => date('Y-m-d h:i:s')
                     ]);
-                    // return $this->SendMailPRAction($pr_no, $status);
+                    return $this->SendMailPRAction($pr_no, $status);
                     }
                 }
                 Alert::success('Danger', 'PR Rejected !!!');
@@ -487,7 +487,7 @@ class EPurchaseManagerController extends Controller
                 }
                 // $mail->to($manager_email);
                 $mail->to('sulis.nugroho@inlingua.co.id');
-                // $mail->cc($GA_email);
+                $mail->cc('adelia.wiratna@inlingua.co.id');
                 $mail->cc('sulis.nugroho@inlingua.co.id');
                 $mail->from(config('mail.from.name'));
                 $mail->subject('SATUPINTU - APP | Purchase Request Order');

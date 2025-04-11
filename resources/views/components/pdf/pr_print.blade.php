@@ -92,13 +92,32 @@
         }
     </style>
 </head>
+{{-- Header Data --}}
+@php
+$header_data = DB::table('pr')
+            ->join('employee', 'employee.id_employee', '=', 'pr.id_employee')
+            ->join('users', 'users.id', '=', 'employee.id_users')
+            ->where('pr.pr_no', '=', $pr_no)->get();
+@endphp
+@foreach ($header_data as $item_header)
 
+@endforeach
+{{-- End Header Data --}}
+{{-- PR Number --}}
 <body style="margin:0px; background: white; ">
     <table border="0" cellpadding="0" cellspacing="0" style="width: 100%; margin-top: -20px; background-color: white">
         <tbody>
             <tr>
                 <td style="padding-left:35px;" align="left">
-                    <img src="{{ asset('assets/dist/img/Inlingua_Logo-removebg-preview.png') }}" width="200" alt="Inlingua" style="border:none">
+                    @if ($item_header->job_number == "i-Link")
+                        <img src="{{ asset('assets/dist/img/ilink.png') }}" width="200" alt="Inlingua" style="border:none">
+                    @elseif (preg_match("/WSCE/",$item_header->job_number))
+                        <img src="{{ asset('assets/dist/img/wsce.png') }}" width="200" alt="Inlingua" style="border:none">
+                    @elseif (preg_match("/WSCC/",$item_header->job_number))
+                        <img src="{{ asset('assets/dist/img/wscc.png') }}" width="200" alt="Inlingua" style="border:none">
+                    @else
+                        <img src="{{ asset('assets/dist/img/Inlingua_Logo-removebg-preview.png') }}" width="200" alt="Inlingua" style="border:none">
+                    @endif
                 </td>
                 <td align="right" id="top-left">
                     Purchase Request

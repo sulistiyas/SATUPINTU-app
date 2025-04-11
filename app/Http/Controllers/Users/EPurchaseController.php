@@ -57,8 +57,21 @@ class EPurchaseController extends Controller
         $qty        = $request->quantity;
         $unit       = $request->unit;
         $pr_no      = $request->txt_pr_number;
-        $jn         = $request->txt_jn;
+        $jn_first   = $request->txt_jn;
         $idusers    = Auth::user()->id;
+
+        if ($jn_first == "Operational Office" || $jn_first == "I-Link" || $jn_first == "WSCC" || $jn_first == "WSCE") {
+            $jn = $request->txt_jn;
+        } else {
+            $get_jn = DB::table('jobnumber')
+            ->where('id_jn', '=', $jn_first)
+            ->where('deleted_at', '=', NULL)->get();
+            foreach ($get_jn as $item_jn) {
+                $jn = $item_jn->job_number;
+            }
+        }
+        
+        
         $division   = DB::table('employee')
             ->join('users', 'users.id', '=', 'employee.id_users')
             ->where('id_users', '=', $idusers)->get();
@@ -198,6 +211,8 @@ class EPurchaseController extends Controller
             }
         }
         // return $this->SendMailPR($idusers, $manager_id, $array_data, $pr_no, $jn);
+        Alert::success('Success', 'PR Updated Successfully');
+        return redirect()->route('index_pr_users');
     }
 
     public function show_modal_pr_users_add($id)

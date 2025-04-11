@@ -1,5 +1,23 @@
-@include('admin.includes.header')
-@include('admin.includes.sidebar')
+@if (Auth::user()->user_level == '0')
+    @include('admin.includes.header')
+    @include('admin.includes.sidebar')
+    
+@elseif (Auth::user()->user_level == '1' )
+    {{-- @include('dire.includes.header')
+    @include('dire.includes.sidebar')
+     --}}
+@elseif (Auth::user()->user_level == '2' )    
+    @include('manager.includes.header')
+    @include('manager.includes.sidebar')
+    
+@elseif (Auth::user()->user_level == '3' )    
+    @include('users.includes.header')
+    @include('users.includes.sidebar')
+
+@elseif (Auth::user()->user_level == '4' )
+    @include('hr_ga.includes.header')
+    @include('hr_ga.includes.sidebar')
+@endif
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <div class="content-header">
@@ -89,7 +107,17 @@
     <!-- /.content -->
     {{-- End Content --}}
 </div>
-@include('admin.includes.footer')
+@if (Auth::user()->user_level == '0')
+    @include('admin.includes.footer')
+@elseif (Auth::user()->user_level == '1' )
+    {{-- @include('dire.includes.footer')  --}}
+@elseif (Auth::user()->user_level == '2' )    
+    @include('manager.includes.footer')
+@elseif (Auth::user()->user_level == '3' )
+    @include('users.includes.footer')
+@elseif (Auth::user()->user_level == '4' )
+    @include('hr_ga.includes.footer')
+@endif
 <script>
     // Datatables
     $(function () {

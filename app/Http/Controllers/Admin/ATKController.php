@@ -161,15 +161,61 @@ class ATKController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $atk_data = ATK_Master::find($id);
+        return response()->json($atk_data);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'edit_atk_name' => 'required',
+            'edit_atk_brand' => 'required',
+            'edit_atk_stock' => 'required',
+            'edit_atk_unit' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status'    => false,
+                'message'   => 'Validation Error',
+                'errors'    => $validator->errors()
+            ]);
+        } else {
+            ATK_Master::where('id_atk', '=', $request->edit_atk_id)->update([
+                'atk_name'          => $request->edit_atk_name,
+                'atk_brand'         => $request->edit_atk_brand,
+                'atk_stock'         => $request->edit_atk_stock,
+                'atk_unit'          => $request->edit_atk_unit,
+                'updated_at'        => date('Y-m-d h:i:s')
+            ]);
+            Alert::success('Success', 'ATK Updated');
+            if (Auth::user()->user_level == '0') {
+                return redirect()->route('index_atk_master');
+            } elseif (Auth::user()->user_level == '4') {
+                return redirect()->route('index_atk_master_hr_ga');
+            }
+            // try {
+                
+                
+            // } catch (\Exception $ex) {
+            //     return response()->json([
+            //         'status'    => false,
+            //         'message'   => 'Error update data : ',
+            //         'errors'    => $ex
+            //     ], 401);
+
+            //     Alert::warning('Warning', 'Failed to update ATK !!');
+            //     if (Auth::user()->user_level == '0') {
+            //         return redirect()->route('index_atk_master');
+            //     } elseif (Auth::user()->user_level == '4') {
+            //         return redirect()->route('index_atk_master_hr_ga');
+            //     }
+                
+            // }
+        }
     }
 
     /**
