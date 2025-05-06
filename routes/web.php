@@ -84,7 +84,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
             Route::get('/Admin/JobNumber/Edit/{id}', [JobNumberController::class, 'edit'])->name('edit_jn_admin');
             Route::POST('/Admin/JobNumber/Update/{id}', [JobNumberController::class, 'update'])->name('update_jn_admin');
             Route::delete('/Admin/JobNumber/Destroy/{id}', [JobNumberController::class, 'destroy'])->name('destroy_jn_admin');
-            Route::get('/List_JN', [JobNumberController::class, 'refresh_jn_admin'])->name('refresh_jn_admin');
+            Route::get('/List_JN/Admin', [JobNumberController::class, 'refresh_jn_admin'])->name('refresh_jn_admin');
             // Client
             Route::get('/Admin/Client/List', [ClientController::class, 'index'])->name('index_client_admin');
             Route::get('/Admin/Client/Create', [ClientController::class, 'create'])->name('create_client_admin');
@@ -192,6 +192,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
             // Purchase Order
             Route::get('/Manager/EPurchase/PO/List', [EPurchaseManagerController::class, 'index_po'])->name('index_po_manager');
             Route::POST('/Manager/EPurchase/PO/Approve', [EPurchaseManagerController::class, 'approve_po_manager'])->name('approve_po_manager');
+            Route::POST('/Manager/EPurchase/PR/Approve_CheckBox_PO', [EPurchaseManagerController::class, 'approve_po_manager_checkbox'])->name('approve_po_manager_checkbox');
             // // Vendor
             // Route::get('/Admin/EPurchase/Vendor/List', [EPurchaseController::class, 'index_vendor'])->name('index_vendor_admin');
             // Route::get('/Admin/EPurchase/Vendor/Create', [EPurchaseController::class, 'create_vendor'])->name('create_vendor_admin');

@@ -100,32 +100,41 @@ class EPurchaseController extends Controller
             return redirect()->route('create_pr_users');
         } else {
             foreach ($rows as $key => $value) {
-                $array_data[] = array(
-                    'pr_no'                 => $pr_no,
-                    'job_number'            => $jn,
-                    'id_employee'           => $emp_id,
-                    'pr_title'              => $pr_title,
-                    'pr_desc'               => $desc[$key],
-                    'pr_qty'                => $qty[$key],
-                    'pr_unit'               => $unit[$key],
-                    'pr_status'             => 5,
-                    'pr_date'               => date('Y-m-d'),
-                    'id_manager'            => $manager_id,
-                    'created_at'            => date('Y-m-d h:i:s'),
-                );
+                if ($desc[$key]=="") {
+                    Alert::error('Error', 'PR Item Description Empty!!');
+                    return redirect()->route('create_pr_admin');
+                } else {
+                    if ($qty[$key]=="") {
+                        Alert::error('Error', 'PR Item Quantity Empty!!');
+                        return redirect()->route('create_pr_admin');
+                    } else {
+                        if ($unit[$key] == "Select Unit Type") {
+                            Alert::error('Error', 'PR Item Unit Empty!!');
+                            return redirect()->route('create_pr_admin');
+                        } else {
+                            $array_data[] = array(
+                                'pr_no'                 => $pr_no,
+                                'job_number'            => $jn,
+                                'id_employee'           => $idusers,
+                                'pr_title'              => $pr_title,
+                                'pr_desc'               => $desc[$key],
+                                'pr_qty'                => $qty[$key],
+                                'pr_unit'               => $unit[$key],
+                                'pr_status'             => 5,
+                                'pr_date'               => date('Y-m-d'),
+                                'id_manager'            => $manager_id,
+                                'created_at'            => date('Y-m-d h:i:s'),
+                            );
+                        }
+                        
+                        
+                    }
+                    
+                }
             }
-            // return view('emails.pr_send', [
-            //     'fullname'      => $emp_name,
-            //     'manager'       => $manager_name,
-            //     'data'          => $array_data,
-            //     'pr_no'         => $request->txt_pr_number,
-            //     'job_number'    => $request->txt_jn,
-            // ]);
-
             PurchaseRequest::insert($array_data);
             return $this->SendMailPR($idusers, $manager_id, $array_data, $pr_no, $jn);
             Alert::success('Success', 'PR Submitted Successfully');
-            // return redirect()->route('index_pr_users');
         }
     }
 

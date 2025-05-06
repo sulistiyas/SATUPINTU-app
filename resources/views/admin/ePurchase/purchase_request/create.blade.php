@@ -152,7 +152,7 @@
                       + '<td><input id="quantity[]" class="form-control" name="quantity[]" type="number" placeholder="Input Quantity only number"></td>'
                       + '<td>'
                         + '<select name="unit[]" id="unit[]" class="form-control select2bs4">'
-                          + '<option value="Unit">- Select Unit Type -</option>'
+                          + '<option value="Select Unit Type">- Select Unit Type -</option>'
                           + '<option value="Unit">Unit</option>'
                           + '<option value="Pcs">Pcs</option>'
                           + '<option value="Lusin">Lusin</option>'

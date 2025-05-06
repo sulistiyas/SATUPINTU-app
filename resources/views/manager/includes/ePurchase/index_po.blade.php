@@ -29,6 +29,9 @@
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
+                          <form onsubmit="return confirm('Are you sure you want to APPROVE this request ?');" action="{{ route('approve_po_manager_checkbox') }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="total_data" id="total_data" value="{{ $count_data }}">
                             <table id="tbl_po" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
@@ -38,11 +41,37 @@
                                         <th>Status</th>
                                         <th><i class="fas fa-cog"></i></th>
                                     </tr>
+                                    <tr>
+                                      @foreach ($data as $item_pr_top)
+                                      @endforeach
+                                      <th colspan="4">
+                                        <div class="icheck-primary d-inline">
+                                          <input type="checkbox" id="checkAll" name="checkAll" class="item-checkbox" onclick="toogleAllCheckbox()">
+                                          <label for="checkAll">
+                                            Select All
+                                          </label>
+                                        </div>
+                                      </th>
+                                      <th>
+                                        <button type="submit" name="btn_approval" id="btn_approval" value="approve_pr" class="btn bg-success" title="Approve PO"><i class="fas fa-check"></i>&nbsp; Approve Checked</button>&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <button type="submit" name="btn_approval" id="btn_approval" value="reject_pr" class="btn bg-danger" title="Reject PO"><i class="fas fa-times"></i>&nbsp; Reject Checked</button>&nbsp;&nbsp;&nbsp;&nbsp;      
+                                      </th>
+                                    </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($data as $item_pr)
                                         <tr>
-                                          <td>{{ $loop->iteration }}</td>
+                                          <td>
+                                            {{ $loop->iteration }}
+                                            @if ( $item_pr->po_status  == 2)
+                                              <div class="icheck-primary d-inline">
+                                                <input type="checkbox" id="ck_po_no_{{ $loop->iteration }}" name="ck_po_no[]" value="{{ $item_pr->po_no }}" class="item-checkbox" onclick="toogleSingleCheckbox()">
+                                                <label for="ck_po_no_{{ $loop->iteration }}">
+                                                </label>
+                                              </div>
+                                            @else
+                                            @endif
+                                          </td>
                                           <td><b>{{ $item_pr->pr_no_1 }}</b></td>
                                           <td>
                                             @if ($item_pr->po_no == "")
@@ -407,4 +436,19 @@
       });
 
   });
+</script>
+<script>
+  function toogleAllCheckbox() {
+    var checkboxes = document.querySelectorAll(".item-checkbox");
+    var total_datas = document.querySelectorAll(".item-checkbox").length;
+    
+    for (var checkbox of checkboxes) {
+      if (document.getElementById("checkAll").checked == true) {
+        checkbox.checked = true;
+      } else if(document.getElementById("checkAll").checked == false){
+        checkbox.checked = false;
+      }
+      
+    }
+  }
 </script>

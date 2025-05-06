@@ -21,6 +21,8 @@ use Illuminate\Support\Facades\Validator;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Yajra\DataTables\Facades\DataTables;
 
+use function PHPUnit\Framework\isEmpty;
+
 class EPurchaseController extends Controller
 {
     // Purchase Request Section Start
@@ -54,34 +56,29 @@ class EPurchaseController extends Controller
 
     public function store_pr(Request $request)
     {
-        // $idusers = Auth::user()->id;
-        // $division = DB::table('employee')->where('id_users', '=', $idusers)->get();
-        // foreach ($division as $item_div) {
-        //     $emp_div = $item_div->emp_division;
-        // }
-
-        // $id_manager = DB::table('employee')
-        //     ->join('users', 'users.id', '=', 'employee.id_users')
-        //     ->where('emp_division', '=', $emp_div)
-        //     ->where('emp_position', '=', "Manager")->get();
-        // foreach ($id_manager as $manager) {
-        //     $manager_id = $manager->name;
-        // }
-
-
-        try {
             $rows       = $request->rows;
             $pr_title   = $request->txt_pr_title;
             $desc       = $request->description;
             $qty        = $request->quantity;
             $unit       = $request->unit;
             $pr_no      = $request->txt_pr_number;
-            $jn         = $request->txt_jn;
+            $jn_first   = $request->txt_jn;
             $idusers    = Auth::user()->id;
-            $jn_code = DB::table('jobnumber')->where('id_jn', '=', $jn)->get();
-            foreach ($jn_code as $jn_codes) {
-                $jn_name = $jn_codes->job_number;
+
+            if ($jn_first == "Operational Office" || $jn_first == "I-Link" || $jn_first == "WSCC" || $jn_first == "WSCE") {
+                $jn = $request->txt_jn;
+            } else {
+                $get_jn = DB::table('jobnumber')
+                ->where('id_jn', '=', $jn_first)
+                ->where('deleted_at', '=', NULL)->get();
+                foreach ($get_jn as $item_jn) {
+                    $jn = $item_jn->job_number;
+                }
             }
+            // $jn_code = DB::table('jobnumber')->where('id_jn', '=', $jn)->get();
+            // foreach ($jn_code as $jn_codes) {
+            //     $jn_name = $jn_codes->job_number;
+            // }
             $division   = DB::table('employee')
                 ->join('users', 'users.id', '=', 'employee.id_users')
                 ->where('id_users', '=', $idusers)->get();
@@ -89,7 +86,13 @@ class EPurchaseController extends Controller
                 $emp_div = $item_div->emp_division;
                 $emp_name = $item_div->name;
             }
-
+            
+            $id_employee = DB::table('employee')
+            ->join('users', 'users.id', '=', 'employee.id_users')
+            ->where('users.id', '=', $idusers)->get();
+            foreach ($id_employee as $item_emp) {
+                $emp_id = $item_emp->id_employee;
+            }
             $id_manager = DB::table('employee')
                 ->join('users', 'users.id', '=', 'employee.id_users')
                 ->where('emp_division', '=', $emp_div)
@@ -98,42 +101,52 @@ class EPurchaseController extends Controller
                 $manager_id = $manager->id;
                 $manager_name = $manager->name;
             }
-            foreach ($rows as $key => $value) {
-                $array_data[] = array(
-                    'pr_no'                 => $pr_no,
-                    'job_number'            => $jn,
-                    'id_employee'           => $idusers,
-                    'pr_title'              => $pr_title,
-                    'pr_desc'               => $desc[$key],
-                    'pr_qty'                => $qty[$key],
-                    'pr_unit'               => $unit[$key],
-                    'pr_status'             => 5,
-                    'pr_date'               => date('Y-m-d'),
-                    'id_manager'            => $manager_id,
-                    'created_at'            => date('Y-m-d h:i:s'),
-                );
+            if ($rows == null) {
+                Alert::error('Error', 'PR Item Empty!!');
+                return redirect()->route('create_pr_admin');
+            }else{
+                foreach ($rows as $key => $value) {
+                    if ($desc[$key]=="") {
+                        Alert::error('Error', 'PR Item Description Empty!!');
+                        return redirect()->route('create_pr_admin');
+                    } else {
+                        if ($qty[$key]=="") {
+                            Alert::error('Error', 'PR Item Quantity Empty!!');
+                            return redirect()->route('create_pr_admin');
+                        } else {
+                            if ($unit[$key] == "Select Unit Type") {
+                                Alert::error('Error', 'PR Item Unit Empty!!');
+                                return redirect()->route('create_pr_admin');
+                            } else {
+                                $array_data[] = array(
+                                    'pr_no'                 => $pr_no,
+                                    'job_number'            => $jn,
+                                    'id_employee'           => $idusers,
+                                    'pr_title'              => $pr_title,
+                                    'pr_desc'               => $desc[$key],
+                                    'pr_qty'                => $qty[$key],
+                                    'pr_unit'               => $unit[$key],
+                                    'pr_status'             => 5,
+                                    'pr_date'               => date('Y-m-d'),
+                                    'id_manager'            => $manager_id,
+                                    'created_at'            => date('Y-m-d h:i:s'),
+                                );
+                            }
+                            
+                            
+                        }
+                        
+                    }
+                    
+                }
+                // dd($rows);
+                PurchaseRequest::insert($array_data);
+                return $this->SendMailPR($idusers, $manager_id, $array_data, $pr_no, $jn);
+                Alert::success('Success', 'PR Submitted Successfully');
+                
+                
+                
             }
-            // return view('emails.pr_send', [
-            //     'fullname'      => $emp_name,
-            //     'manager'       => $manager_name,
-            //     'data'          => $array_data,
-            //     'pr_no'         => $request->txt_pr_number,
-            //     'job_number'    => $request->txt_jn,
-            // ]);
-
-            PurchaseRequest::insert($array_data);
-            return $this->SendMailPR($idusers, $manager_id, $array_data, $pr_no, $jn_name);
-            Alert::success('Success', 'PR Submitted Successfully');
-            return redirect()->route('index_pr_admin');
-        } catch (\Exception $th) {
-            return response()->json([
-                'status'    => false,
-                'message'   => 'Error Send mail : ',
-                'errors'    => $th
-            ], 401);
-            Alert::error('error', 'Failed to Create Data!!');
-            return redirect()->route('create_pr_admin');
-        }
     }
 
     public function print_pr_admin(Request $request)
@@ -152,7 +165,7 @@ class EPurchaseController extends Controller
         $pr_data = DB::table('pr')->select('*','pr.job_number as id_jn_pr', 'jobnumber.job_number as jn')
             ->join('employee', 'employee.id_employee', '=', 'pr.id_employee')
             ->join('users', 'users.id', '=', 'employee.id_users')
-            ->join('jobnumber', 'jobnumber.id_jn', '=', 'pr.job_number')
+            ->join('jobnumber', 'jobnumber.job_number', '=', 'pr.job_number')
             ->where('pr.pr_no', '=', $id)->get();
         // $pr_data = DB::table('pr')->where('pr_no', '=', $id)->get();
         return view('components.modals.admin_modals.e_purchase.pr.pr_admin_show', ['data_pr' => $pr_data]);
