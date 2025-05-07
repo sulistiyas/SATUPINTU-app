@@ -131,6 +131,32 @@ class HREpurchaseController extends Controller
         }
         
     }
+    public function get_pr_hr_ga($pr_no){
+        $pr_data = PurchaseRequest::firstWhere('pr_no', '=', $pr_no);
+        // dd($pr_data);
+        return response()->json($pr_data);
+    }
+    public function approve_final_pr(Request $request){
+        // 
+        $status_approval = $request->btn_approval;
+        $pr_no = $request->app_txt_pr_no;
+        if ($status_approval == "approve_final_pr"){
+            $update_pr = PurchaseRequest::where('pr_no', '=', $pr_no)->update([
+                'pr_status'     => '4',
+                'updated_at'    => date('Y-m-d h:i:s')
+            ]);
+            Alert::success('Success', 'Successfully Approve PR');
+            return redirect()->route('index_pr_hr_ga');
+        }else if ($status_approval == "reject_final_pr"){
+            $update_pr = PurchaseRequest::where('pr_no', '=', $pr_no)->update([
+                'pr_status'     => '6',
+                'pr_reason'    => $request->txt_pr_reject_reason,
+                'updated_at'    => date('Y-m-d h:i:s')
+            ]);
+            Alert::success('Danger', 'PR Rejected !!!');
+            return redirect()->route('index_pr_hr_ga');
+        }
+    }
     public function print_pr_hr_ga(Request $request)
     {
         $pr_no = $request->txt_pr_no;

@@ -288,6 +288,8 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
             Route::POST('/HRGA/EPurchase/PR/Update/{id}', [HREpurchaseController::class, 'update_pr'])->name('update_pr_hr_ga');
             Route::delete('/HRGA/EPurchase/PR/Destroy/{id}', [HREpurchaseController::class, 'destroy_pr'])->name('destroy_pr_hr_ga');
             Route::get('/HRGA/refresh/pr', [HREpurchaseController::class, 'refresh_pr_hr_ga'])->name('refresh_pr_hr_ga');
+            Route::post('/HRGA/EPurchase/PR/FinalApproval',[HREpurchaseController::class,'approve_final_pr'])->name('approve_final_pr_hr_ga');
+            Route::get('/PRData/{id}',[HREpurchaseController::class,'get_pr_hr_ga'])->name('get_pr_update_hr_ga');
             // Purchase Order
             Route::get('/HRGA/EPurchase/PO/List', [HREpurchaseController::class, 'index_po'])->name('index_po_hr_ga');
             Route::get('/HRGA/EPurchase/PO/Create', [HREpurchaseController::class, 'create_po'])->name('create_po_hr_ga');

@@ -75,7 +75,7 @@ class EPurchaseManagerController extends Controller
                         return redirect()->route('index_pr_manager');
                     } else {
                         $pr_data = PurchaseRequest::where('pr_no', '=', $request->ck_pr_no[$j])->update([
-                            'pr_status'     => '4',
+                            'pr_status'     => '8',
                             'updated_at'    => date('Y-m-d h:i:s')
                         ]);
                     }

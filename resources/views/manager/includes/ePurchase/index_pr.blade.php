@@ -114,6 +114,8 @@
                                               PR Rejected
                                             @elseif ( $item_pr->pr_status == 7)
                                               PO Rejected
+                                            @elseif ( $item_pr->pr_status == 8)
+                                              PR Final Check by GA
                                             @endif
                                           </td>
                                           <td>
@@ -136,7 +138,7 @@
                                                   <button type="submit" name="btn_approval" id="btn_approval" value="reject_pr" class="btn bg-danger" title="Reject PR"><i class="fas fa-times"></i></button>
                                                 </form>
                                               </div>
-                                              @elseif ( $item_pr->pr_status  == 4 || $item_pr->pr_status  == 3 || $item_pr->pr_status  == 2 || $item_pr->pr_status  == 1)
+                                              @elseif ( $item_pr->pr_status  == 4 || $item_pr->pr_status  == 3 || $item_pr->pr_status  == 2 || $item_pr->pr_status  == 1 || $item_pr->pr_status  == 8)
                                               <div class="col-7">
                                                 <button type="button" class="btn btn-outline-primary" title="Show Data" data-toggle="modal" data-target="#modal_pr_show_manager" id="getPR" data-url="{{ route('show_modal_pr_manager',['id'=>$item_pr->pr_no])}}"><i class="fas fa-eye">&nbsp;View Data</i></button>
                                               </div>
