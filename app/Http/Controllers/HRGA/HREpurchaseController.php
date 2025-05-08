@@ -382,6 +382,7 @@ class HREpurchaseController extends Controller
                 'po_delivery_fee'       => $delivery_fee,
                 'po_additional_charge'  => $addtional_charge,
                 'po_status'             => '2',
+                'po_notes'              => $request->txt_po_notes,
                 'updated_at'            => date('Y-m-d h:i:s')
             ]);
             $pr_data = PurchaseRequest::where('pr_no', '=', $pr_no)->update([
@@ -426,25 +427,6 @@ class HREpurchaseController extends Controller
                 $a_tax = ($tax / 100) * $total_disc;
                 $grand_total = $total_disc + $a_tax + $service_charge + $delivery_fee + $addtional_charge; 
                 return $this->SendMailPO($emp_name, $mng_name, $po_data, $disc, $a_tax, $sub, $grand_total, $service_charge, $delivery_fee, $addtional_charge);
-            }
-
-            
-            
-            try {
-
-
-                // return $this->SendMailPO($emp_name, $mng_name, $po_data, $a_disc, $a_tax, $sub, $grand_total);
-                Alert::success('Success', 'Successfully Insert PO');
-                return redirect()->route('index_po_hr_ga');
-                // dd($po_no);
-            } catch (\Exception $ex) {
-                return response()->json([
-                    'status'    => false,
-                    'message'   => 'Error : ',
-                    'errors'    => $ex
-                ], 401);
-                Alert::error('Error', 'Error Insert PO');
-                return redirect()->route('index_po_hr_ga');
             }
         }
     }

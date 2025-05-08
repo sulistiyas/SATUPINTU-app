@@ -31,6 +31,7 @@ return new class extends Migration
             $table->float('po_delivery_fee')->nullable();
             $table->float('po_additional_charge')->nullable();
             $table->string('po_rev')->nullable();
+            $table->string('po_notes')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

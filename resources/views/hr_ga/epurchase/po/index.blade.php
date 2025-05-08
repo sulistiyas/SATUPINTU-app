@@ -231,6 +231,12 @@
                       <th><Label for="txt_delivery_fee">Additional Charge</Label></th>
                       <th><input type="number" name="txt_adds_charge" id="txt_adds_charge" class="form-control" placeholder="Optional"></th>
                     </tr>
+                    <tr>
+                      <th colspan="6">
+                        <label for="txt_payment_terms">Payment Terms</label>
+                        <textarea name="txt_payment_terms" id="txt_payment_terms" class="form-control" rows="3" placeholder="Optional"></textarea>
+                      </th>
+                    </tr>
                   </table>
               </div>
               <div class="modal-footer justify-content-between">
