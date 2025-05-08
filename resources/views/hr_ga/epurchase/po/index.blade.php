@@ -203,7 +203,25 @@
                         </div>
                       </th>
                       <th><Label for="txt_disc">Discount</Label></th>
-                      <th><input type="number" name="txt_disc" id="txt_disc" class="form-control"></th>
+                      <th>
+                        <div class="custom-control custom-radio">
+                          <input class="custom-control-input custom-control-input-danger custom-control-input-outline" type="radio" id="diskon_type" name="diskon_type" value="diskon" onclick="toogleInput()">
+                          <label for="diskon_type" class="custom-control-label">Percentage (%)</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                          <input class="custom-control-input custom-control-input-danger custom-control-input-outline" type="radio" id="diskon_type_1" name="diskon_type" value="harga_normal" onclick="toogleInput()">
+                          <label for="diskon_type_1" class="custom-control-label">Normal Price Number</label>
+                        </div>
+                      </th>
+                      <th>
+                        <div id="input_box_diskon" style="display: none;">
+                          <input type="number" name="txt_disc"  id="txt_disc" class="form-control" placeholder="Percetage (%)" >
+                        </div>
+                        <div id="input_box_harga_normal" style="display: none;">
+                          <input type="number" name="txt_harga_normal" id="txt_harga_normal" class="form-control" placeholder="Normal Price Number">
+                        </div>
+                      </th>
+                      {{-- <th><input type="number" name="txt_disc" id="txt_disc" class="form-control"></th> --}}
                     </tr>
                     <tr>
                       <th><Label for="txt_service_charge">Service Charge</Label></th>
@@ -435,4 +453,27 @@
       toastr.error('PO NOT APPROVED by MANAGER.')
     });
   });
+</script>
+
+{{-- Fungsi Mengubah inputan diskon --}}
+
+<script>
+  function toogleInput(){
+    const select_diskon = document.querySelector('input[name="diskon_type"]:checked').value;
+    // const select_harga_normal = document.getElementById('select_harga_normal');
+
+    const input_box_diskon = document.getElementById('input_box_diskon');
+    const input_box_harga_normal = document.getElementById('input_box_harga_normal');
+
+    if(select_diskon == 'diskon'){
+      input_box_diskon.style.display = 'block';
+      input_box_harga_normal.style.display = 'none';
+    }else if(select_diskon == 'harga_normal'){
+      input_box_diskon.style.display = 'none';
+      input_box_harga_normal.style.display = 'block';
+    }else{
+      input_box_diskon.style.display = 'none';
+      input_box_harga_normal.style.display = 'none';
+    }
+  }
 </script>

@@ -51,7 +51,7 @@
           @foreach ($data_pr as $item_list)
               <tr>
                   <td>
-                    {{ $loop->iteration }}
+                    {{ $loop->iteration }}.
                     <input type="hidden" name="txt_id_pr[]" id="txt_id_pr[]" value="{{ $item_list->id_pr }}">
                     <input type="hidden" name="txt_po_no[]" id="txt_po_no[]" value="{{ $po_no }}">
                   </td>
@@ -79,3 +79,5 @@
       });
     });
   </script>
+
+  

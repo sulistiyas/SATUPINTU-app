@@ -72,6 +72,7 @@ class HREpurchaseController extends Controller
         foreach ($division as $item_div) {
             $emp_div = $item_div->emp_division;
             $emp_name = $item_div->name;
+            
         }
         $id_employee = DB::table('employee')
             ->join('users', 'users.id', '=', 'employee.id_users')
@@ -89,25 +90,25 @@ class HREpurchaseController extends Controller
             $manager_name = $manager->name;
         }if ($rows == null) {
             Alert::error('Error', 'PR Item Empty!!');
-            return redirect()->route('create_pr_users');
+            return redirect()->route('create_pr_hr_ga');
         } else {
             foreach ($rows as $key => $value) {
                 if ($desc[$key]=="") {
                     Alert::error('Error', 'PR Item Description Empty!!');
-                    return redirect()->route('create_pr_admin');
+                    return redirect()->route('create_pr_hr_ga');
                 } else {
                     if ($qty[$key]=="") {
                         Alert::error('Error', 'PR Item Quantity Empty!!');
-                        return redirect()->route('create_pr_admin');
+                        return redirect()->route('create_pr_hr_ga');
                     } else {
                         if ($unit[$key] == "Select Unit Type") {
                             Alert::error('Error', 'PR Item Unit Empty!!');
-                            return redirect()->route('create_pr_admin');
+                            return redirect()->route('create_pr_hr_ga');
                         } else {
                             $array_data[] = array(
                                 'pr_no'                 => $pr_no,
                                 'job_number'            => $jn,
-                                'id_employee'           => $idusers,
+                                'id_employee'           => $emp_id,
                                 'pr_title'              => $pr_title,
                                 'pr_desc'               => $desc[$key],
                                 'pr_qty'                => $qty[$key],
@@ -205,19 +206,30 @@ class HREpurchaseController extends Controller
             $sub = $subs->sub_total;
         }
         foreach ($data_po as $item) {
+            $disc_type = $item->po_disc_type;
             $disc = $item->po_disc;
             $tax = $item->po_tax;
             $service_charge = $item->po_service_charge;
             $delivery_fee = $item->po_delivery_fee;
             $addtional_charge = $item->po_additional_charge;
         }
-        $a_disc = ($disc / 100) * $sub;
-        $total_disc = $sub - $a_disc ;
-        $a_tax = ($tax / 100) * $total_disc;
-        $grand_total = $total_disc + $a_tax + $service_charge + $delivery_fee + $addtional_charge;
-        $total_prices = DB::table('po')->selectRaw('SUM(total_price) as grand_total')->where('po_no', '=', $id)->get();
+        if($disc_type == "diskon"){
+            $a_disc = ($disc / 100) * $sub;
+            $total_disc = $sub - $a_disc ;
+            $a_tax = ($tax / 100) * $total_disc;
+            $grand_total = $total_disc + $a_tax + $service_charge + $delivery_fee + $addtional_charge;
+            $total_prices = DB::table('po')->selectRaw('SUM(total_price) as grand_total')->where('po_no', '=', $id)->get();
         $vendor_data = DB::table('vendor')->where('deleted_at', '=', NULL)->orderBy('vendor', 'asc')->get();
         return view('components.modals.admin_modals.e_purchase.po.po_admin', compact('data_po', 'total_prices', 'vendor_data','sub','a_disc','a_tax','grand_total','service_charge','delivery_fee','addtional_charge'));
+        }else if($disc_type == "harga_normal"){
+            $total_disc = $sub - $disc ;
+            $a_tax = ($tax / 100) * $total_disc;
+            $grand_total = $total_disc + $a_tax + $service_charge + $delivery_fee + $addtional_charge;
+            $total_prices = DB::table('po')->selectRaw('SUM(total_price) as grand_total')->where('po_no', '=', $id)->get();
+        $vendor_data = DB::table('vendor')->where('deleted_at', '=', NULL)->orderBy('vendor', 'asc')->get();
+        return view('components.modals.admin_modals.e_purchase.po.po_admin', compact('data_po', 'total_prices', 'vendor_data','sub','disc','a_tax','grand_total','service_charge','delivery_fee','addtional_charge'));
+        }
+        
     }
 
     public function show_modal_create_po_hr_ga($id)
@@ -336,7 +348,8 @@ class HREpurchaseController extends Controller
             $po_no = $request->txt_po_no;
             $pr_no = $request->txt_pr_no;
             $total_price = $request->txt_total_price;
-            $disc = $request->txt_disc;
+            $disc_type = $request->diskon_type;
+            // $disc = $request->txt_disc;
             $tax = $request->txt_tax;
             $service_charge = $request->txt_service_charge;
             $delivery_fee = $request->txt_delivery_fee;
@@ -344,6 +357,11 @@ class HREpurchaseController extends Controller
             $count_data = $request->txt_count_data;
             $addtional_charge = $request->txt_adds_charge;
 
+            if($disc_type == "diskon"){
+                $disc = $request->txt_disc;
+            }else if($disc_type == "harga_normal"){
+                $disc = $request->txt_harga_normal;
+            }
 
             foreach ($count_data as $key => $value) {
                 // $a_disc = ($disc / 100) * $total_price;
@@ -357,6 +375,7 @@ class HREpurchaseController extends Controller
             }
             $po_data = PurchaseOrder::where('po_no', '=', $po_no)->update([
                 'id_vendor'             => $vendor,
+                'po_disc_type'          => $disc_type,
                 'po_disc'               => $disc,
                 'po_tax'                => $tax,
                 'po_service_charge'     => $service_charge,
@@ -396,11 +415,21 @@ class HREpurchaseController extends Controller
                 $sub = $subs->sub_total;
             }
 
-            $a_disc = ($disc / 100) * $sub;
-            $total_disc = $sub - $a_disc ;
-            $a_tax = ($tax / 100) * $total_disc;
-            $grand_total = $total_disc + $a_tax + $service_charge + $delivery_fee + $addtional_charge;
-            return $this->SendMailPO($emp_name, $mng_name, $po_data, $a_disc, $a_tax, $sub, $grand_total, $service_charge, $delivery_fee, $addtional_charge);
+            if($disc_type == "diskon"){
+                $a_disc = ($disc / 100) * $sub;
+                $total_disc = $sub - $a_disc ;
+                $a_tax = ($tax / 100) * $total_disc;
+                $grand_total = $total_disc + $a_tax + $service_charge + $delivery_fee + $addtional_charge; 
+                return $this->SendMailPO($emp_name, $mng_name, $po_data, $a_disc, $a_tax, $sub, $grand_total, $service_charge, $delivery_fee, $addtional_charge);
+            }else if($disc_type == "harga_normal"){
+                $total_disc = $sub - $disc ;
+                $a_tax = ($tax / 100) * $total_disc;
+                $grand_total = $total_disc + $a_tax + $service_charge + $delivery_fee + $addtional_charge; 
+                return $this->SendMailPO($emp_name, $mng_name, $po_data, $disc, $a_tax, $sub, $grand_total, $service_charge, $delivery_fee, $addtional_charge);
+            }
+
+            
+            
             try {
 
 

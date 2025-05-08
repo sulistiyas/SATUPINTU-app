@@ -22,6 +22,7 @@ class PurchaseOrder extends Model
         'po_date',
         'po_status',
         'po_approve',
+        'po_disc_type',
         'po_disc',
         'po_tax',
         'po_service_charge',

@@ -121,7 +121,7 @@ class EPurchaseController extends Controller
                                 $array_data[] = array(
                                     'pr_no'                 => $pr_no,
                                     'job_number'            => $jn,
-                                    'id_employee'           => $idusers,
+                                    'id_employee'           => $emp_id,
                                     'pr_title'              => $pr_title,
                                     'pr_desc'               => $desc[$key],
                                     'pr_qty'                => $qty[$key],

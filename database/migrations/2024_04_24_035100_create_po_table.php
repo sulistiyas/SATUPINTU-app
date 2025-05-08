@@ -15,13 +15,16 @@ return new class extends Migration
             $table->id('id_po');
             $table->string('po_no');
             $table->string('id_pr');
-            $table->foreignId('id_vendor')->references('id_vendor')->on('vendor')->onUpdate('cascade')->onDelete('cascade')->nullable();
+            $table->bigInteger('id_vendor')->unsigned()->nullable();
+            $table->foreign('id_vendor')->references('id_vendor')->on('vendor')->onUpdate('cascade')->onDelete('cascade');
+            // $table->foreignId('id_vendor')->references('id_vendor')->on('vendor')->onUpdate('cascade')->onDelete('cascade')->nullable();
             $table->string('currency')->nullable();
             $table->float('price');
             $table->float('total_price');
             $table->date('po_date');
             $table->string('po_status');
             $table->string('po_approve');
+            $table->float('po_disc_type')->nullable();
             $table->float('po_disc')->nullable();
             $table->float('po_tax')->nullable();
             $table->float('po_service_charge')->nullable();
