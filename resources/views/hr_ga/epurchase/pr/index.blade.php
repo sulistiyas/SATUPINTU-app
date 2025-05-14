@@ -97,7 +97,7 @@
                                                     <button type="submit" id="print_pr" class="btn bg-secondary" title="Print PR"><i class="fas fa-print"></i></i></button>&nbsp;
                                                   </form>
                                               @elseif ( $item_pr->pr_status == 8)
-                                                  <form onsubmit="return confirm('Are you sure you want to Process this request ?');" action="{{ route('approve_final_pr_hr_ga') }}" method="POST">
+                                                  <form onsubmit="return confirm('Are you sure you want to Process this request ?');" action="{{ route('approve_final_pr_hr_ga') }}" method="POST" enctype="multipart/form-data">
                                                     @csrf
                                                     <input type="hidden" name="txt_pr_no" id="txt_pr_no" value="{{ $item_pr->pr_no }}">
                                                     <button type="submit" id="approve_pr" name="btn_approval" value="approve_pr" class="btn bg-success" title="Approve PR"><i class="fas fa-check-circle"></i></i></button>&nbsp;

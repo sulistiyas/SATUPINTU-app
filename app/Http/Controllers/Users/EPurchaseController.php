@@ -115,7 +115,7 @@ class EPurchaseController extends Controller
                             $array_data[] = array(
                                 'pr_no'                 => $pr_no,
                                 'job_number'            => $jn,
-                                'id_employee'           => $idusers,
+                                'id_employee'           => $emp_id,
                                 'pr_title'              => $pr_title,
                                 'pr_desc'               => $desc[$key],
                                 'pr_qty'                => $qty[$key],
@@ -190,6 +190,13 @@ class EPurchaseController extends Controller
             $manager_name = $manager->name;
         }
 
+        $id_employee = DB::table('employee')
+            ->join('users', 'users.id', '=', 'employee.id_users')
+            ->where('users.id', '=', $idusers)->get();
+        foreach ($id_employee as $item_emp) {
+            $emp_id = $item_emp->id_employee;
+        }
+
         $count_data = DB::table('pr')->where('pr_no', '=', $pr_no)->count();
         $pr_data = PurchaseRequest::where('pr_no', '=', $pr_no)->first();
         $rows[]       = $count_data;
@@ -197,7 +204,7 @@ class EPurchaseController extends Controller
             $array_data[] = array(
                 'pr_no'                 => $pr_no,
                 'job_number'            => $jn,
-                'id_employee'           => $idusers,
+                'id_employee'           => $emp_id,
                 'pr_title'              => $pr_title,
                 'pr_desc'               => $desc[$key],
                 'pr_qty'                => $qty[$key],
@@ -261,11 +268,18 @@ class EPurchaseController extends Controller
             $manager_id = $manager->id;
             $manager_name = $manager->name;
         }
+
+        $id_employee = DB::table('employee')
+            ->join('users', 'users.id', '=', 'employee.id_users')
+            ->where('users.id', '=', $idusers)->get();
+        foreach ($id_employee as $item_emp) {
+            $emp_id = $item_emp->id_employee;
+        }
         foreach ($rows as $key => $value) {
             $array_data[] = array(
                 'pr_no'                 => $pr_no,
                 'job_number'            => $jn,
-                'id_employee'           => $idusers,
+                'id_employee'           => $emp_id,
                 'pr_title'              => $pr_title,
                 'pr_desc'               => $desc[$key],
                 'pr_qty'                => $qty[$key],

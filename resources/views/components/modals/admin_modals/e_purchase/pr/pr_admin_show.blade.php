@@ -5,7 +5,7 @@
           
       @endforeach
       <tr>
-        <th>PR Number </th>
+        <th >PR Number </th>
         <td>:</td>
         <th>{{ $item_single->pr_no }}</th>
       </tr>

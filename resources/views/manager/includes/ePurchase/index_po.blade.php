@@ -31,7 +31,7 @@
                         <div class="card-body">
                           <form onsubmit="return confirm('Are you sure you want to APPROVE this request ?');" action="{{ route('approve_po_manager_checkbox') }}" method="POST">
                             @csrf
-                            <input type="hidden" name="total_data" id="total_data" value="{{ $count_data }}">
+                            {{-- <input type="hidden" name="total_data" id="total_data" value="{{ $count_data }}"> --}}
                             <table id="tbl_po" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>

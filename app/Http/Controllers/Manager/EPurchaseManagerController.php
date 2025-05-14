@@ -62,8 +62,6 @@ class EPurchaseManagerController extends Controller
         // $rows[]         = $count_data;
 
         if ($pr_approval == "approve_pr") {
-            
-            try {
                 $status = "Approved";
                 for ($j=0; $j < $total_datas; $j++) { 
                     $flag = DB::table('pr')->where('pr_no', '=', $request->ck_pr_no[$j])->get();
@@ -83,15 +81,17 @@ class EPurchaseManagerController extends Controller
                 }
                 Alert::success('Success', 'Successfully Approve PR');
                 return redirect()->route('index_pr_manager');
-            } catch (\Exception $ex) {
-                return response()->json([
-                    'status'    => false,
-                    'message'   => 'Error : ',
-                    'errors'    => $ex
-                ], 401);
-                Alert::success('Danger', 'Failed Approve Request');
-                return redirect()->route('index_pr_manager');
-            }
+            // try {
+                
+            // } catch (\Exception $ex) {
+            //     return response()->json([
+            //         'status'    => false,
+            //         'message'   => 'Error : ',
+            //         'errors'    => $ex
+            //     ], 401);
+            //     Alert::success('Danger', 'Failed Approve Request');
+            //     return redirect()->route('index_pr_manager');
+            // }
         } else if ($pr_approval == "reject_pr") {
             try {
                 $status = "Rejected";
@@ -439,13 +439,13 @@ class EPurchaseManagerController extends Controller
 
     public function SendMailPRAction($pr_no, $status)
     {
-        try {
-
             $emp_data = DB::table('pr')
-                ->join('users', 'users.id', '=', 'pr.id_employee')
+                ->join('employee', 'employee.id_employee', '=', 'pr.id_employee')
+                ->join('users', 'users.id', '=', 'employee.id_users')
                 ->where('pr.pr_no', '=', $pr_no)->get();
             foreach ($emp_data as $item_emp) {
                 $emp_name = $item_emp->name;
+                
             }
 
             $manager_data = DB::table('pr')
@@ -462,13 +462,24 @@ class EPurchaseManagerController extends Controller
                 'data'          => $data_request,
                 'pr_no'         => $pr_no,
                 'status'        => $status
-            ], function ($mail) {
+            ], function ($mail) use ($pr_no) {
                 $id_users = Auth::user()->id;
                 $emp_data   = DB::table('employee')
                     ->join('users', 'users.id', '=', 'employee.id_users')
                     ->where('id_users', '=', $id_users)->get();
                 foreach ($emp_data as $item_emp) {
                     $emp_div = $item_emp->emp_division;
+                    
+                }
+
+                 $emp_data2 = DB::table('pr')->selectRaw('* ,pr.id_employee as id_emp')
+                    ->join('employee', 'employee.id_employee', '=', 'pr.id_employee')
+                    ->join('users', 'users.id', '=', 'employee.id_users')
+                    // ->where('employee.emp_position', '=', "Staff")
+                    ->where('pr.pr_no', '=', $pr_no)->get();
+                foreach ($emp_data2 as $item_emp2) {
+                    $emp_mail2 = $item_emp2->email;
+                    // dd($emp_mail2);
                 }
 
                 $manager_data = DB::table('employee')
@@ -480,34 +491,27 @@ class EPurchaseManagerController extends Controller
                 }
 
                 $ga_data = DB::table('users')
-                    ->where('user_level', '=', '0')
+                    ->where('user_level', '=', '4')
                     ->where('deleted_at', '=', NULL)->get();
                 foreach ($ga_data as $data_ga) {
                     $GA_email = $data_ga->email;
                 }
                 // $mail->to($manager_email);
-                $mail->to('sulis.nugroho@inlingua.co.id');
-                $mail->cc('adelia.wiratna@inlingua.co.id');
+                $mail->to($emp_mail2);
+                $mail->to($GA_email);
                 $mail->cc('sulis.nugroho@inlingua.co.id');
                 $mail->from(config('mail.from.name'));
                 $mail->subject('SATUPINTU - APP | Purchase Request Order');
+                
             });
             if ($status == "Approved") {
+                dd($status);
                 Alert::success('Success', 'PR Submitted Successfully');
                 return redirect()->route('index_pr_manager');
             } elseif ($status == "Rejected") {
                 Alert::danger('Warning', 'PR Rejected');
                 return redirect()->route('index_pr_manager');
             }
-        } catch (\Exception $th) {
-            return response()->json([
-                'status'    => false,
-                'message'   => 'Error Send mail : ',
-                'errors'    => $th
-            ], 401);
-            Alert::error('error', 'Failed to Create Data!!');
-            return redirect()->route('index_pr_manager');
-        }
     }
 
     public function SendMailPOAction($emp_name, $mng_name, $po_data, $a_disc, $a_tax, $sub, $grand_total, $status)
