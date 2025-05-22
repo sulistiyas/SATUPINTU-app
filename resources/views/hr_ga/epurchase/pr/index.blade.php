@@ -48,7 +48,7 @@
                                           <td>{{ $item_pr->pr_title }}</td>
                                           <td>
                                             @if ( $item_pr->pr_status  == 5)
-                                              Waiting Manager/HR-GA Approval
+                                              Waiting Manager Approval
                                             @elseif ( $item_pr->pr_status == 4)
                                               PR Approved
                                             @elseif ( $item_pr->pr_status == 3)
@@ -62,13 +62,13 @@
                                             @elseif ( $item_pr->pr_status == 7)
                                               PO Rejected
                                             @elseif ( $item_pr->pr_status == 8)
-                                              PR Final Check
+                                              PR Final Check by GA
                                             @endif
                                           </td>
                                           <td>
                                             <div class="btn-group">
                                               @if ($item_pr->pr_status  == 5)
-                                                  <form onsubmit="return confirm('Are you sure you want to APPROVE this request ?');" action="{{ route('approve_pr_hr_ga') }}" method="POST">
+                                                  {{-- <form onsubmit="return confirm('Are you sure you want to APPROVE this request ?');" action="{{ route('approve_pr_hr_ga') }}" method="POST">
                                                     @csrf
                                                     <input type="hidden" name="txt_pr_no" id="txt_pr_no" value="{{ $item_pr->pr_no }}" readonly>
                                                     <button type="submit" name="btn_approval" id="btn_approval" value="approve_pr" class="btn bg-success" title="Approve PR"><i class="far fa-check-circle"></i></button>&nbsp;
@@ -77,12 +77,12 @@
                                                     @csrf
                                                     <input type="hidden" name="txt_pr_no" id="txt_pr_no" value="{{ $item_pr->pr_no }}" readonly>
                                                     <button type="submit" name="btn_approval" id="btn_approval" value="reject_pr" class="btn bg-danger" title="Reject PR"><i class="far fa-times-circle"></i></button> &nbsp;&nbsp; 
-                                                  </form>
+                                                  </form> --}}
                                                   
-                                                  <button type="button" class="btn bg-info" title="Show Detail" data-toggle="modal" data-target="#modal_pr_show" id="getPR" data-url="{{ route('show_modal_pr_hr_ga',['id'=>$item_pr->pr_no])}}"><i class="far fa-check-circle"></i></button>&nbsp;
+                                                  <button type="button" class="btn bg-info" title="Show Detail" data-toggle="modal" data-target="#modal_pr_show" id="getPR" data-url="{{ route('show_modal_pr_hr_ga',['id'=>$item_pr->pr_no])}}"><i class="fas fa-eye"></i></button>&nbsp;
                                                   <button class="btn bg-secondary toastrDefaultError" title="Print PR"><i class="fas fa-print"></i></i></button>&nbsp;
                                               @elseif ( $item_pr->pr_status == 4 || $item_pr->pr_status == 3 || $item_pr->pr_status == 2 )
-                                                  <button type="button" class="btn bg-info" title="Show Detail" data-toggle="modal" data-target="#modal_pr_show" id="getPR" data-url="{{ route('show_modal_pr_hr_ga',['id'=>$item_pr->pr_no])}}"><i class="far fa-check-circle"></i></button>&nbsp;
+                                                  <button type="button" class="btn bg-info" title="Show Detail" data-toggle="modal" data-target="#modal_pr_show" id="getPR" data-url="{{ route('show_modal_pr_hr_ga',['id'=>$item_pr->pr_no])}}"><i class="fas fa-eye"></i></button>&nbsp;
                                                   <form action="{{ route('print_pr_hr_ga') }}" method="POST">
                                                     @csrf
                                                     <input type="hidden" name="txt_pr_no" id="txt_pr_no" value="{{ $item_pr->pr_no }}">
@@ -100,11 +100,11 @@
                                                   <form onsubmit="return confirm('Are you sure you want to Process this request ?');" action="{{ route('approve_final_pr_hr_ga') }}" method="POST" enctype="multipart/form-data">
                                                     @csrf
                                                     <input type="hidden" name="txt_pr_no" id="txt_pr_no" value="{{ $item_pr->pr_no }}">
-                                                    <button type="submit" id="approve_pr" name="btn_approval" value="approve_pr" class="btn bg-success" title="Approve PR"><i class="fas fa-check-circle"></i></i></button>&nbsp;
+                                                    <button type="submit" id="approve_pr" name="btn_approval" value="approve_final_pr" class="btn bg-success" title="Approve PR"><i class="fas fa-check-circle"></i></i></button>&nbsp;
                                                     <button type="button" id="reject-pr" name="btn_approval" value="reject_pr" class="btn bg-danger" title="Reject PR" data-url="{{ route('get_pr_update_hr_ga',['id'=>$item_pr->pr_no]) }}"><i class="fas fa-times-circle"></i></i></button>&nbsp;
                                                   </form>
                                               @else
-                                                <button type="button" class="btn bg-info" title="Show Detail" data-toggle="modal" data-target="#modal_pr_show" id="getPR" data-url="{{ route('show_modal_pr_hr_ga',['id'=>$item_pr->pr_no])}}"><i class="far fa-check-circle"></i></button>&nbsp;
+                                                <button type="button" class="btn bg-info" title="Show Detail" data-toggle="modal" data-target="#modal_pr_show" id="getPR" data-url="{{ route('show_modal_pr_hr_ga',['id'=>$item_pr->pr_no])}}"><i class="fas fa-eye"></i></button>&nbsp;
                                                 <button class="btn bg-secondary toastrDefaultError" title="Print PR"><i class="fas fa-print"></i></i></button>&nbsp;
                                               @endif
                                                
@@ -212,7 +212,7 @@
     </div>
     {{-- End Update Modal --}}
     {{-- Reject modal --}}
-    <form action="{{ route('approve_final_pr_hr_ga') }}" method="POST" enctype="multipart/form-data" id="pr_reject" name="pr_reject">
+    <form action="{{ route('reject_final_pr_hr_ga') }}" method="POST" enctype="multipart/form-data" id="pr_reject" name="pr_reject">
         @csrf
         <div class="modal fade" id="modal_pr_reject">
             <div class="modal-dialog modal-lg">

@@ -138,25 +138,37 @@ class HREpurchaseController extends Controller
         return response()->json($pr_data);
     }
     public function approve_final_pr(Request $request){
-        // 
         $status_approval = $request->btn_approval;
-        $pr_no = $request->app_txt_pr_no;
+        $pr_no = $request->txt_pr_no;
         if ($status_approval == "approve_final_pr"){
             $update_pr = PurchaseRequest::where('pr_no', '=', $pr_no)->update([
                 'pr_status'     => '4',
                 'updated_at'    => date('Y-m-d h:i:s')
             ]);
-            Alert::success('Success', 'Successfully Approve PR');
+            Alert::success('Success', 'Successfully Approve Request');
             return redirect()->route('index_pr_hr_ga');
-        }else if ($status_approval == "reject_final_pr"){
+        }else {
+            Alert::error('Error', 'Failed Approve Request');
+            return redirect()->route('index_pr_hr_ga');
+        }
+    }
+
+    public function reject_final_pr(Request $request){
+        $status_approval = $request->btn_approval;
+        $pr_no = $request->app_txt_pr_no;
+        if ($status_approval == "reject_final_pr"){
             $update_pr = PurchaseRequest::where('pr_no', '=', $pr_no)->update([
                 'pr_status'     => '6',
                 'pr_reason'    => $request->txt_pr_reject_reason,
                 'updated_at'    => date('Y-m-d h:i:s')
             ]);
-            Alert::success('Danger', 'PR Rejected !!!');
+            Alert::success('Success', 'Successfully Reject   Request');
+            return redirect()->route('index_pr_hr_ga');
+        }else {
+            Alert::error('Error', 'Failed Reject Request');
             return redirect()->route('index_pr_hr_ga');
         }
+        
     }
     public function print_pr_hr_ga(Request $request)
     {

@@ -58,7 +58,13 @@
             <!-- small box -->
             <div class="small-box bg-info">
               <div class="inner">
-                <h3>0</h3>
+                <h3>
+                  @php
+                      $query_letter = Illuminate\Support\Facades\DB::table('letter_number')->where('deleted_at','=',NULL)->get();
+                      $letter_count =  $query_letter->count();
+                  @endphp
+                  {{ $letter_count }}
+                </h3>
 
                 <p>Letter Numbers</p>
               </div>
@@ -73,7 +79,16 @@
             <!-- small box -->
             <div class="small-box bg-success">
               <div class="inner">
-                <h3>0</h3>
+                <h3>
+                  @php
+                      $query_pr = Illuminate\Support\Facades\DB::table('pr')->where('pr_status','=','4')
+                      ->orWhere('pr_status','=','3')
+                      ->orWhere('pr_status','=','2')
+                      ->orWhere('pr_status','=','1')->get();
+                      $pr_count =  $query_pr->count();
+                  @endphp
+                  {{ $pr_count }}
+                </h3>
 
                 <p>PR Approved</p>
               </div>
@@ -88,7 +103,16 @@
             <!-- small box -->
             <div class="small-box bg-warning">
               <div class="inner">
-                <h3>0</h3>
+                <h3>
+                  @php
+                      $query_pr = Illuminate\Support\Facades\DB::table('pr')->where('pr_status','=','5')
+                      ->orWhere('pr_status','=','4')
+                      ->orWhere('pr_status','=','3')
+                      ->orWhere('pr_status','=','2')->get();
+                      $pr_count =  $query_pr->count();
+                  @endphp
+                  {{ $pr_count }}
+                </h3>
 
                 <p>PR On Process</p>
               </div>
@@ -103,7 +127,13 @@
             <!-- small box -->
             <div class="small-box bg-danger">
               <div class="inner">
-                <h3>0</h3>
+                <h3>
+                   @php
+                      $query_pr = Illuminate\Support\Facades\DB::table('pr')->where('pr_status','=','6')->get();
+                      $pr_count =  $query_pr->count();
+                  @endphp
+                  {{ $pr_count }}
+                </h3>
 
                 <p>PR Rejected</p>
               </div>
