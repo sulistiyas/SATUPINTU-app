@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\HRGA;
 
 use App\Models\OldPR;
+use App\Models\Vendor;
 use Illuminate\Http\Request;
 use App\Models\PurchaseOrder;
 use App\Models\PurchaseRequest;
@@ -21,6 +22,44 @@ class HREpurchaseController extends Controller
     /**
      * Display a listing of the resource.
      */
+    public function store_vendor(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'txt_vendor' => 'required',
+            'txt_vendor_cp' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status'    => false,
+                'message'   => 'Validation Error',
+                'errors'    => $validator->errors()
+            ], 401);
+        } else {
+            try {
+                Vendor::create([
+                    'vendor'       => $request->txt_vendor,
+                    'vendor_cp'    => $request->txt_vendor_cp,
+                    'telepon'      => $request->txt_vendor_phone,
+                    'email'        => $request->txt_vendor_mail,
+                    'alamat'       => $request->txt_vendor_add,
+                    'created_at'   => date('Y-m-d h:i:s'),
+                    'updated_at'   => date('Y-m-d h:i:s')
+                ]);
+                Alert::success('Success', 'New Vendor Added');
+                return redirect()->route('index_vendor_hr_ga');
+            } catch (\Exception $ex) {
+                return response()->json([
+                    'status'    => false,
+                    'message'   => 'Error insert data : ',
+                    'errors'    => $ex
+                ], 401);
+
+                Alert::warning('Warning', 'Failed to add new Vendor !!');
+                return redirect()->route('index_vendor_hr_ga');
+            }
+        }
+    }
     public function index_pr()
     {
         $id_usr = Auth::user()->id;
@@ -50,7 +89,7 @@ class HREpurchaseController extends Controller
         $data = DB::table('jobnumber')->where('deleted_at', '=', NULL)->orderBy('id_jn', 'DESC')->get();
         return view('hr_ga.epurchase.pr.create', compact('id', 'data'));
     }
-
+    
     public function store_pr(Request $request)
     {
 
@@ -373,6 +412,8 @@ class HREpurchaseController extends Controller
                 $disc = $request->txt_disc;
             }else if($disc_type == "harga_normal"){
                 $disc = $request->txt_harga_normal;
+            }else if($disc_type == null){
+                $disc = 0;
             }
 
             foreach ($count_data as $key => $value) {
@@ -435,6 +476,11 @@ class HREpurchaseController extends Controller
                 $grand_total = $total_disc + $a_tax + $service_charge + $delivery_fee + $addtional_charge; 
                 return $this->SendMailPO($emp_name, $mng_name, $po_data, $a_disc, $a_tax, $sub, $grand_total, $service_charge, $delivery_fee, $addtional_charge);
             }else if($disc_type == "harga_normal"){
+                $total_disc = $sub - $disc ;
+                $a_tax = ($tax / 100) * $total_disc;
+                $grand_total = $total_disc + $a_tax + $service_charge + $delivery_fee + $addtional_charge; 
+                return $this->SendMailPO($emp_name, $mng_name, $po_data, $disc, $a_tax, $sub, $grand_total, $service_charge, $delivery_fee, $addtional_charge);
+            }else if($disc_type == null){
                 $total_disc = $sub - $disc ;
                 $a_tax = ($tax / 100) * $total_disc;
                 $grand_total = $total_disc + $a_tax + $service_charge + $delivery_fee + $addtional_charge; 

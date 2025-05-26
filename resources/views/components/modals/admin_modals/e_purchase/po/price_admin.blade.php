@@ -37,7 +37,7 @@
   </div>
   <div class="row">
     <div class="col-12">
-      <table id="tbl_price" class="table table-bordered table-striped">
+      <table id="tbl_prices" class="table table-bordered table-striped">
         <thead>
           <tr>
             <th>No.</th>

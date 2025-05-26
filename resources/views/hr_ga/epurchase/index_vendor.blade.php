@@ -81,7 +81,7 @@
     <!-- /.content -->
     {{-- End Content --}}
     {{-- Create Modal --}}
-    <form action="{{ route('store_vendor_admin') }}" method="POST" enctype="multipart/form-data" id="vendor" name="vendor">
+    <form action="{{ route('store_vendor_hr_ga') }}" method="POST" enctype="multipart/form-data" id="vendor" name="vendor">
         @csrf
         <div class="modal fade" id="modal_vendor">
             <div class="modal-dialog modal-lg">

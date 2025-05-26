@@ -84,12 +84,18 @@
                     <th id="sub2">@currency($sub)</th>
                 </tr>
                 <tr>
-                    <td align="right" colspan="5"><i>Disc&nbsp;({{ $item_single->po_disc }}%)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</i></td>
-                    <td align="center">@currency($disc)</td>
+                   @if ($item_single->po_disc_type =="diskon")
+                                            <td align="right" colspan="5"><i>Disc&nbsp;({{ $item_single->po_disc }}%)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</i></td>
+                                            <td align="center">@currency($disc)</td>
+                                        @elseif ($item_single->po_disc_type == "harga_normal")
+                                            <td align="right" colspan="5"><i>Disc&nbsp;()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</i></td>
+                                            <td align="center">@currency($disc)</td>
+                                            
+                                        @endif
                 </tr>
                 <tr>
                     <td align="right" colspan="5"><i>Tax&nbsp;({{ $item_single->po_tax }}%)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</i></td>
-                    <td align="center">@currency($tax)</td>
+                    <td align="center">@currency($a_tax)</td>
                 </tr>
                 <tr>
                     <th colspan="5">Grand Total</th>

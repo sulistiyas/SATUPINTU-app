@@ -51,12 +51,7 @@ class EPurchaseManagerController extends Controller
                     'pr_no' => $request->ck_pr_no[$i],
                 );        
             }
-            print_r($array_data);
-        }
-        
-        
-        
-        $pr_approval    = $request->btn_approval;
+            $pr_approval    = $request->btn_approval;
         $pr_no          = $request->txt_pr_no;
         // $count_data     = $request->total_data;
         // $rows[]         = $count_data;
@@ -123,6 +118,11 @@ class EPurchaseManagerController extends Controller
                 return redirect()->route('index_pr_manager');
             }
         }
+        }
+        
+        
+        
+        
     }
     public function approve_pr_manager(Request $request)
     {   
@@ -399,17 +399,46 @@ class EPurchaseManagerController extends Controller
         foreach ($data_po as $po_datas) {
             $disc = $po_datas->po_disc;
             $tax = $po_datas->po_tax;
+            $po_disc_type = $po_datas->po_disc_type;
         }
-        $sub_total = DB::table('po')->selectRaw('SUM(total_price) as sub_total')->where('po_no', '=', $id)->get();
-        foreach ($sub_total as $subs) {
-            $sub = $subs->sub_total;
+        
+        if($po_disc_type == "diskon"){
+            $sub_total = DB::table('po')->selectRaw('SUM(total_price) as sub_total')->where('po_no', '=', $id)->get();
+            foreach ($sub_total as $subs) {
+                $sub = $subs->sub_total;
+            }
+            
+            $a_disc = ($disc / 100) * $sub;
+            $total_disc = $sub - $a_disc ;
+            $a_tax = ($tax / 100) * $total_disc;
+            $grand_total = $sub - $a_disc + $a_tax;
+            return view('components.modals.po_price_manager_comp', compact('data_po', 'sub', 'grand_total', 'disc', 'tax'));
+        }elseif($po_disc_type == "harga_normal"){
+            $sub_total = DB::table('po')->selectRaw('SUM(total_price) as sub_total')->where('po_no', '=', $id)->get();
+            foreach ($sub_total as $subs) {
+                $sub = $subs->sub_total;
+            }
+            $total_disc = $sub - $disc ;
+            $a_tax = ($tax / 100) * $total_disc;
+            $grand_total = $total_disc + $a_tax;
+            return view('components.modals.po_price_manager_comp', compact('data_po', 'sub', 'grand_total', 'disc', 'tax','a_tax'));
+        }elseif($po_disc_type == null){
+            $sub_total = DB::table('po')->selectRaw('SUM(total_price) as sub_total')->where('po_no', '=', $id)->get();
+            foreach ($sub_total as $subs) {
+                $sub = $subs->sub_total;
+            }
+            $total_disc = $sub - $disc ;
+            $a_tax = ($tax / 100) * $total_disc;
+            $grand_total = $total_disc + $a_tax;
+            return view('components.modals.po_price_manager_comp', compact('data_po', 'sub', 'grand_total', 'disc', 'tax'));
         }
+        
 
-        $a_disc = ($disc / 100) * $sub;
-        $a_tax = ($tax / 100) * $sub;
+        // $a_disc = ($disc / 100) * $sub;
+        // $a_tax = ($tax / 100) * $sub;
 
-        $grand_total = $sub - $a_disc + $a_tax;
-        return view('components.modals.po_price_manager_comp', compact('data_po', 'sub', 'grand_total', 'disc', 'tax'));
+        // $grand_total = $sub - $a_disc + $a_tax;
+        // return view('components.modals.po_price_manager_comp', compact('data_po', 'sub', 'grand_total', 'disc', 'tax'));
     }
 
 

@@ -98,7 +98,7 @@
     <!-- /.content -->
     {{-- End Content --}}
     {{-- Create Modal --}}
-    <form action="{{ route('store_jn_users') }}" method="POST" enctype="multipart/form-data" id="jobnumber" name="jobnumber">
+    <form action="{{ route('store_jn_users') }}" tabindex="-1" method="POST" enctype="multipart/form-data" id="jobnumber" name="jobnumber">
         @csrf
         <div class="modal fade" id="modal_jn">
             <div class="modal-dialog modal-xl">
@@ -195,7 +195,7 @@
                     <div class="col-3">
                       <div class="form-group">
                         <label for="txt_day_start">Day Training ( Start )</label>
-                        <select name="txt_day_start" id="txt_day_start" class="form-control select2bs4">
+                        <select name="txt_day_start" id="txt_day_start" class="form-control">
                           <option value="Monday">Monday</option>
                           <option value="Tuesday">Tuesday</option>
                           <option value="Wednesday">Wednesday</option>
@@ -209,7 +209,7 @@
                     <div class="col-3">
                       <div class="form-group">
                         <label for="txt_day_end">Day Training ( End )</label>
-                        <select name="txt_day_end" id="txt_day_end" class="form-control select2bs4">
+                        <select name="txt_day_end" id="txt_day_end" class="form-control">
                           <option value="Monday">Monday</option>
                           <option value="Tuesday">Tuesday</option>
                           <option value="Wednesday">Wednesday</option>
@@ -481,4 +481,24 @@
       });
   });
   </script>
+  <!-- Select2 -->
 
+<script>
+  
+  $(function () {
+    $(document).ready(function() {
+      $("#txt_comp").select2({
+        dropdownParent: $("#modal_jn .modal-content")
+      });
+    });
+    //Initialize Select2 Elements
+    // $('.select2').select2()
+
+    //Initialize Select2 Elements
+    $('.select2bs4').select2({
+      theme: 'bootstrap4'
+    })
+
+  })
+  
+</script>

@@ -101,7 +101,7 @@
                                     @endforeach
                                 </tbody>
                             </table>
-                            <p>Please proceed to <a href="#"><b>SATUPINTU - APP</b>.</a></p>
+                            <p>Please proceed to <a href="https://satupintu-v2.inlingua.co.id/"><b>SATUPINTU - APP</b>.</a></p>
                             <p>Kind regards,</p>
                             <p>SATUPINTU - APP</p>
                             <br>

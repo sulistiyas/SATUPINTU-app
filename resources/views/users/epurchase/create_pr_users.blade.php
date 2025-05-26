@@ -52,7 +52,7 @@
                                         <div class="form-group">
                                             <label for="txt_jn">Job Number</label>
                                             <input type="hidden" id="txt_pr_number" name="txt_pr_number" class="form-control" value="{{ $id }}" readonly>
-                                            <select name="txt_jn" id="txt_jn" class="form-control select2bs4">
+                                            <select name="txt_jn" id="txt_jn" class="form-control select2bs4" style="width: 100%;" required>
                                                 <option value="Operational Office">Operational Office</option>
                                                 <option value="I-Link">I-Link</option>
                                                 <option value="WSCC">WSCC</option>
@@ -202,4 +202,15 @@
         });
   
     });
+</script>
+<script>
+    $(function () {
+    //Initialize Select2 Elements
+    $('.select2').select2()
+
+    //Initialize Select2 Elements
+    $('.select2bs4').select2({
+      theme: 'bootstrap4'
+    })
+})
 </script>
