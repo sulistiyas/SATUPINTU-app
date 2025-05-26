@@ -109,7 +109,7 @@ $header_data = DB::table('pr')
         <tbody>
             <tr>
                 <td style="padding-left:35px;" align="left">
-                    @if ($item_header->job_number == "i-Link")
+                    @if ($item_header->job_number == "I-Link")
                         <img src="{{ asset('assets/dist/img/ilink.png') }}" width="200" alt="Inlingua" style="border:none">
                     @elseif (preg_match("/WSCE/",$item_header->job_number))
                         <img src="{{ asset('assets/dist/img/wsce.png') }}" width="200" alt="Inlingua" style="border:none">

@@ -455,7 +455,7 @@ class HREpurchaseController extends Controller
                 ->join('vendor', 'vendor.id_vendor', '=', 'po.id_vendor')
                 ->join('users', 'users.id', '=', 'pr.id_manager')->get();
             foreach ($mng_data as $mng) {
-                $mng_name = $mng->name;
+                $mng_name = "Christina Marlina";
             }
             $po_data = DB::table('po')
                 ->join('pr', 'pr.id_pr', '=', 'po.id_pr')
@@ -690,7 +690,8 @@ class HREpurchaseController extends Controller
                 foreach ($manager_data as $manager) {
                     $manager_email = $manager->email;
                 }
-                $mail->to($manager_email);
+                // Email Manager Ops
+                $mail->to('marlina.pasaribu@inlingua.co.id');
                 $mail->cc('sulis.nugroho@inlingua.co.id');
                 $mail->from(config('mail.from.name'));
                 $mail->subject('SATUPINTU - APP | Purchase Order Approval');

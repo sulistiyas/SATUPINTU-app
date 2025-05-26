@@ -108,7 +108,7 @@ $header_data = DB::table('po')
         <tbody>
             <tr>
                 <td style="padding-left:35px;" align="left">
-                    @if ($item_header->job_number == "i-Link")
+                    @if ($item_header->job_number == "I-Link")
                         <img src="{{ asset('assets/dist/img/ilink.png') }}" width="200" alt="Inlingua" style="border:none">
                     @elseif (preg_match("/WSCE/",$item_header->job_number))
                         <img src="{{ asset('assets/dist/img/wsce.png') }}" width="200" alt="Inlingua" style="border:none">
@@ -119,7 +119,7 @@ $header_data = DB::table('po')
                     @endif
                 </td>
                 <td align="right" id="top-left">
-                    Purchase Order
+                    Purchase Request
                 </td>
             </tr>
         </tbody>
@@ -188,7 +188,7 @@ $header_data = DB::table('po')
                             <tr id="top-right-2">
                                 <td>Company</td>
                                 <td>:</td>
-                                @if ($item_header->job_number == "i-Link")
+                                @if ($item_header->job_number == "I-Link")
                                     <td id="td1">PT. i-Link</td>
                                 @elseif (preg_match("/WSCE/",$item_header->job_number))
                                     <td id="td1">WSCE</td>
@@ -202,17 +202,22 @@ $header_data = DB::table('po')
                             <tr id="top-right-2">
                                 <td>Address</td>
                                 <td>:</td>
-                                <td id="td1">Gd. inlingua</td>
+                                <td id="td1">Jakarta International Tower</td>
                             </tr>
                             <tr id="top-right-2">
                                 <td></td>
                                 <td></td>
-                                <td id="td1">Jl. Puri Indah Raya Kav A3 No. 33-35</td>
+                                <td id="td1">Jl. Anggrek Neli Murni No.1AA</td>
                             </tr>
                             <tr id="top-right-2">
                                 <td></td>
                                 <td></td>
-                                <td id="td1">Jakarta Barat (11610)</td>
+                                <td id="td1">Jakarta Barat (11480)</td>
+                            </tr>
+                            <tr id="top-right-2">
+                                <td></td>
+                                <td></td>
+                                <td id="td1">Floor 12</td>
                             </tr>
                             <tr id="top-right-2">
                                 <td>Phone</td>
@@ -245,18 +250,49 @@ $header_data = DB::table('po')
                 
             foreach ($po_table as $data_bal) {
                 $disc               = $data_bal->po_disc;
+                $po_disc_type       = $data_bal->po_disc_type;
                 $tax                = $data_bal->po_tax;
                 $service_charge     = $data_bal->po_service_charge;
                 $delivery_fee       = $data_bal->po_delivery_fee;
                 $addtional_charge   = $data_bal->po_additional_charge;
             }
-
+                if($po_disc_type == "diskon"){
+                    $sub_total = DB::table('po')->selectRaw('SUM(total_price) as sub_total')->where('po_no', '=', $po_no)->get();
+                    foreach ($sub_total as $subs) {
+                        $sub = $subs->sub_total;
+                    }
+                    
+                    $a_disc = ($disc / 100) * $sub;
+                    $total_disc = $sub - $a_disc ;
+                    $a_tax = ($tax / 100) * $total_disc;
+                    $grand_total = $sub - $a_disc + $a_tax;
+                    $grand_total = $total_disc + $a_tax + $service_charge + $delivery_fee + $addtional_charge;
+                    // return view('components.modals.po_price_manager_comp', compact('data_po', 'sub', 'grand_total', 'disc', 'tax'));
+                }elseif($po_disc_type == "harga_normal"){
+                    $sub_total = DB::table('po')->selectRaw('SUM(total_price) as sub_total')->where('po_no', '=', $po_no)->get();
+                    foreach ($sub_total as $subs) {
+                        $sub = $subs->sub_total;
+                    }
+                    $total_disc = $sub - $disc ;
+                    $a_tax = ($tax / 100) * $total_disc;
+                    $grand_total = $total_disc + $a_tax;
+                    $grand_total = $total_disc + $a_tax + $service_charge + $delivery_fee + $addtional_charge;
+                    // return view('components.modals.po_price_manager_comp', compact('data_po', 'sub', 'grand_total', 'disc', 'tax','a_tax'));
+                }elseif($po_disc_type == null){
+                    $sub_total = DB::table('po')->selectRaw('SUM(total_price) as sub_total')->where('po_no', '=', $po_no)->get();
+                    foreach ($sub_total as $subs) {
+                        $sub = $subs->sub_total;
+                    }
+                    $total_disc = $sub - $disc ;
+                    $a_tax = ($tax / 100) * $total_disc;
+                    $grand_total = $total_disc + $a_tax;
+                    $grand_total = $total_disc + $a_tax + $service_charge + $delivery_fee + $addtional_charge;
+                    // return view('components.modals.po_price_manager_comp', compact('data_po', 'sub', 'grand_total', 'disc', 'tax'));
+                }
             // $a_disc = ($disc / 100) * $sub;
-            // $a_tax = ($tax / 100) * $sub;
-            $a_disc = ($disc / 100) * $sub;
-            $total_disc = $sub - $a_disc ;
-            $a_tax = ($tax / 100) * $total_disc;
-            $grand_total = $total_disc + $a_tax + $service_charge + $delivery_fee + $addtional_charge;
+            // $total_disc = $sub - $a_disc ;
+            // $a_tax = ($tax / 100) * $total_disc;
+            // $grand_total = $total_disc + $a_tax + $service_charge + $delivery_fee + $addtional_charge;
             // $grand_total = $sub - $a_disc + $a_tax + $service_charge + $delivery_fee;
         @endphp
         <table border="1" cellpadding="0" cellspacing="0" style="width: 100%;" id="pr">
@@ -288,8 +324,14 @@ $header_data = DB::table('po')
                     <th>@currency($sub)</th>
                 </tr>
                 <tr>
-                    <td align="right" colspan="5"><i>Disc ({{ $item_pr->po_disc }}%)</i></td>
-                    <td>@currency($a_disc)</td>
+                    @if ($item_pr->po_disc_type =="diskon")
+                        <td align="right" colspan="5"><i>Disc&nbsp;({{ $item_pr->po_disc }}%)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</i></td>
+                        <td align="center">@currency($disc)</td>
+                    @elseif ($item_pr->po_disc_type == "harga_normal")
+                        <td align="right" colspan="5"><i>Disc&nbsp;()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</i></td>
+                        <td align="center">@currency($disc)</td>
+                                            
+                    @endif
                 </tr>
                 <tr>
                     <td align="right" colspan="5"><i>Tax({{ $item_pr->po_tax }}%)</i></td>
