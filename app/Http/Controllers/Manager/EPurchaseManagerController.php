@@ -31,7 +31,7 @@ class EPurchaseManagerController extends Controller
             ->join('users', 'users.id', '=', 'employee.id_users')
             ->where('employee.emp_division', '=', $division)
             ->where('pr.deleted_at', '=', NULL)
-            ->where('pr.pr_status', '=', '8')
+            ->whereIn('pr.pr_status',['5','8'])
             ->orderBy('pr.created_at', 'desc')
             ->groupBy('pr.pr_no')->get();
         $count_data = $data->count();
@@ -53,7 +53,7 @@ class EPurchaseManagerController extends Controller
                 );        
             }
             $pr_approval    = $request->btn_approval;
-        $pr_no          = $request->txt_pr_no;
+            $pr_no          = $request->txt_pr_no;
         // $count_data     = $request->total_data;
         // $rows[]         = $count_data;
 
@@ -72,8 +72,9 @@ class EPurchaseManagerController extends Controller
                             'pr_status'     => '8',
                             'updated_at'    => date('Y-m-d h:i:s')
                         ]);
+                        $this->SendMailPRAction($request->ck_pr_no[$j], $status);
                     }
-                    return $this->SendMailPRAction($pr_no, $status);
+                    
                 }
                 Alert::success('Success', 'Successfully Approve PR');
                 return redirect()->route('index_pr_manager');
@@ -562,7 +563,7 @@ class EPurchaseManagerController extends Controller
                 foreach ($ga_data as $data_ga) {
                     $GA_email = $data_ga->email;
                 }
-                // $mail->to($manager_email);
+                // $mail->to('sulis.nugroho@inlingua.co.id');
                 $mail->to($emp_mail2);
                 $mail->to($GA_email);
                 $mail->cc('sulis.nugroho@inlingua.co.id');
@@ -571,7 +572,7 @@ class EPurchaseManagerController extends Controller
                 
             });
             if ($status == "Approved") {
-                dd($status);
+                // dd($status);
                 Alert::success('Success', 'PR Submitted Successfully');
                 return redirect()->route('index_pr_manager');
             } elseif ($status == "Rejected") {
