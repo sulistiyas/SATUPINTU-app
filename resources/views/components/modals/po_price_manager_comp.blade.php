@@ -43,7 +43,7 @@
 </div>
 <div class="row">
     <div class="col-12">
-        <table id="tbl_po_submit" class="table table-bordered table-striped">
+        <table id="tbl_po_submit_comp" class="table table-bordered table-striped">
             <thead>
                 <tr>
                     <th>No.</th>
@@ -94,8 +94,14 @@
                                         @endif
                 </tr>
                 <tr>
-                    <td align="right" colspan="5"><i>Tax&nbsp;({{ $item_single->po_tax }}%)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</i></td>
-                    <td align="center">@currency($a_tax)</td>
+                    @if ($a_tax == 0)
+                        <td align="right" colspan="5"><i>Tax&nbsp;({{ $item_single->po_tax }}%)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</i></td>
+                        <td align="center">0</td>
+                    @else
+                        <td align="right" colspan="5"><i>Tax&nbsp;({{ $item_single->po_tax }}%)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</i></td>
+                        <td align="center">@currency($a_tax)</td>
+                    @endif
+                    
                 </tr>
                 <tr>
                     <th colspan="5">Grand Total</th>
@@ -107,7 +113,7 @@
 </div>
 <script>
     $(function () {
-      $("#tbl_po_submit").DataTable({
+      $("#tbl_po_submit_comp").DataTable({
         "responsive": true, "lengthChange": false, "autoWidth": false,
       });
     });

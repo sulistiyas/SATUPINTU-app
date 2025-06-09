@@ -23,12 +23,13 @@
           <th>{{ $item_single->name }}</th>
         </tr>
         <tr>
-          <th>Currency </th>
+          <th>Vendor </th>
           <td>:</td>
           <th>
-            <select name="txt_currency" id="txt_currency" class="form-control">
-              <option value="IDR">IDR</option>
-              <option value="$">USD</option>
+            <select name="txt_vendor" id="txt_vendor" class="form-control">
+                @foreach ($data_vendor as $vendor)
+                    <option value="{{ $vendor->id_vendor }}">{{ $vendor->vendor }}</option>
+                @endforeach
             </select>
           </th>
         </tr>
@@ -44,16 +45,19 @@
             <th>Description</th>
             <th>Qty</th>
             <th>Unit</th>
-            <th>Price (Per Unit)</th>
+            <th><i class="fas fa-cog"></i></th>
           </tr>
         </thead>
         <tbody>
           @foreach ($data_pr as $item_list)
+            @php
+                $id_item = 0;
+            @endphp
               <tr>
                   <td>
                     {{ $loop->iteration }}.
                     <input type="hidden" name="txt_id_pr[]" id="txt_id_pr[]" value="{{ $item_list->id_pr }}">
-                    <input type="hidden" name="txt_id_po[]" id="txt_id_po[]" value="{{ $item_list->id_po }}" readonly class="form-control">
+                    <input type="hidden" name="txt_po_no[]" id="txt_po_no[]" value="{{ $po_no }}">
                   </td>
                   <td>{{ $item_list->pr_desc }}</td>
                   <td>
@@ -62,8 +66,10 @@
                   </td>
                   <td>{{ $item_list->pr_unit }}</td>
                   <td>
-                    <input type="number" name="txt_price[]" id="txt_price[]" class="form-control" required>
-                    <input type="hidden" name="txt_count[]" id="txt_count[]" value="{{ $loop->iteration }}">
+                    <div class="icheck-primary d-inline">
+                        <input type="checkbox" id="check_add_item[{{ $item_list->id_pr }}]" name="check_add_item[]" value="{{ $item_list->id_pr }}" class="item-checkbox">
+                        <label for="check_add_item[{{ $item_list->id_pr }}]">{{ $item_list->id_pr }}</label>
+                    </div>
                   </td>
               </tr>
           @endforeach

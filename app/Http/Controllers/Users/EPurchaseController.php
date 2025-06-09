@@ -414,9 +414,10 @@ class EPurchaseController extends Controller
                 foreach ($manager_data as $manager) {
                     $manager_email = $manager->email;
                 }
-                $mail->to($manager_email);
-                $mail->cc('sulis.nugroho@inlingua.co.id');
-                $mail->cc($GA_email);
+                // $mail->to($manager_email);
+                // $mail->cc('sulis.nugroho@inlingua.co.id');
+                $mail->to('sulis.nugroho@inlingua.co.id');
+                // $mail->cc($GA_email);
                 $mail->from(config('mail.from.name'));
                 $mail->subject('SATUPINTU - APP | Purchase Request Order');
             });

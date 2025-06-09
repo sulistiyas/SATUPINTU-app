@@ -67,6 +67,7 @@
                     <td>
                         {{ $loop->iteration }}
                         <input type="hidden" name="txt_id_po" id="txt_id_po" value="{{ $item_list->id_po }}">
+                        <input type="hidden" name="txt_id_pr[]" id="txt_id_pr[]" value="{{ $item_list->id_pr }}">
                     </td>
                     <td>{{ $item_list->pr_desc }}</td>
                     <td>

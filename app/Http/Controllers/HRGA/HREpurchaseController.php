@@ -232,15 +232,27 @@ class HREpurchaseController extends Controller
         return view('components.modals.admin_modals.e_purchase.pr.pr_admin_show', ['data_pr' => $pr_data]);
     }
 
-    public function show_modal_price_hr_ga($id)
-    {
+    public function show_modal_add_po_item_hr_ga($id){
         $po_no = IdGenerator::generate(['table' => 'po', 'field' => 'po_no', 'length' => 13, 'prefix' => 'PO' . +date('Ymd')]);
         $data_pr = DB::table('pr')
             ->join('employee', 'employee.id_employee', '=', 'pr.id_employee')
             ->join('users', 'users.id', '=', 'employee.id_users')
+            ->where('pr.pr_status', '=', '9')
             ->where('pr.pr_no', '=', $id)->get();
+        $data_vendor = DB::table('vendor')->where('deleted_at', '=', NULL)->orderBy('vendor', 'asc')->get();
         // $pr_data = DB::table('pr')->where('pr_no', '=', $id)->get();
-        return view('components.modals.admin_modals.e_purchase.po.price_admin', compact('po_no', 'data_pr'));
+        return view('components.modals.admin_modals.e_purchase.po.po_item_add', compact('po_no', 'data_pr','data_vendor'));
+    }
+    public function show_modal_price_hr_ga($id)
+    {
+        // $po_no = IdGenerator::generate(['table' => 'po', 'field' => 'po_no', 'length' => 13, 'prefix' => 'PO' . +date('Ymd')]);
+        $data_pr = DB::table('po')
+            ->join('pr', 'pr.id_pr', '=', 'po.id_pr')
+            ->join('employee', 'employee.id_employee', '=', 'pr.id_employee')
+            ->join('users', 'users.id', '=', 'employee.id_users')
+            ->where('po.po_no', '=', $id)->get();
+        // $pr_data = DB::table('pr')->where('pr_no', '=', $id)->get();
+        return view('components.modals.admin_modals.e_purchase.po.price_admin', compact('data_pr'));
     }
 
     public function show_modal_po_hr_ga($id)
@@ -367,7 +379,15 @@ class HREpurchaseController extends Controller
             ->orderBy('pr.created_at', 'desc')
             ->groupBy('pr.pr_no')->get();
         // dd($get_pr_data);
-        return view('hr_ga.epurchase.po.index', ['data' => $get_pr_data]);
+
+        $get_po_data = DB::table('pr')->select('*', 'pr.pr_no as pr_no_1')
+            ->join('po', 'po.id_pr', '=', 'pr.id_pr')
+            ->join('employee', 'employee.id_employee', '=', 'pr.id_employee')
+            ->join('users', 'users.id', '=', 'employee.id_users')
+            ->where('pr.deleted_at', '=', NULL)
+            ->orderBy('po.created_at', 'desc')
+            ->groupBy('po.po_no')->get();
+        return view('hr_ga.epurchase.po.index', compact('get_pr_data', 'get_po_data'));
     }
 
     public function create_po()
@@ -396,6 +416,7 @@ class HREpurchaseController extends Controller
             ], 401);
         } else {
             $id_po = $request->txt_id_po;
+            $id_pr = $request->txt_id_pr;
             $po_no = $request->txt_po_no;
             $pr_no = $request->txt_pr_no;
             $total_price = $request->txt_total_price;
@@ -438,7 +459,7 @@ class HREpurchaseController extends Controller
                 'po_notes'              => $request->txt_po_notes,
                 'updated_at'            => date('Y-m-d h:i:s')
             ]);
-            $pr_data = PurchaseRequest::where('pr_no', '=', $pr_no)->update([
+            $pr_data = PurchaseRequest::whereIn('id_pr', $id_pr)->update([
                 'pr_status'     => '2',
                 'updated_at'    => date('Y-m-d h:i:s')
             ]);
@@ -489,6 +510,54 @@ class HREpurchaseController extends Controller
         }
     }
 
+    public function store_item_po_hr_ga(Request $request){
+        if($request->check_add_item == null){
+            Alert::warning('Warning', 'Please Select Item to Add');
+            return redirect()->route('index_po_hr_ga');
+        } else {
+            $selected_item_ids = $request->check_add_item; // contoh: ['7', '9', '12']
+            $all_ids           = $request->txt_id_pr;      // ['1', '2', ..., '14']
+            $all_po_nos        = $request->txt_po_no;
+
+            $array_data = [];
+
+            foreach ($selected_item_ids as $selected_id) {
+                // cari index dari item yang dicentang
+                $index = array_search($selected_id, $all_ids);
+
+                if ($index !== false) {
+                    $array_data[] = [
+                        'po_no'       => $all_po_nos[$index],
+                        'id_pr'       => $all_ids[$index],
+                        'price'       => 0,
+                        'total_price' => 0,
+                        'po_date'     => date('Y-m-d'),
+                        'po_status'   => '4',
+                        'created_at'  => now(),
+                        'updated_at'  => now(),
+                    ];
+                    
+                }
+            }
+
+            // Simpan ke database jika ada data valid
+            if (!empty($array_data)) {
+                PurchaseOrder::insert($array_data);
+
+                // Update status PR jika perlu (berdasarkan salah satu nomor PR saja, misalnya)
+                PurchaseRequest::whereIn('id_pr', $selected_item_ids)->update([
+                    'pr_status'  => '4',
+                    'updated_at' => now(),
+                ]);
+                Alert::success('Success', 'Successfully Insert Item to PO');
+                return redirect()->route('index_po_hr_ga');
+            } else {
+                Alert::warning('Warning', 'Tidak ada item valid untuk dimasukkan ke PO');
+                return redirect()->route('index_po_hr_ga');
+            }
+        }
+    }
+
     public function store_price(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -503,32 +572,32 @@ class HREpurchaseController extends Controller
         } else {
                 $txt_pr_no = $request->txt_pr_no;
                 $txt_po_no = $request->txt_po_no;
+                $txt_id_po = $request->txt_id_po;
                 $txt_id_pr = $request->txt_id_pr;
-                $currency = $request->txt_currency;
-                $price = $request->txt_price;
-                $txt_qty = $request->txt_qty_pr;
+                $currency  = $request->txt_currency;
+                $price     = $request->txt_price;
+                $txt_qty   = $request->txt_qty_pr;
                 $txt_count = $request->txt_count;
 
                 // dd($txt_count);
+
                 foreach ($txt_count as $key => $value) {
                     $price_total_unit = $price[$key] * $txt_qty[$key];
-                    $array_data[] = array(
-                        'po_no'         => $txt_po_no[$key],
-                        'id_pr'         => $txt_id_pr[$key],
-                        'currency'      => $currency,
-                        'price'         => $price[$key],
-                        'total_price'   => $price_total_unit,
-                        'po_date'       => date('Y-m-d'),
-                        'po_status'     => '3',
-                        'created_at'    => date('Y-m-d h:i:s'),
-                        'updated_at'    => date('Y-m-d h:i:s'),
-                    );
+
+                    PurchaseOrder::where('id_po', $txt_id_po[$key])->update([
+                        'currency'     => $currency,
+                        'price'        => $price[$key],
+                        'total_price'  => $price_total_unit,
+                        'po_date'      => now(),
+                        'po_status'    => '3',
+                        'updated_at'   => now(),
+                    ]);
                 }
-                // dd($array_data);
-                PurchaseOrder::insert($array_data);
-                $pr_data = PurchaseRequest::where('pr_no', '=', $txt_pr_no)->update([
-                    'pr_status'     => '3',
-                    'updated_at'    => date('Y-m-d h:i:s')
+
+                // Update hanya PR yang berkaitan
+                PurchaseRequest::whereIn('id_pr', $txt_id_pr)->update([
+                    'pr_status'   => '3',
+                    'updated_at'  => now(),
                 ]);
                 Alert::success('Success', 'Successfully Insert Price');
                 return redirect()->route('index_po_hr_ga');
@@ -691,8 +760,8 @@ class HREpurchaseController extends Controller
                     $manager_email = $manager->email;
                 }
                 // Email Manager Ops
-                $mail->to('marlina.pasaribu@inlingua.co.id');
-                $mail->cc('sulis.nugroho@inlingua.co.id');
+                // $mail->to('marlina.pasaribu@inlingua.co.id');
+                $mail->to('sulis.nugroho@inlingua.co.id');
                 $mail->from(config('mail.from.name'));
                 $mail->subject('SATUPINTU - APP | Purchase Order Approval');
             });

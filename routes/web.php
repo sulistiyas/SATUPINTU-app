@@ -296,6 +296,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
             Route::get('/HRGA/EPurchase/PO/Create', [HREpurchaseController::class, 'create_po'])->name('create_po_hr_ga');
             Route::post('/HRGA/EPurchase/PO/Store', [HREpurchaseController::class, 'store_po'])->name('store_po_hr_ga');
             // Route::post('/HRGA/EPurchase/PO/Store', [HREpurchaseController::class, 'store_po_2'])->name('store_po_hr_ga');
+            Route::post('/HRGA/EPurchase/PO/Price/StoreItemPO', [HREpurchaseController::class, 'store_item_po_hr_ga'])->name('store_item_po_hr_ga');
             Route::post('/HRGA/EPurchase/PO/Price/Store', [HREpurchaseController::class, 'store_price'])->name('store_price_hr_ga');
             Route::get('/HRGA/EPurchase/PO/Edit/{id}', [HREpurchaseController::class, 'edit_po'])->name('edit_po_hr_ga');
             Route::POST('/HRGA/EPurchase/PO/Update/{id}', [HREpurchaseController::class, 'update_po'])->name('update_po_hr_ga');
@@ -316,6 +317,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
             Route::post('/HRGA/EPurchase/PO/Print/', [HREpurchaseController::class, 'print_po_hr_ga'])->name('print_po_hr_ga');
             // Show Modal Data
             Route::get('show_modal_pr_hr_ga/{id}', [HREpurchaseController::class, 'show_modal_pr_hr_ga'])->name('show_modal_pr_hr_ga');
+            Route::get('show_modal_add_po_item_hr_ga/{id}',[HREpurchaseController::class,'show_modal_add_po_item_hr_ga'])->name('show_modal_add_po_item_hr_ga');
             Route::get('show_modal_price_hr_ga/{id}', [HREpurchaseController::class, 'show_modal_price_hr_ga'])->name('show_modal_price_hr_ga');
             Route::get('show_modal_po_hr_ga/{id}', [HREpurchaseController::class, 'show_modal_po_hr_ga'])->name('show_modal_po_hr_ga');
             Route::get('show_modal_create_po_hr_ga/{id}', [HREpurchaseController::class, 'show_modal_create_po_hr_ga'])->name('show_modal_create_po_hr_ga');

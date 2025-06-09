@@ -53,8 +53,8 @@
                                         </div>
                                       </th>
                                       <th>
-                                        <button type="submit" name="btn_approval" id="btn_approval" value="approve_pr" class="btn bg-success" title="Approve PO"><i class="fas fa-check"></i>&nbsp; Approve Checked</button>&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <button type="submit" name="btn_approval" id="btn_approval" value="reject_pr" class="btn bg-danger" title="Reject PO"><i class="fas fa-times"></i>&nbsp; Reject Checked</button>&nbsp;&nbsp;&nbsp;&nbsp;      
+                                        <button type="submit" name="btn_approval" id="btn_approval" value="approve_po" class="btn bg-success" title="Approve PO"><i class="fas fa-check"></i>&nbsp; Approve Checked</button>&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <button type="submit" name="btn_approval" id="btn_approval" value="reject_po" class="btn bg-danger" title="Reject PO"><i class="fas fa-times"></i>&nbsp; Reject Checked</button>&nbsp;&nbsp;&nbsp;&nbsp;      
                                       </th>
                                     </tr>
                                 </thead>
@@ -68,6 +68,7 @@
                                                 <input type="checkbox" id="ck_po_no_{{ $loop->iteration }}" name="ck_po_no[]" value="{{ $item_pr->po_no }}" class="item-checkbox" onclick="toogleSingleCheckbox()">
                                                 <label for="ck_po_no_{{ $loop->iteration }}">
                                                 </label>
+                                                <input type="hidden" name="txt_id_pr_[]" id="txt_id_pr_[]" value="{{ $item_pr->id_pr }}" readonly>
                                               </div>
                                             @else
                                             @endif
@@ -81,29 +82,31 @@
                                             @endif
                                           </td>
                                           <td>
-                                            @if ( $item_pr->pr_status  == 5)
+                                            @if ( $item_pr->po_status  == 5)
                                               Waiting Manager Approval
-                                            @elseif ( $item_pr->pr_status == 4)
-                                              PR Approved
-                                            @elseif ( $item_pr->pr_status == 3)
+                                            @elseif ( $item_pr->po_status == 4)
                                               PR Approved - PO Submitting
-                                            @elseif ( $item_pr->pr_status == 2)
+                                            @elseif ( $item_pr->po_status == 3)
                                               PR Approved - PO Submitting
-                                            @elseif ( $item_pr->pr_status == 1)
+                                            @elseif ( $item_pr->po_status == 2)
+                                              PO Need Approval
+                                            @elseif ( $item_pr->po_status == 1)
                                               PR PO Completed
-                                            @elseif ( $item_pr->pr_status == 6)
+                                            @elseif ( $item_pr->po_status == 6)
                                               PR Rejected
-                                            @elseif ( $item_pr->pr_status == 7)
+                                            @elseif ( $item_pr->po_status == 7)
                                               PO Rejected
+                                            @elseif ( $item_pr->po_status == 9)
+                                              PO Completed
                                             @endif
                                           </td>
                                           <td>
                                             <div class="btn-group">
-                                                @if ( $item_pr->pr_status  == 5)
+                                                @if ( $item_pr->po_status  == 5)
                                                   <div class="col-12">
                                                     <button type="button" class="btn btn-outline-primary" title="Show Data" data-toggle="modal" data-target="#modal_pr_show_manager" id="getPR" data-url="{{ route('show_modal_pr_manager',['id'=>$item_pr->pr_no_1])}}"><i class="fas fa-eye">&nbsp;View Data</i></button>
                                                   </div>
-                                                @elseif ($item_pr->pr_status  == 4)
+                                                @elseif ($item_pr->po_status  == 9)
                                                   <div class="col-7">
                                                     <button type="button" class="btn btn-outline-primary" title="Show Data" data-toggle="modal" data-target="#modal_pr_show_manager" id="getPR" data-url="{{ route('show_modal_pr_manager',['id'=>$item_pr->pr_no_1])}}"><i class="fas fa-eye">&nbsp;View Data</i></button>
                                                   </div>
@@ -114,7 +117,18 @@
                                                       <button type="submit" class="btn btn-outline-success" id="print_pr"><i class="fas fa-print">&nbsp;Print PR</i></button>
                                                     </form>
                                                   </div>
-                                                @elseif ( $item_pr->pr_status  == 3)
+                                                @elseif ( $item_pr->po_status  == 4)
+                                                  <div class="col-7">
+                                                    <button type="button" class="btn btn-outline-primary" title="Show Data" data-toggle="modal" data-target="#modal_pr_show_manager" id="getPR" data-url="{{ route('show_modal_po_price_manager',['id'=>$item_pr->po_no])}}"><i class="fas fa-eye">&nbsp;View Data</i></button>
+                                                  </div>
+                                                  <div class="col-6">
+                                                    <form action="{{ route('print_pr_manager') }}" method="POST">
+                                                      @csrf
+                                                      <input type="hidden" name="txt_pr_no" id="txt_pr_no" value="{{ $item_pr->pr_no }}">
+                                                      <button type="submit" class="btn btn-outline-success" id="print_pr"><i class="fas fa-print">&nbsp;Print PR</i></button>
+                                                    </form>
+                                                  </div>
+                                                @elseif ( $item_pr->po_status  == 3)
                                                   <div class="col-7">
                                                     <button type="button" class="btn btn-outline-primary" title="Show Data" data-toggle="modal" data-target="#modal_show_price_manager" id="getPOPrice" data-url="{{ route('show_modal_po_price_manager',['id'=>$item_pr->po_no])}}"><i class="fas fa-eye">&nbsp;View Data</i></button>
                                                   </div>
@@ -125,7 +139,7 @@
                                                       <button type="submit" class="btn btn-outline-success" id="print_pr"><i class="fas fa-print">&nbsp;Print PR</i></button>
                                                     </form>
                                                   </div>
-                                                @elseif ( $item_pr->pr_status == 2)
+                                                @elseif ( $item_pr->po_status == 2)
                                                   <div class="col-5">
                                                     <button type="button" class="btn btn-outline-primary" title="Show Data" data-toggle="modal" data-target="#modal_show_price_manager_comp" id="getPOPrice_comp" data-url="{{ route('show_modal_po_price_manager_comp',['id'=>$item_pr->po_no])}}"><i class="fas fa-eye">&nbsp;View Data</i></button>
                                                   </div>
@@ -134,6 +148,7 @@
                                                       @csrf
                                                         <input type="hidden" name="txt_po_no" id="txt_po_no" value="{{ $item_pr->po_no }}" readonly>
                                                         <input type="hidden" name="txt_pr_no" id="txt_pr_no" value="{{ $item_pr->pr_no }}" readonly>
+                                                        <input type="hidden" name="txt_id_pr" id="txt_id_pr" value="{{ $item_pr->id_pr }}" readonly>
                                                         <button type="submit" name="btn_approval" id="btn_approval" value="approve_po" class="btn btn-outline-success" title="Approve PO"><i class="fas fa-check"></i>&nbsp; Approve</i></button>
                                                     </form>
                                                   </div>
@@ -145,9 +160,9 @@
                                                           <button type="submit" name="btn_approval" id="btn_approval" value="reject_po" class="btn btn-outline-danger" title="Reject PO"><i class="fas fa-times">&nbsp; Reject</i></button>
                                                     </form>
                                                   </div>
-                                                @elseif ( $item_pr->pr_status == 1)
+                                                @elseif ( $item_pr->po_status == 1)
                                                   <div class="col-7">
-                                                    <button type="button" class="btn btn-outline-primary" title="Show Data" data-toggle="modal" data-target="#modal_pr_show_manager" id="getPR" data-url="{{ route('show_modal_pr_manager',['id'=>$item_pr->pr_no_1])}}"><i class="fas fa-eye">&nbsp;View Data</i></button>
+                                                    <button type="button" class="btn btn-outline-primary" title="Show Data" data-toggle="modal" data-target="#modal_show_price_manager_comp" id="getPOPrice_comp" data-url="{{ route('show_modal_po_price_manager_comp',['id'=>$item_pr->po_no])}}"><i class="fas fa-eye">&nbsp;View Data</i></button>
                                                   </div>
                                                   <div class="col-6">
                                                     <form action="{{ route('print_po_manager') }}" method="POST">
@@ -450,5 +465,5 @@
       }
       
     }
-  }
+  }
 </script>
