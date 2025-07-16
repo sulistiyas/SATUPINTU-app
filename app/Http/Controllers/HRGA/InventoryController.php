@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers\HRGA;
 
-use App\Http\Controllers\Controller;
 use App\Models\Furniture;
-use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\Validator;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Illuminate\Support\Facades\Response;
 
 class InventoryController extends Controller
 {
@@ -17,7 +19,10 @@ class InventoryController extends Controller
      */
     public function index_furniture()
     {
-        $furnitures = \App\Models\Furniture::all();
+        $furnitures = DB::table('furniture')->orderBy('id_furniture', 'desc')->get();
+        if($furnitures->isEmpty()) {
+            Alert::info('Info', 'No furniture found');
+        }
         return view('hr_ga.inventory.furniture.index', compact('furnitures'));
     }
     public function store_furniture(Request $request)
@@ -42,7 +47,7 @@ class InventoryController extends Controller
                     'condition' => $request->condition,
                     'furniture_image' => $filepath
                 ]);
-                dd($filepath);
+                // dd($filepath);
                 Alert::success('Success', 'Furniture added successfully');
                 return redirect()->route('index_furniture');            
         }
@@ -92,34 +97,25 @@ class InventoryController extends Controller
         }
     }
 
-    public function generateQR(){
-        // return QrCode::generate(
-        //     'Hello, World!',
-        // );
-        $file = Storage::disk('public')->path('logo/inl.png');
-        // $img = ; 
-        $data = QrCode::size(512)
-            ->format('png')
-            ->mergeString(@imagecreatefrompng($file))
-            ->errorCorrection('M')
-            ->generate(
-                'https://twitter.com/HarryKir',
-            );
+    public function generateQR($id)
+    {
+        $item = Furniture::findOrFail($id);
 
-        return response($data)
-            ->header('Content-type', 'image/png');
+        $qrContent = "Item Name: {$item->name}\n"
+                . "Quantity: {$item->quantity}\n"
+                . "Condition: {$item->condition}\n"
+                . "Location: {$item->location}";
 
-        // return response()->streamDownload(
-        //     function () {
-        //         echo QrCode::format('png')
-        //         ->size(200)
-        //         ->generate('Hello, World!');
-        //     }
-        //     ,  
-        //     'qr-code.png',
-        //     [
-        //         'Content-Type' => 'image/png',
-        //     ]
-        // );
+        $qrImage = QrCode::format('png')
+            ->size(300)
+            ->errorCorrection('H')
+            ->generate($qrContent);
+
+        $fileName = 'QR ITEM - ' . $item->item_name . '.png';
+
+        return Response::make($qrImage, 200, [
+            'Content-Type' => 'application/octet-stream',
+            'Content-Disposition' => "attachment; filename={$fileName}"
+        ]);
     }
 }

@@ -37,6 +37,7 @@
                                         <th>Condition</th>
                                         <th>Location</th>
                                         <th>Images</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -46,6 +47,7 @@
                                         <td>{{ $furniture->item_name }}</td>
                                         <td>{{ $furniture->quantity }}</td>
                                         <td>{{ $furniture->condition }}</td>
+                                        <td>{{ $furniture->location ?? 'Not Specified' }}</td>
                                         <td><img src="{{ Storage::url($furniture->furniture_image) }}" alt="" srcset="" width="100px" height="100px"> </td>
                                         <td>
                                             {{-- <button class="btn btn-warning" data-toggle="modal" data-target="#modal_edit_furniture" onclick="editFurniture({{ $furniture->id_furniture }})">
@@ -64,7 +66,7 @@
                                                     <button type="submit" class="btn bg-danger" title="Delete Furniture">
                                                         <i class="fas fa-trash-alt"></i>
                                                     </button> &nbsp;&nbsp; 
-                                                    <a href="{{ route('generateQR') }}"  target="_blank" class="btn btn-info">
+                                                    <a href="{{ route('generateQR', ['id' => $furniture->id_furniture]) }}" target="_blank" class="btn btn-info">
                                                         <i class="fas fa-qrcode"></i>
                                                     </a>
                                                 </form>
@@ -83,6 +85,7 @@
                                         <th>Condition</th>
                                         <th>Location</th>
                                         <th>Images</th>
+                                        <th>Action</th>
                                     </tr>
                                 </tfoot>
                             </table>
@@ -122,6 +125,9 @@
                         </select>
                     </div>
                     <div class="form-group">
+                        <label for="location">Location</label>
+                        <input type="text" name="location" class="form-control" placeholder="Enter location (optional)">
+                    <div class="form-group">
                         <label for="furniture_image"> Furniture Image</label>
                         <input type="file" name="furniture_image" class="form-control" required>
                     </div>
@@ -159,13 +165,16 @@
                     <div class="form-group">
                         <label for="condition">Condition</label>
                         <select name="condition" id="edit_condition" class="form-control" required>
-                            @if ($furniture->condition == 'Good')
+                            {{-- @if ($furniture->condition == 'Good')
                                 <option value="Good" selected>Good</option>
                                 <option value="Bad">Bad</option>
-                            @else
+                            @elseif ($furniture->condition == 'Bad')
                                 <option value="Good">Good</option>
                                 <option value="Bad" selected>Bad</option>
-                            @endif
+                            @elseif ($furniture->condition == null)
+                                <option value="Good">Good</option>
+                                <option value="Bad">Bad</option>
+                            @endif --}}
                         </select>
                     </div>
                     

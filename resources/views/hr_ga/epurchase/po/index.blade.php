@@ -109,13 +109,7 @@
                                                     <button type="button" class="btn bg-info" title="Show Detail" data-toggle="modal" data-target="#modal_po_show_hr_ga_po" id="showPO" data-url="{{ route('show_modal_po_hr_ga',['id'=>$item_pr->po_no])}}"><i class="far fa-eye"></i></button>&nbsp;
                                                     <button class="btn bg-secondary toastrDefaultError2" title="Print PO"><i class="fas fa-print"></i></i></button>&nbsp;
                                                    --}}
-                                                @elseif ( $item_pr->pr_status == 1)
-                                                  
-                                                    <form action="{{ route('print_po_hr_ga') }}" method="POST">
-                                                      @csrf
-                                                      <input type="hidden" name="txt_po_no" id="txt_po_no" value="{{ $item_pr->po_no }}">
-                                                      <button type="submit" class="btn btn-block btn-outline-success" title="Print PO"><i class="fas fa-print">&nbsp;Print PO</i></button>
-                                                    </form>
+                                                
                                                   
                                                 @elseif( $item_pr->pr_status == 6)
                                                   

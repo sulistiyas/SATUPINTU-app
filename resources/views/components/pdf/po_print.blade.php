@@ -119,7 +119,7 @@ $header_data = DB::table('po')
                     @endif
                 </td>
                 <td align="right" id="top-left">
-                    Purchase Request
+                    Purchase Order
                 </td>
             </tr>
         </tbody>
@@ -147,7 +147,7 @@ $header_data = DB::table('po')
                             <tr id="top-left-3">
                                 <th align="left">Vendor</th>
                                 <th>:</th>
-                                <th>(Note : Please only use info below)</th>
+                                <th></th>
                             </tr>
                             <tr id="top-left-4">
                                 <td>{{ $item_vendor->vendor }}</td>

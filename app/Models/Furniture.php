@@ -12,6 +12,6 @@ class Furniture extends Model
     use SoftDeletes;
     public $table = 'furniture';
     protected $primaryKey = 'id_furniture';
-    protected $fillable = ['item_name', 'quantity', 'condition','furniture_image'];
+    protected $fillable = ['item_name', 'quantity', 'condition','location','furniture_image'];
 
 }

@@ -50,7 +50,7 @@
                                             @if ( $item_pr->pr_status  == 5)
                                               Waiting Manager Approval
                                             @elseif ( $item_pr->pr_status == 4)
-                                              PR Approved
+                                              PR Approved - PO Submitting by GA
                                             @elseif ( $item_pr->pr_status == 3)
                                               PR Approved - PO Submitting
                                             @elseif ( $item_pr->pr_status == 2)
@@ -61,6 +61,10 @@
                                               PR Rejected
                                             @elseif ( $item_pr->pr_status == 7)
                                               PO Rejected
+                                            @elseif ( $item_pr->pr_status == 8)
+                                              PR Final Check by GA
+                                            @elseif ( $item_pr->pr_status == 9)
+                                              PO Submitting by GA
                                             @endif
                                           </td>
                                           <td>

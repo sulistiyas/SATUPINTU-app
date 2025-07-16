@@ -334,7 +334,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
             Route::get('/HRGA/Inventory/Edit/{id}', [InventoryController::class, 'edit_furniture'])->name('edit_furniture');
             Route::post('/HRGA/Inventory/Update', [InventoryController::class, 'update_furniture'])->name('update_furniture');
             Route::delete('/HRGA/Inventory/Destroy/{id}', [InventoryController::class, 'destroy_furniture'])->name('destroy_furniture');
-            Route::get('/HRGA/Inventory/QRCode', [InventoryController::class, 'generateQR'])->name('generateQR');
+            Route::get('/HRGA/Inventory/QRCode/{id}', [InventoryController::class, 'generateQR'])->name('generateQR');
             // Letter Number
             // Route::get('/HRGA/LetterNumber', [LetterNumberController::class, 'index'])->name('index_letter_number');
             // Route::post('/HRGA/LetterNumber/Store', [LetterNumberController::class, 'store'])->name('store_letter_number');

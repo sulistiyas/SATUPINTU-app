@@ -181,7 +181,7 @@ class HREpurchaseController extends Controller
         $pr_no = $request->txt_pr_no;
         if ($status_approval == "approve_final_pr"){
             $update_pr = PurchaseRequest::where('pr_no', '=', $pr_no)->update([
-                'pr_status'     => '4',
+                'pr_status'     => '9',
                 'updated_at'    => date('Y-m-d h:i:s')
             ]);
             Alert::success('Success', 'Successfully Approve Request');
@@ -327,7 +327,7 @@ class HREpurchaseController extends Controller
             try {
                 $status = "Approved";
                 $pr_data = PurchaseRequest::where('pr_no', '=', $pr_no)->update([
-                    'pr_status'     => '4',
+                    'pr_status'     => '9',
                     'updated_at'    => date('Y-m-d h:i:s')
                 ]);
                 // return $this->SendMailPRAction($pr_no, $status);
@@ -372,7 +372,7 @@ class HREpurchaseController extends Controller
     public function index_po()
     {
         $get_pr_data = DB::table('pr')->select('*', 'pr.pr_no as pr_no_1')
-            ->leftJoin('po', 'po.id_pr', '=', 'pr.id_pr')
+            // ->leftJoin('po', 'po.id_pr', '=', 'pr.id_pr')
             ->join('employee', 'employee.id_employee', '=', 'pr.id_employee')
             ->join('users', 'users.id', '=', 'employee.id_users')
             ->where('pr.deleted_at', '=', NULL)
@@ -760,8 +760,8 @@ class HREpurchaseController extends Controller
                     $manager_email = $manager->email;
                 }
                 // Email Manager Ops
-                // $mail->to('marlina.pasaribu@inlingua.co.id');
-                $mail->to('sulis.nugroho@inlingua.co.id');
+                $mail->to('marlina.pasaribu@inlingua.co.id');
+                $mail->cc('sulis.nugroho@inlingua.co.id');
                 $mail->from(config('mail.from.name'));
                 $mail->subject('SATUPINTU - APP | Purchase Order Approval');
             });

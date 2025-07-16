@@ -245,7 +245,7 @@
       <form method="POST" action="{{ route('logout') }}" x-data>
         @csrf
         <button type="submit" class="btn btn-default"><i class="fas fa-power-off"></i></button>
-        <a href="{{ url('https://wa.me/+6282110873602') }}" class="btn btn-secondary hide-on-collapse pos-right" target="_blank">Contact Support</a>
+        <a href="{{ url('https://wa.me/+6282360951828') }}" class="btn btn-secondary hide-on-collapse pos-right" target="_blank">Contact Support</a>
       </form>
       {{-- <a href="{{ route('logout') }}" class="btn btn-link"><i class="fas fa-cogs"></i></a> --}}
       

@@ -244,7 +244,7 @@ $header_data = DB::table('pr')
             
         @endforeach
         <div class="section">
-            @if ($bot_item->pr_status == '4' || $bot_item->pr_status == '3' || $bot_item->pr_status == '2' || $bot_item->pr_status == '1')
+            @if ($bot_item->pr_status == '9' || $bot_item->pr_status == '4' || $bot_item->pr_status == '3' || $bot_item->pr_status == '2' || $bot_item->pr_status == '1')
                 <p id="top-left-2" style="margin-top: 40px">Authorized by,</p>    
                 <p id="top-right-2" style="margin-top: 20px"><u>{{ $bot_item->name }}</u></p>
                 <p id="top-right-2">inlingua</p>

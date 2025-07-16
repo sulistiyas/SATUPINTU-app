@@ -265,6 +265,7 @@ class EPurchaseManagerController extends Controller
         if ($request->ck_po_no == null) {
             Alert::warning('Warning', 'Please Select Data');
             return redirect()->route('index_po_manager');
+            // dd($request->ck_po_no);
         } else {
             $total_datas = count($request->ck_po_no);
             $row_data[] = $request->total_data;
@@ -294,7 +295,7 @@ class EPurchaseManagerController extends Controller
                         } else {
                                 $id_pr_array = DB::table('po')
                                 ->where('po_no', '=', $request->ck_po_no[$j])
-                                ->pluck('id_pr') // hasilnya Collection ['2', '10']
+                                ->pluck('id_pr')
                                 ->map(fn($id) => (int) $id)
                                 ->toArray();
                                 $status = "Approved";
@@ -620,10 +621,17 @@ class EPurchaseManagerController extends Controller
         // $pr_data = DB::table('pr')->where('pr_no', '=', $id)->get();
         foreach ($data_po as $po_datas) {
             $disc = $po_datas->po_disc;
-            $tax = $po_datas->po_tax;
+            $taxs = $po_datas->po_tax;
+            if($taxs == null){
+                $tax = 0;
+            }else{
+                $tax = $taxs;
+            }
             $po_disc_type = $po_datas->po_disc_type;
         }
         // dd($tax);
+        
+        
         
         if($po_disc_type == "diskon"){
             $sub_total = DB::table('po')->selectRaw('SUM(total_price) as sub_total')->where('po_no', '=', $id)->get();
@@ -635,7 +643,7 @@ class EPurchaseManagerController extends Controller
             $total_disc = $sub - $a_disc ;
             $a_tax = ($tax / 100) * $total_disc;
             $grand_total = $sub - $a_disc + $a_tax;
-            return view('components.modals.po_price_manager_comp', compact('data_po', 'sub', 'grand_total', 'disc', 'tax'));
+            return view('components.modals.po_price_manager_comp', compact('data_po', 'sub', 'grand_total', 'disc', 'a_tax'));
         }elseif($po_disc_type == "harga_normal"){
             $sub_total = DB::table('po')->selectRaw('SUM(total_price) as sub_total')->where('po_no', '=', $id)->get();
             foreach ($sub_total as $subs) {

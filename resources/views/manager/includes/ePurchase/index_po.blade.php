@@ -32,7 +32,7 @@
                           <form onsubmit="return confirm('Are you sure you want to APPROVE this request ?');" action="{{ route('approve_po_manager_checkbox') }}" method="POST">
                             @csrf
                             {{-- <input type="hidden" name="total_data" id="total_data" value="{{ $count_data }}"> --}}
-                            <table id="tbl_po" class="table table-bordered table-striped">
+                            <table id="" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
                                         <th>#</th>
@@ -65,8 +65,8 @@
                                             {{ $loop->iteration }}
                                             @if ( $item_pr->po_status  == 2)
                                               <div class="icheck-primary d-inline">
-                                                <input type="checkbox" id="ck_po_no_{{ $loop->iteration }}" name="ck_po_no[]" value="{{ $item_pr->po_no }}" class="item-checkbox" onclick="toogleSingleCheckbox()">
-                                                <label for="ck_po_no_{{ $loop->iteration }}">
+                                                <input type="checkbox" id="ck_po_no_{{ $loop->iteration }}" name="ck_po_no[{{$loop->iteration}}]" value="{{ $item_pr->po_no }}" class="item-checkbox" onclick="toogleSingleCheckbox()">
+                                                <label for="ck_po_no{{ $loop->iteration }}">
                                                 </label>
                                                 <input type="hidden" name="txt_id_pr_[]" id="txt_id_pr_[]" value="{{ $item_pr->id_pr }}" readonly>
                                               </div>
