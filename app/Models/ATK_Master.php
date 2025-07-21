@@ -24,4 +24,11 @@ class ATK_Master extends Model
         'created_at',
         'deleted_at',
     ];
+
+    public function atkRequestLogs()
+    {
+        return $this->hasMany(ATK_Request_Log::class, 'atk_id', 'id_atk');
+    }
+
+    
 }

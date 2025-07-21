@@ -71,4 +71,11 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function atkRequestLogs()
+    {
+        return $this->hasMany(ATK_Request_Log::class, 'user_id');
+    }
+
+    
 }

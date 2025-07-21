@@ -279,10 +279,10 @@ class EPurchaseManagerController extends Controller
             $po_no          = $request->txt_po_no;
             $pr_no          = $request->txt_pr_no;
             // $id_pr          = $request->txt_id_pr;
-        // $count_data     = $request->total_data;
-        // $rows[]         = $count_data;
+            // $count_data     = $request->total_data;
+            // $rows[]         = $count_data;
 
-        if ($po_approval == "approve_po") {
+            if ($po_approval == "approve_po") {
                     $status = "Approved";
                     for ($j=0; $j < $total_datas; $j++) { 
                         $flag = DB::table('po')->where('po_no', '=', $request->ck_po_no[$j])->get();
@@ -299,9 +299,9 @@ class EPurchaseManagerController extends Controller
                                 ->map(fn($id) => (int) $id)
                                 ->toArray();
                                 $status = "Approved";
-                                $po_data = PurchaseOrder::where('po_no', '=', $po_no)->update([
+                                $po_data = PurchaseOrder::where('po_no', '=', $request->ck_po_no[$j])->update([
                                     'po_status'     => '1',
-                                    'updated_at'    => date('Y-m-d h:i:s')
+                                    'updated_at'    => date('Y-m-d H:i:s')
                                 ]);
                                 PurchaseRequest::whereIn('id_pr', $id_pr_array)->update([
                                     'pr_status'  => '1',
@@ -336,7 +336,7 @@ class EPurchaseManagerController extends Controller
 
 
                                 if($po_disc_type == "diskon"){
-                                    $sub_total = DB::table('po')->selectRaw('SUM(total_price) as sub_total')->where('po_no', '=', $po_no)->get();
+                                    $sub_total = DB::table('po')->selectRaw('SUM(total_price) as sub_total')->where('po_no', '=', $request->ck_po_no[$j])->get();
                                     foreach ($sub_total as $subs) {
                                         $sub = $subs->sub_total;
                                     }
@@ -345,27 +345,28 @@ class EPurchaseManagerController extends Controller
                                     $total_disc = $sub - $a_disc ;
                                     $a_tax = ($tax / 100) * $total_disc;
                                     $grand_total = $sub - $a_disc + $a_tax;
-                                    return $this->SendMailPOAction($emp_name, $mng_name, $po_data, $a_disc, $a_tax, $sub, $grand_total, $status);
+                                    // return $this->SendMailPOAction($emp_name, $mng_name, $po_data, $a_disc, $a_tax, $sub, $grand_total, $status);
                                     // return view('components.modals.po_price_manager_comp', compact('data_po', 'sub', 'grand_total', 'disc', 'tax'));
                                 }elseif($po_disc_type == "harga_normal"){
-                                    $sub_total = DB::table('po')->selectRaw('SUM(total_price) as sub_total')->where('po_no', '=', $po_no)->get();
+                                    $sub_total = DB::table('po')->selectRaw('SUM(total_price) as sub_total')->where('po_no', '=', $request->ck_po_no[$j])->get();
+
                                     foreach ($sub_total as $subs) {
                                         $sub = $subs->sub_total;
                                     }
                                     $total_disc = $sub - $disc ;
                                     $a_tax = ($tax / 100) * $total_disc;
                                     $grand_total = $total_disc + $a_tax;
-                                    return $this->SendMailPOAction($emp_name, $mng_name, $po_data, $disc, $a_tax, $sub, $grand_total, $status);
+                                    // return $this->SendMailPOAction($emp_name, $mng_name, $po_data, $disc, $a_tax, $sub, $grand_total, $status);
                                     // return view('components.modals.po_price_manager_comp', compact('data_po', 'sub', 'grand_total', 'disc', 'tax','a_tax'));
                                 }elseif($po_disc_type == null){
-                                    $sub_total = DB::table('po')->selectRaw('SUM(total_price) as sub_total')->where('po_no', '=', $po_no)->get();
+                                    $sub_total = DB::table('po')->selectRaw('SUM(total_price) as sub_total')->where('po_no', '=', $request->ck_po_no[$j])->get();
                                     foreach ($sub_total as $subs) {
                                         $sub = $subs->sub_total;
                                     }
                                     $total_disc = $sub - $disc ;
                                     $a_tax = ($tax / 100) * $total_disc;
                                     $grand_total = $total_disc + $a_tax;
-                                    return $this->SendMailPOAction($emp_name, $mng_name, $po_data, $disc, $a_tax, $sub, $grand_total, $status);
+                                    // return $this->SendMailPOAction($emp_name, $mng_name, $po_data, $disc, $a_tax, $sub, $grand_total, $status);
                                     // return view('components.modals.po_price_manager_comp', compact('data_po', 'sub', 'grand_total', 'disc', 'tax'));
                                 }
                         }

@@ -69,6 +69,8 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
     // ATK Global Route
     Route::get('ATK/Master/List',[ATKGlobalController::class, 'index'])->name('index_atk_global');
     Route::get('ATK/Master/Show/{id}', [ATKGlobalController::class, 'show'])->name('show_atk_global');
+    Route::get('ATK/Request)', [ATKGlobalController::class, 'index_request'])->name('index_atk_request');
+    Route::post('ATK/Request/Store', [ATKGlobalController::class, 'store_atk_request'])->name('store_atk_request');
     
     Route::controller(LoginController::class)->group(function () {
         Route::get('/dashboard', 'index')->name('dashboard');
