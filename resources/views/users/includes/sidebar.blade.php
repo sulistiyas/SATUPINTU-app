@@ -242,6 +242,13 @@
               </li>
             </ul>
           </li>
+          <li class="{{ Request::routeIs('index_office_legalitas_users') ? 'nav-item menu-open' : 'nav-item menu' }}">
+            <a href="{{ route('index_office_legalitas_users') }}" class="{{ Request::routeIs('index_office_legalitas_users') ? 'nav-link active' : 'nav-link' }}">
+              <i class="fas fa-file-contract"></i>
+              <p>Office Legalitas</p>
+            </a>
+
+          </li>
         </ul>
       </nav>
       <!-- /.sidebar-menu -->

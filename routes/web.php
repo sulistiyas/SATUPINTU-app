@@ -262,6 +262,9 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
             // Route::get('/refresh/number/users', [UsersUsersController::class, 'refresh_last_number_letter_users'])->name('refresh_last_number_letter_users');
             // Adds on
             Route::get('/users/data/json', [UsersUsersController::class, 'get_old_pr_users'])->name('get_old_pr_users');
+
+            // Legalitas
+            Route::get('/Users/Legalitas/Office', [UsersUsersController::class, 'index_office_legalitas_users'])->name('index_office_legalitas_users');
         });
 
         Route::middleware(['auth', 'userLevel:4'])->group(function () {
@@ -350,6 +353,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
             Route::get('/HRGA/ATK/Master/Create', [ATKController::class, 'create'])->name('show_modal_create_atk_hr_ga');
             Route::get('/HRGA/ATK/Master/Show/{id}', [ATKController::class, 'show'])->name('show_atk_master_hr_ga');
             Route::get('/HRGA/ATK/Master/Edit/{id}', [ATKController::class, 'edit'])->name('edit_atk_master_hr_ga');
+            Route::get('/HRGA/ATK/Request', [ATKController::class, 'index_atk_request_hr_ga'])->name('index_atk_request_hr_ga');
 
             Route::get('/HRGA/ATK/In', [ATKController::class, 'index_atk_in'])->name('index_atk_in_hr_ga');
             Route::post('/HRGA/ATK/In/Store', [ATKController::class, 'store_atk_in'])->name('store_atk_in_hr_ga');

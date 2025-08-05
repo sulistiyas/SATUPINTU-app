@@ -225,4 +225,15 @@ class ATKController extends Controller
     {
         //
     }
+
+    public function index_atk_request_hr_ga()
+    {
+        $atk_request_list = DB::table('atk_request_log')
+            ->join('atk_master', 'atk_request_log.atk_id', '=', 'atk_master.id_atk')
+            ->join('users', 'atk_request_log.user_id', '=', 'users.id')
+            ->select('atk_request_log.*', 'atk_master.atk_name', 'users.name')
+            ->orderBy('atk_request_log.created_at', 'DESC')
+            ->get();
+        return view('layouts.atk_request.index_hr_ga', compact('atk_request_list'));
+    }
 }

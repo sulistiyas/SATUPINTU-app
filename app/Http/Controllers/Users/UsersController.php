@@ -488,4 +488,10 @@ class UsersController extends Controller
         // $get_data = DB::table('tbl_pr')->orderBy('id_pr', 'desc')->get();
         // return view('admin.ePurchase.old_pr', ['old_pr' => $get_data]);
     }
+
+    public function index_office_legalitas_users()
+    {
+        $office_legalitas = DB::table('legalitas_office')->orderBy('id_legalitas', 'DESC')->get();
+        return view('users.index_legalitas', ['office_legalitas' => $office_legalitas]);
+    }
 }

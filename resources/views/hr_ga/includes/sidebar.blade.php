@@ -187,8 +187,8 @@
               </li>
             </ul>
           </li> --}}
-          <li class="{{ Request::routeIs('index_furniture') || Request::routeIs('index_atk_master_hr_ga') || Request::routeIs('index_atk_in_hr_ga') || Request::routeIs('index_office_legalitas_hr_ga') || Request::routeIs('index_letter_number') || Request::routeIs('index_users') || Request::routeIs('index_letter_2018') || Request::routeIs('index_letter_2019') || Request::routeIs('index_letter_2020') || Request::routeIs('index_letter_2021') || Request::routeIs('index_letter_2022') || Request::routeIs('index_letter_2023') || Request::routeIs('index_letter_2024')? 'nav-item menu-open' : 'nav-item menu' }}">
-            <a href="#"  class="{{ Request::routeIs('index_furniture') || Request::routeIs('index_atk_master_hr_ga') || Request::routeIs('index_atk_in_hr_ga') || Request::routeIs('index_office_legalitas_hr_ga') || Request::routeIs('index_letter_number') || Request::routeIs('index_users') || Request::routeIs('index_letter_2018') || Request::routeIs('index_letter_2019') || Request::routeIs('index_letter_2020') || Request::routeIs('index_letter_2021') || Request::routeIs('index_letter_2022') || Request::routeIs('index_letter_2023') || Request::routeIs('index_letter_2024')? 'nav-link active' : 'nav-link' }}">
+          <li class="{{ Request::routeIs('index_furniture') || Request::routeIs('index_atk_master_hr_ga') || Request::routeIs('index_atk_in_hr_ga') ||  Request::routeIs('index_atk_request_hr_ga') || Request::routeIs('index_office_legalitas_hr_ga') || Request::routeIs('index_letter_number') || Request::routeIs('index_users') || Request::routeIs('index_letter_2018') || Request::routeIs('index_letter_2019') || Request::routeIs('index_letter_2020') || Request::routeIs('index_letter_2021') || Request::routeIs('index_letter_2022') || Request::routeIs('index_letter_2023') || Request::routeIs('index_letter_2024')? 'nav-item menu-open' : 'nav-item menu' }}">
+            <a href="#"  class="{{ Request::routeIs('index_furniture') || Request::routeIs('index_atk_master_hr_ga') || Request::routeIs('index_atk_in_hr_ga') || Request::routeIs('index_atk_request_hr_ga') || Request::routeIs('index_office_legalitas_hr_ga') || Request::routeIs('index_letter_number') || Request::routeIs('index_users') || Request::routeIs('index_letter_2018') || Request::routeIs('index_letter_2019') || Request::routeIs('index_letter_2020') || Request::routeIs('index_letter_2021') || Request::routeIs('index_letter_2022') || Request::routeIs('index_letter_2023') || Request::routeIs('index_letter_2024')? 'nav-link active' : 'nav-link' }}">
               <i class="fas fa-users-cog"></i>
               <p>
                 Administration Area
@@ -196,8 +196,8 @@
               </p>
             </a>
             <ul class="nav nav-treeview">
-              <li class="{{ Request::routeIs('index_furniture') || Request::routeIs('index_atk_master_hr_ga') || Request::routeIs('index_atk_in_hr_ga') ? 'nav-item menu-open' : 'nav-item menu' }}">
-                <a href="#" class="{{ Request::routeIs('index_furniture') || Request::routeIs('index_atk_master_hr_ga') || Request::routeIs('index_atk_in_hr_ga') ? 'nav-link active' : 'nav-link' }}">
+              <li class="{{ Request::routeIs('index_furniture') || Request::routeIs('index_atk_master_hr_ga') || Request::routeIs('index_atk_in_hr_ga') || Request::routeIs('index_atk_request_hr_ga') ? 'nav-item menu-open' : 'nav-item menu' }}">
+                <a href="#" class="{{ Request::routeIs('index_furniture') || Request::routeIs('index_atk_master_hr_ga') || Request::routeIs('index_atk_in_hr_ga') || Request::routeIs('index_atk_request_hr_ga') ? 'nav-link active' : 'nav-link' }}">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Office Asset</p>
                   <i class="right fas fa-angle-left"></i>
@@ -209,8 +209,8 @@
                       <p>Furniture</p>
                     </a>
                   </li>
-                  <li class="{{ Request::routeIs('index_atk_master_hr_ga') || Request::routeIs('index_atk_in_hr_ga')? 'nav-item menu-open' : 'nav-item menu' }}">
-                    <a href="#" class="{{ Request::routeIs('index_atk_master_hr_ga')  || Request::routeIs('index_atk_in_hr_ga')? 'nav-link active' : 'nav-link' }}">
+                  <li class="{{ Request::routeIs('index_atk_master_hr_ga') || Request::routeIs('index_atk_in_hr_ga') || Request::routeIs('index_atk_request_hr_ga')? 'nav-item menu-open' : 'nav-item menu' }}">
+                    <a href="#" class="{{ Request::routeIs('index_atk_master_hr_ga')  || Request::routeIs('index_atk_in_hr_ga')|| Request::routeIs('index_atk_request_hr_ga')? 'nav-link active' : 'nav-link' }}">
                       <i class="far fa-dot-circle nav-icon"></i>
                       <p>
                         ATK
@@ -228,6 +228,12 @@
                         <a href="{{ route('index_atk_in_hr_ga') }}" class="{{ Request::routeIs('index_atk_in_hr_ga') ? 'nav-link active' : 'nav-link' }}">
                           <i class="fas fa-circle nav-icon"></i>
                           <p>ATK in</p>
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a href="{{ route('index_atk_request_hr_ga') }}" class="{{ Request::routeIs('index_atk_request_hr_ga') ? 'nav-link active' : 'nav-link' }}">
+                          <i class="fas fa-circle nav-icon"></i>
+                          <p>ATK Request</p>
                         </a>
                       </li>
                     </ul>
