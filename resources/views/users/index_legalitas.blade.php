@@ -36,21 +36,23 @@
                                             <th>No.</th>
                                             <th>Legalitas Name</th>
                                             <th>Document Number</th>
+                                            <th>Company Name</th>
                                             <th>Issued Date</th>
                                             <th>Expired Date</th>
                                             <th><i class="fas fa-cog"></i></th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($office_legalitas as $legalitas)
+                                        @foreach ($office_legalitas as $item_legalitas)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
-                                                <td>{{ $legalitas->legalitas_name }}</td>
-                                                <td>{{ $legalitas->document_number }}</td>
-                                                <td>{{ \Carbon\Carbon::parse($legalitas->issued_date)->format('d-m-Y') }}</td>
-                                                <td>{{ \Carbon\Carbon::parse($legalitas->expired_date)->format('d-m-Y') }}</td>
+                                                <td>{{ $item_legalitas->dokumen }}</td>
+                                                <td>{{ $item_legalitas->no_legalitas }}</td>
+                                                <td>{{ $item_legalitas->nama_perusahaan }}</td>
+                                                <td>{{ \Carbon\Carbon::parse($item_legalitas->terbit)->format('d-m-Y') }}</td>
+                                                <td>{{ \Carbon\Carbon::parse($item_legalitas->berakhir)->format('d-m-Y') }}</td>
                                                 <td>
-                                                    <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#modal_view_legalitas_{{ $legalitas->id_legalitas }}">
+                                                    <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#modal_view_legalitas_{{ $item_legalitas->id_legalitas }}">
                                                         <i class="fas fa-eye"></i> View
                                                     </button>
                                                 </td>
@@ -66,6 +68,70 @@
         </section>
     {{-- End Section --}}
 </div>
+{{-- Create Modal --}}
+    <form action="{{ route('office_legalitas_store_users') }}" method="POST" enctype="multipart/form-data" id="legalitas_office" name="legalitas_office">
+        @csrf
+        <div class="modal fade" id="modal_legalitas">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Legalitas Form</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="txt_no_legalitas">Nomor</label>
+                                <input type="text" name="txt_no_legalitas" id="txt_no_legalitas" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="txt_dokumen">Dokumen</label>
+                                <input type="text" name="txt_dokumen" id="txt_dokumen" class="form-control" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="txt_comp"> Company </label>
+                                <select name="txt_comp" id="txt_comp" class="form-control select2bs4">
+                                    <option value="PT. Inlingua International Indonesia">PT. Inlingua International Indonesia</option>
+                                    <option value="PT. i-Link">PT. i-Link</option>
+                                    <option value="PT. Jakarta International College (JIC)">PT. Jakarta International College (JIC)</option>
+                                    <option value="PT. Multi Sarana Edukasi (MSE)">PT. Multi Sarana Edukasi (MSE)</option>
+                                    <option value="PT. Sinergy Informasi Pratama (SIP)">PT. Sinergy Informasi Pratama (SIP)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <label for="txt_issued">Issued</label>
+                            <div class="input-group input-group-lg">
+                                <input type="text" class="form-control datetimepicker-input" id="txt_issued" name="txt_issued" data-toggle="datetimepicker" data-target="#txt_issued" placeholder="DD/MM/YYYY" required/>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label for="txt_expiry">Expiry</label>
+                            <div class="input-group input-group-lg">
+                                <input type="text" class="form-control datetimepicker-input" id="txt_expiry" name="txt_expiry" data-toggle="datetimepicker" data-target="#txt_expiry" placeholder="DD/MM/YYYY" required/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+              </div>
+            </div>
+        </div>
+    </form>
 @include('users.includes.footer')
 <script>
     $(document).ready(function() {
@@ -76,4 +142,10 @@
     });
 
     // Add your JavaScript functions for modal handling here
+</script>
+<script type="text/javascript">
+  $(function () {
+      $('#txt_issued').datetimepicker({format: 'YYYY/MM/DD'});
+      $('#txt_expiry').datetimepicker({format: 'YYYY/MM/DD'});
+  });
 </script>

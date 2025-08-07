@@ -165,7 +165,6 @@
     </form>
     {{-- End Create --}}
     {{-- View Modal --}}
-    {{-- @include('components.modals.pr_hr_ga_show',['pr_data' => $item_pr->pr_no]) --}}
     <div class="modal fade" id="modal_pr_show">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">

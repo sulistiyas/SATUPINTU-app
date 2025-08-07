@@ -232,9 +232,20 @@ class HRJobNumberController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show_jn_hr_ga(string $id)
     {
-        //
+
+        $jn_data = DB::table('jobnumber')
+            ->join('client', 'jobnumber.id_client', '=', 'client.id_client')
+            ->where('jobnumber.id_jn', '=', $id)
+            ->where('jobnumber.deleted_at', '=', NULL)->get();
+        $data_client = DB::table('client')->where('client.deleted_at', '=', NULL)
+            ->orderBy('client.id_client', 'asc')->get();
+        $latest_jn = DB::table('jobnumber')
+            ->join('client', 'jobnumber.id_client', '=', 'client.id_client')
+            ->where('jobnumber.deleted_at', '=', NULL)
+            ->orderBy('jobnumber.id_jn', 'desc')->limit(1)->get();
+        return view('components.modals.admin_modals.jobnumber.show_detail', compact('jn_data', 'data_client', 'latest_jn'));
     }
 
     /**

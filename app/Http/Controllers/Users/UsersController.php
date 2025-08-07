@@ -9,6 +9,7 @@ use App\Models\JobNumber;
 use App\Models\LetterNumber;
 use App\Models\OldJobnumber;
 use Illuminate\Http\Request;
+use App\Models\LegalitasOffice;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -493,5 +494,43 @@ class UsersController extends Controller
     {
         $office_legalitas = DB::table('legalitas_office')->orderBy('id_legalitas', 'DESC')->get();
         return view('users.index_legalitas', ['office_legalitas' => $office_legalitas]);
+    }
+
+    public function office_legalitas_store_users(Request $request){
+        
+        $validator = Validator::make($request->all(), [
+            'txt_no_legalitas' => 'required',
+            'txt_dokumen' => 'required',
+            'txt_issued' => 'required',
+            'txt_expiry' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status'    => false,
+                'message'   => 'Validation Error',
+                'errors'    => $validator->errors()
+            ]);
+        } else {
+            $now = date('Y-m-d');
+                if ($request->txt_expiry < $now) {
+                    $status = 3;
+                } else {
+                    $status = 1;
+                }
+
+                LegalitasOffice::create([
+                    'no_legalitas'      => $request->txt_no_legalitas,
+                    'dokumen'           => $request->txt_dokumen,
+                    'nama_perusahaan'   => $request->txt_comp,
+                    'terbit'            => $request->txt_issued,
+                    'berakhir'          => $request->txt_expiry,
+                    'status'            => $status,
+                    'created_at'        => date('Y-m-d h:i:s'),
+                    'updated_at'        => date('Y-m-d h:i:s')
+                ]);
+                Alert::success('Success', 'New Legalitas Added');
+                return redirect()->route('index_office_legalitas_users');
+        }
     }
 }

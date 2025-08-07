@@ -61,6 +61,7 @@
                                             <i class="fas fa-align-justify"></i>
                                         </button>
                                         <div class="dropdown-menu" role="menu" style="">
+                                          <button type="button" title="Show Detail" data-toggle="modal" data-target="#modal_jn_show" id="getJN" data-url="{{ route('show_jn_hr_ga',['id'=>$item->id_jn])}}"><i class="fas fa-eye"> Show</i></button>&nbsp;
                                           <form onsubmit="return confirm('Apakah Anda Yakin ingin Menghapus data ?');" action="{{ route('destroy_client_hr_ga',[$item->id_jn]) }}" method="POST">
                                             @csrf
                                             @method('DELETE')
@@ -286,6 +287,29 @@
         </div>
     </form>
     {{-- End Update --}}
+    {{-- View Modal --}}
+    <div class="modal fade" id="modal_jn_show">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="overlay" id="modal-loader">
+            <i class="fas fa-2x fa-sync fa-spin"></i>
+          </div>
+          <div class="modal-header">
+              <h4 class="modal-title">JN Detail</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="modal-body">
+             <div id="dynamic-content"></div>
+          </div>
+          <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    {{-- End View --}}
   </div>
   
 @include('hr_ga.includes.footer')
@@ -328,4 +352,30 @@
       });
   });
   </script>
+
+  <script>
+  $(document).ready(function(){
+      $(document).on('click', '#getJN', function(e){
+          e.preventDefault();
+          var url = $(this).data('url');
+          $('#dynamic-content').html(''); // leave it blank before ajax call
+          $('#modal-loader').show();      // load ajax loader
+          $.ajax({
+              url: url,
+              type: 'GET',
+              dataType: 'html'
+          })
+          .done(function(data){
+              console.log(data);  
+              $('#dynamic-content').html('');    
+              $('#dynamic-content').html(data); // load response 
+              $('#modal-loader').hide();        // hide ajax loader   
+          })
+          .fail(function(){
+              $('#dynamic-content').html('<i class="glyphicon glyphicon-info-sign"></i> Something went wrong, Please try again...');
+              $('#modal-loader').hide();
+          });
+      });
+  });
+</script>
 

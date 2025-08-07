@@ -265,11 +265,13 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
 
             // Legalitas
             Route::get('/Users/Legalitas/Office', [UsersUsersController::class, 'index_office_legalitas_users'])->name('index_office_legalitas_users');
+            Route::post('/Users/Legalitas/Office/Store', [UsersUsersController::class, 'office_legalitas_store_users'])->name('office_legalitas_store_users');
         });
 
         Route::middleware(['auth', 'userLevel:4'])->group(function () {
             //  JobNumber
             Route::get('/HRGA/JobNumber/List', [HRJobNumberController::class, 'index_jn'])->name('index_jn_hr_ga');
+            Route::get('/HRGA/JobNumber/Show/{id}', [HRJobNumberController::class, 'show_jn_hr_ga'])->name('show_jn_hr_ga');
             Route::get('/HRGA/JobNumber/List/Old', [HRJobNumberController::class, 'index_old_jn'])->name('index_jn_old_hr_ga');
             Route::get('/HRGA/JobNumber/Show/JN_OLD/{id}', [HRJobNumberController::class, 'show_jn_old_hr_ga'])->name('show_jn_old_hr_ga');
             Route::get('/HRGA/JobNumber/Create', [HRJobNumberController::class, 'create'])->name('create_jn_hr_ga');
